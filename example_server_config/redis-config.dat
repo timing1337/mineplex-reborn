@@ -1,0 +1,4 @@
+localhost 6379 MASTER DefaultConnection
+localhost 6379 SLAVE DefaultConnection
+localhost 6379 MASTER ServerStatus
+localhost 6379 SLAVE ServerStatus

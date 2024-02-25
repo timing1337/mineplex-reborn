@@ -1,0 +1,12 @@
+AMPLIFIERS:
+  ip: localhost
+  port: 1000
+ANTISPAM:
+  ip: localhost
+  port: 1000
+ENDERCHEST:
+  ip: localhost
+  port: 1000
+BANNER:
+  ip: localhost
+  port: 1000

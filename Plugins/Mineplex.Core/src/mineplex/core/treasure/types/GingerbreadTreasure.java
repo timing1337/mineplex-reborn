@@ -82,7 +82,7 @@ public class GingerbreadTreasure extends Treasure
 		addPetReward(PetType.GINGERBREAD_MAN, rarity, 20);
 
 		// Win Effect
-		//addGadgetReward(getGadget(WinEffectWinterWarfare.class), rarity, 25);
+		addGadgetReward(getGadget(WinEffectWinterWarfare.class), rarity, 25);
 
 		// Taunts
 		addGadgetReward(getGadget(FrostBreathTaunt.class), rarity, 20);
