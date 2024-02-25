@@ -49,10 +49,10 @@ public class PlayerCount implements Listener, Runnable
 													Region.ALL, BungeeServer.class, "bungeeServers");
 		
 		if (_region == Region.US)
-			_secondRepository = new RedisDataRepository<BungeeServer>(new ConnectionData("127.0.0.1", 6379, ConnectionType.MASTER, "ServerStatus"), new ConnectionData("127.0.0.1", 6377, ConnectionType.SLAVE, "ServerStatus"),
+			_secondRepository = new RedisDataRepository<BungeeServer>(new ConnectionData("127.0.0.1", 6379, ConnectionType.MASTER, "ServerStatus"), new ConnectionData("127.0.0.1", 6379, ConnectionType.SLAVE, "ServerStatus"),
 				Region.ALL, BungeeServer.class, "bungeeServers");
 		else
-			_secondRepository = new RedisDataRepository<BungeeServer>(new ConnectionData("127.0.0.1", 6379, ConnectionType.MASTER, "ServerStatus"), new ConnectionData("127.0.0.1", 6377, ConnectionType.SLAVE, "ServerStatus"),
+			_secondRepository = new RedisDataRepository<BungeeServer>(new ConnectionData("127.0.0.1", 6379, ConnectionType.MASTER, "ServerStatus"), new ConnectionData("127.0.0.1", 6379, ConnectionType.SLAVE, "ServerStatus"),
 					Region.ALL, BungeeServer.class, "bungeeServers");
 	}
 	

@@ -90,6 +90,11 @@ public class Hub extends JavaPlugin implements IRelation
 		Bukkit.setSpawnRadius(0);
 		getConfig().addDefault(Constants.WEB_CONFIG_KEY, Constants.WEB_ADDRESS);
 		getConfig().set(Constants.WEB_CONFIG_KEY, getConfig().getString(Constants.WEB_CONFIG_KEY));
+
+		getConfig().addDefault("enableHubGames", false);
+		getConfig().addDefault("enableParkour", false);
+		getConfig().addDefault("enableSecretAreas", false);
+
 		saveConfig();
 
 		//Static Modules

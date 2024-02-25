@@ -79,13 +79,6 @@ public class ParkourManager extends MiniPlugin
 		_attempts = new HashMap<>();
 		_parkours = new ArrayList<>();
 
-		_parkours.add(new ParkourData(this, "HayYou", new String[]
-				{
-						"Jump fast and jump quick, just don't",
-						"stick around long enough to wave to",
-						"everyone or you'll have a bad time!"
-				}, DIFFICULTY_EASY));
-
 		List<Snake> snakes = new ArrayList<>();
 		List<Location> path = _worldData.getSpongeLocations(String.valueOf(Material.QUARTZ_ORE.getId()));
 
@@ -94,34 +87,43 @@ public class ParkourManager extends MiniPlugin
 			snakes.add(new Snake(head, path));
 		}
 
-		_parkours.add(new SnakeParkourData(this, snakes));
+		if(getPlugin().getConfig().getBoolean("enableParkour")){
+			_parkours.add(new ParkourData(this, "HayYou", new String[]
+					{
+							"Jump fast and jump quick, just don't",
+							"stick around long enough to wave to",
+							"everyone or you'll have a bad time!"
+					}, DIFFICULTY_EASY));
+
+			_parkours.add(new SnakeParkourData(this, snakes));
 
 
-		_parkours.add(new SprintingParkourData(this, "Splinter", new String[]
-				{
-						"Don't poke around to much or",
-						"you might hurt yourself. You have",
-						"to go fast to beat this one!"
-				}, DIFFICULTY_MEDIUM));
-		_parkours.add(new ParkourData(this, "Ruins", new String[]
-				{
-						"Something was here at some point,",
-						"we aren't sure what, but you are free to",
-						"jump around it a whole bunch."
-				}, DIFFICULTY_MEDIUM));
-		_parkours.add(new ParkourData(this, "Mystery Pillars", "HOUSE", new String[]
-				{
-						"This house came from the sky, only to leave",
-						"these weird pillars all over the place. See",
-						"if you can reach the top and collect it's prize!"
-				}, DIFFICULTY_HARD));
+			_parkours.add(new SprintingParkourData(this, "Splinter", new String[]
+					{
+							"Don't poke around to much or",
+							"you might hurt yourself. You have",
+							"to go fast to beat this one!"
+					}, DIFFICULTY_MEDIUM));
+			_parkours.add(new ParkourData(this, "Ruins", new String[]
+					{
+							"Something was here at some point,",
+							"we aren't sure what, but you are free to",
+							"jump around it a whole bunch."
+					}, DIFFICULTY_MEDIUM));
+			_parkours.add(new ParkourData(this, "Mystery Pillars", "HOUSE", new String[]
+					{
+							"This house came from the sky, only to leave",
+							"these weird pillars all over the place. See",
+							"if you can reach the top and collect it's prize!"
+					}, DIFFICULTY_HARD));
 
-		NewNPCManager npcManager = require(NewNPCManager.class);
+			NewNPCManager npcManager = require(NewNPCManager.class);
 
-		for (ParkourData data : _parkours)
-		{
-			npcManager.spawnNPCs(data.getKey() + " START", null);
-			npcManager.spawnNPCs(data.getKey() + " END", null);
+			for (ParkourData data : _parkours)
+			{
+				npcManager.spawnNPCs(data.getKey() + " START", null);
+				npcManager.spawnNPCs(data.getKey() + " END", null);
+			}
 		}
 	}
 

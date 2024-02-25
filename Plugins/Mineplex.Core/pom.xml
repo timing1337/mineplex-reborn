@@ -68,7 +68,7 @@
                     <include>version.properties</include>
                 </includes>
                 <filtering>true</filtering>
-                <directory>../</directory>
+                <directory>./</directory>
             </resource>
         </resources>
     </build>

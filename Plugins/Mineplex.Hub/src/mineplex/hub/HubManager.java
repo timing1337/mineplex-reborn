@@ -245,7 +245,7 @@ public class HubManager extends MiniClientPlugin<HubClient>
 		require(HubPlayerManager.class);
 		require(AdminPunch.class);
 		require(StaffBuild.class);
-		require(SecretAreas.class);
+		if(getPlugin().getConfig().getBoolean("enableSecretAreas")) require(SecretAreas.class);
 //		require(TreasureHuntManager.class);
 
 		new GameRejoinManager(this)
