@@ -11,8 +11,6 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
-import com.mineplex.anticheat.checks.move.Glide;
-
 import mineplex.core.common.util.C;
 import mineplex.core.common.util.F;
 import mineplex.core.common.util.MapUtil;
@@ -83,7 +81,6 @@ public class Dropper extends SoloGame
 		});
 
 		// Temporary fix to fix rubber banding
-		_manager.getAntiHack().addIgnoredCheck(Glide.class);
 	}
 
 	@Override

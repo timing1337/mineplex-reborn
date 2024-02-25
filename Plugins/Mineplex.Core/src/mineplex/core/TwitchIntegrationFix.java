@@ -73,12 +73,12 @@ public class TwitchIntegrationFix extends MiniPlugin implements IPacketHandler
 		if (packetInfo.getPacket() instanceof PacketPlayOutOpenWindow)
 		{
 			_inventoryOpenedAt.put(packetInfo.getPlayer().getUniqueId(), packetInfo.getPlayer().getLocation());
-			_inventoryOpenedAtTime.put(packetInfo.getPlayer().getUniqueId(), entityPlayer.playerConnection.networkManager.packetCount);
+			//_inventoryOpenedAtTime.put(packetInfo.getPlayer().getUniqueId(), entityPlayer.playerConnection.networkManager.packetCount);
 		}
 		else if (packetInfo.getPacket() instanceof PacketPlayOutCloseWindow)
 		{
 			_inventoryOpenedAt.remove(packetInfo.getPlayer().getUniqueId());
-			_inventoryOpenedAtTime.remove(packetInfo.getPlayer().getUniqueId());
+			//_inventoryOpenedAtTime.remove(packetInfo.getPlayer().getUniqueId());
 		}
 		else if (packetInfo.getPacket() instanceof PacketPlayInRightClick ||
 				packetInfo.getPacket() instanceof PacketPlayInBlockPlace ||
@@ -92,11 +92,13 @@ public class TwitchIntegrationFix extends MiniPlugin implements IPacketHandler
 			if (entityPlayer.activeContainer != entityPlayer.defaultContainer && _inventoryOpenedAtTime.containsKey(packetInfo.getPlayer().getUniqueId()))
 			{
 				long openedTime = _inventoryOpenedAtTime.get(packetInfo.getPlayer().getUniqueId());
+				/* 
 				if (entityPlayer.playerConnection.networkManager.packetCount - openedTime > 5)
 				{
 					System.out.println("Impossible packet: " + packetInfo.getPacket().getClass());
 					packetInfo.getPlayer().closeInventory();
 				}
+				*/
 			}
 		}
 		else if (packetInfo.getPacket() instanceof PacketPlayInFlying)

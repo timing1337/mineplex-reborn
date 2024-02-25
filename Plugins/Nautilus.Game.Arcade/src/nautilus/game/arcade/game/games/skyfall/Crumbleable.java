@@ -31,34 +31,34 @@ import mineplex.core.common.util.UtilTime;
 public abstract class Crumbleable
 {
 	private static final long CHUNK_CRUMBLE_DELAY = 1000;
-	
+
 	private boolean _crumble;
-	
+
 	private ArrayList<Location> _initBlocks;
 	private ArrayList<Location> _realBlocks;
 	private Map<Chunk, BitSet> _chunksToUpdate;
-	
+
 	private boolean _onlyTop;
 	private int _height;
-	
+
 	private long _lastChunk;
-	
+
 	public Crumbleable()
 	{
 		this(false, 0);
 	}
-	
+
 	public Crumbleable(boolean onlyTop, int height)
 	{
 		_onlyTop = onlyTop;
 		_height = height;
-		
+
 		_realBlocks = new ArrayList<>();
 		_chunksToUpdate = new HashMap<>();
-		
+
 		_lastChunk = System.currentTimeMillis();
 	}
-	
+
 	/**
 	 * Must be called when getBlocks is set
 	 */
@@ -74,24 +74,24 @@ public abstract class Crumbleable
 				if (loc.getBlockY() > y)
 					y = loc.getBlockY();
 			}
-			
+
 			for (Location loc : locs)
 			{
 				if (loc.getBlockY() == y)
 					flatMap.add(loc.clone());
 			}
-			
+
 			for (Location loc : flatMap)
 			{
 				Block block = loc.getBlock();
-				
+
 				int i = 0;
-				
+
 				while (i <= _height)
 				{
 					if (block.getType() != Material.AIR && block.getRelative(BlockFace.UP).getType() == Material.AIR)
 						_realBlocks.add(block.getLocation());
-						
+
 					block = block.getRelative(BlockFace.DOWN);
 					i++;
 				}
@@ -103,7 +103,7 @@ public abstract class Crumbleable
 			_realBlocks = (ArrayList<Location>) getBlocks().clone();
 			_initBlocks = (ArrayList<Location>) getBlocks().clone();
 		}
-		
+
 	}
 
 	/**
@@ -113,24 +113,24 @@ public abstract class Crumbleable
 	{
 		return crumble(blocks, Material.AIR);
 	}
-	
+
 	/**
 	 * Lets the island crumble with the provided rate. <br/>
 	 * <br/>
 	 * Will call {@link #crumbledAway()} in subclasses if there are no blocks left to crumble.
 	 * <br/>
-	 * 
+	 *
 	 * @param blocks blocks to crumble per call
 	 * @param replacements blocks which will replace old blocks
-	 * 
+	 *
 	 * @return true if island is comepletely crumbled away
 	 */
 	public boolean crumble(int blocks, Material... replacements)
 	{
 		_crumble = true;
-			
+
 		crumblePercentage();
-		
+
 		if (_realBlocks.isEmpty())
 		{
 			crumbledAway();
@@ -154,7 +154,7 @@ public abstract class Crumbleable
 					for (Player player : UtilServer.getPlayers())
 					{
 						int protocol = UtilPlayer.getProtocol(player);
-						UtilPlayer.sendPacket(player, new PacketPlayOutMapChunk(protocol, chunk, false, mask));
+						UtilPlayer.sendPacket(player, new PacketPlayOutMapChunk(chunk, false, mask));
 					}
 
 					_lastChunk = System.currentTimeMillis();
@@ -162,7 +162,7 @@ public abstract class Crumbleable
 			}
 			return true;
 		}
-			
+
 		for (int i = 0; i < blocks; i++)
 		{
 			Material material = replacements[UtilMath.r(replacements.length)];
@@ -171,53 +171,53 @@ public abstract class Crumbleable
 				crumbledAway();
 				return true;
 			}
-			
+
 			Location toRemove =	_realBlocks.remove(UtilMath.r(_realBlocks.size()));
 			if (toRemove.getBlock().getType() == Material.CHEST && _realBlocks.size() > 25)
 			{
 				_realBlocks.add(toRemove);
 				continue;
 			}
-			
+
 			if (toRemove.getBlock().getType() == Material.AIR
 					|| toRemove.getBlock().getType() == Material.WATER
 					|| toRemove.getBlock().getType() == Material.STATIONARY_WATER
 					|| toRemove.getBlock().getType() == Material.LAVA
 					|| toRemove.getBlock().getType() == Material.STATIONARY_LAVA)
 				continue;
-			
+
 			byte id = 0;
-			
+
 			if (toRemove.getBlock().getType() == Material.STAINED_GLASS ||
 					toRemove.getBlock().getType() == Material.GLASS)
 			{
 				material = Material.STAINED_GLASS;
 				id = DyeColor.BLACK.getData();
 			}
-			
+
 			MapUtil.ChunkBlockChange(toRemove, material.getId(), id, false);
 			_chunksToUpdate.computeIfAbsent(((CraftChunk) toRemove.getChunk()).getHandle(), key -> new BitSet()).set(((int) toRemove.getY()) >> 4);
 		}
-		
+
 		return false;
 	}
-	
+
 	public boolean isCrumbling()
 	{
 		return _crumble;
 	}
-	
+
 	public boolean isCrumbledAway()
 	{
 		return _realBlocks.isEmpty();
 	}
-	
+
 	/**
 	 * @return the percentage of the crumbeled blocks.
 	 */
 	public double crumblePercentage()
-	{	
-		try 
+	{
+		try
 		{
 			return (_realBlocks.size()/(_initBlocks.size()));
 		}
@@ -226,19 +226,19 @@ public abstract class Crumbleable
 			return 1;
 		}
 	}
-	
+
 	public ArrayList<Location> getRealBlocks()
 	{
 		return _realBlocks;
 	}
-	
+
 	/**
-	 * Overrideable method which is called by 
-	 * {@link #crumble(int, Material...)} or {@link #crumble(int)} 
+	 * Overrideable method which is called by
+	 * {@link #crumble(int, Material...)} or {@link #crumble(int)}
 	 * when there are no more blocks left to crumble.
 	 */
 	public void crumbledAway() {}
-	
+
 	public abstract ArrayList<Location> getBlocks();
-	
+
 }

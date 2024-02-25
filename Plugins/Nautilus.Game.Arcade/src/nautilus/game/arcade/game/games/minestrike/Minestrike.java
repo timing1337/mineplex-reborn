@@ -32,10 +32,7 @@ import org.bukkit.scoreboard.Objective;
 import org.bukkit.scoreboard.Team;
 import org.bukkit.util.Vector;
 
-import com.mineplex.anticheat.checks.combat.KillauraTypeA;
-
 import mineplex.core.Managers;
-import mineplex.core.antihack.AntiHack;
 import mineplex.core.common.util.C;
 import mineplex.core.common.util.F;
 import mineplex.core.common.util.UtilAlg;
@@ -101,7 +98,7 @@ public class Minestrike extends TeamGame
 	//Data
 	private int _roundsToWin = 8;
 	private long _roundTime = 120000;
-	
+
 	//Round Data
 	private String _winText = null;
 	private boolean _roundOver = false;
@@ -121,15 +118,15 @@ public class Minestrike extends TeamGame
 	private Player _bombPlantedBy;
 
 	private boolean _bombScoreboardFlash = false;
-	
+
 	private GunModule _gunModule;
-	
+
 	//Scoreboard
 	private Objective _scoreObj;
-	
+
 	public Minestrike(ArcadeManager manager, Kit[] kits, GameType type)
 	{
-		super(manager, type, kits, 
+		super(manager, type, kits,
 				new String[]
 				{
 						C.cAqua + "SWAT" + C.cWhite + "  Defend the Bomb Sites",
@@ -160,10 +157,7 @@ public class Minestrike extends TeamGame
 		this.AllowParticles = false;
 
 		this.PlayerGameMode = GameMode.ADVENTURE;
-		
-		AntiHack antiHack = Managers.get(AntiHack.class);
-		antiHack.addIgnoredCheck(KillauraTypeA.class);
-		
+
 		_scoreObj = Scoreboard.getScoreboard().registerNewObjective("HP", "dummy");
 		_scoreObj.setDisplaySlot(DisplaySlot.BELOW_NAME);
 
@@ -194,7 +188,7 @@ public class Minestrike extends TeamGame
 				.setGiveCompassToAlive(false)
 				.register(this);
 	}
-	
+
 	public Minestrike(ArcadeManager manager)
 	{
 		this(manager, new Kit[]{new KitPlayer(manager)}, GameType.MineStrike);
@@ -210,7 +204,7 @@ public class Minestrike extends TeamGame
 
 				new TeamDeathsStatTracker(this),
 				new TeamKillsStatTracker(this),
-				
+
 				new MineStrikeGunStats(this)
 		);
 
@@ -229,14 +223,14 @@ public class Minestrike extends TeamGame
 	{
 		if (event.GetState() != GameState.Recruit)
 			return;
-		
+
 		this.GetTeamList().get(0).SetColor(ChatColor.AQUA);
 		this.GetTeamList().get(0).SetName("SWAT");
 
 		this.GetTeamList().get(1).SetColor(ChatColor.RED);
 		this.GetTeamList().get(1).SetName("Bombers");
 	}
-	
+
 	@EventHandler
 	public void SetScoreboardNameVisibility(GameStateChangeEvent event)
 	{
@@ -254,7 +248,7 @@ public class Minestrike extends TeamGame
 	}
 
 	@Override
-	public void ParseData() 
+	public void ParseData()
 	{
 		_bombSites = WorldData.GetDataLocs("RED");
 	}
@@ -268,18 +262,18 @@ public class Minestrike extends TeamGame
 
 		GameCosmeticManager cosmeticManager = Manager.getCosmeticManager().getGadgetManager().getGameCosmeticManager();
 		GameModifierMineStrikeSkin knifeSkin = (GameModifierMineStrikeSkin) cosmeticManager.getActiveCosmetic(event.getPlayer(), GameDisplay.MineStrike, "Knife");
-		
+
 		Material mat = Material.IRON_AXE;
 		byte data = 0;
 		String name = "Knife";
-		
+
 		if(knifeSkin != null)
 		{
 			mat = knifeSkin.getSkinMaterial();
 			data = knifeSkin.getSkinData();
 			name = knifeSkin.getName();
 		}
-		
+
 		ItemStack knife = ItemStackFactory.Instance.CreateStack(mat, data, 1, name);
 
 		if (team.GetColor() == ChatColor.RED)
@@ -296,8 +290,8 @@ public class Minestrike extends TeamGame
 
 				//Knife
 				if(knifeSkin == null) knife.setType(Material.IRON_AXE);
-				
-				event.getPlayer().getInventory().setItem(2, knife);	
+
+				event.getPlayer().getInventory().setItem(2, knife);
 
 				//Armor
 				giveTeamArmor(event.getPlayer(), Color.fromRGB(255, 75, 75));
@@ -317,7 +311,7 @@ public class Minestrike extends TeamGame
 
 				//Knife
 				if(knifeSkin == null) knife.setType(Material.IRON_SWORD);
-				
+
 				event.getPlayer().getInventory().setItem(2, knife);
 
 				//Armor
@@ -339,7 +333,7 @@ public class Minestrike extends TeamGame
 			armor.setItemMeta(meta);
 			player.getInventory().setHelmet(armor);
 		}
-		
+
 		ItemStack armor = new ItemStack(Material.LEATHER_CHESTPLATE);
 		LeatherArmorMeta meta = (LeatherArmorMeta)armor.getItemMeta();
 		meta.setColor(color);
@@ -448,21 +442,21 @@ public class Minestrike extends TeamGame
 			}
 
 			_shopManager.addMoney(killer, amount, "kill with " + event.GetLog().GetLastDamager().GetReason());
-			
+
 			/*
 			if(event.GetLog().GetLastDamager().GetReason().contains("Knife"))
 			{
-				GadgetManager gadgetManager = Manager.getCosmeticManager().getGadgetManager(); 
-				GameModifierMineStrikeSkin knifeSkin = (GameModifierMineStrikeSkin) gadgetManager.getActiveGameModifier(event.getPlayer(), 
+				GadgetManager gadgetManager = Manager.getCosmeticManager().getGadgetManager();
+				GameModifierMineStrikeSkin knifeSkin = (GameModifierMineStrikeSkin) gadgetManager.getActiveGameModifier(event.getPlayer(),
 						GameModifierType.MineStrike, GameModifierMineStrikeSkin.getWeaponFilter("Knife"));
-				
+
 				if(knifeSkin != null)
 				{
 					int kills = GetStats().get(killer).get("")
 					ItemStack item = killer.getInventory().getItem(2);
 					ItemMeta im = item.getItemMeta();
 					im.setDisplayName(C.cYellow + C.Bold + knifeSkin.GetName() + " - Kills: " + kills);
-					
+
 					AddStat(killer, "Knife." + knifeSkin.GetName() + ".Kills", 1, false, false);
 				}
 			}
@@ -485,7 +479,7 @@ public class Minestrike extends TeamGame
 			event.setCancelled(true);
 			return;
 		}
-		
+
 		// Added a small tip for players that are trying to right-click with the bomb.
 		if (UtilEvent.isAction(event, ActionType.L))
 		{
@@ -544,7 +538,7 @@ public class Minestrike extends TeamGame
 			return;
 
 		// Added to check if the round is over when a bomb is being planted.
-		if (_roundOver) 
+		if (_roundOver)
 			return;
 
 		if (_bombPlanter == null)
@@ -618,12 +612,12 @@ public class Minestrike extends TeamGame
 			HashSet<Material> ignoreBlocks = new HashSet<Material>();
 			ignoreBlocks.add(Material.AIR);
 			ignoreBlocks.add(Material.PORTAL);
-			
+
 			Block block = player.getTargetBlock(ignoreBlocks, 5);
 
 			if (block == null || !_gunModule.getBomb().isBlock(block))
 				continue;
-	
+
 			if (UtilMath.offset(player.getLocation(), block.getLocation().add(0.5, 0, 0.5)) > 3)
 				continue;
 
@@ -667,16 +661,16 @@ public class Minestrike extends TeamGame
 		HashSet<Material> ignoreBlocks = new HashSet<Material>();
 		ignoreBlocks.add(Material.AIR);
 		ignoreBlocks.add(Material.PORTAL);
-		
+
 		Block block = _bombDefuser.getTargetBlock(ignoreBlocks, 5);
-		
+
 		if (!IsAlive(_bombDefuser) || block == null || !_gunModule.getBomb().isBlock(block)  || !_bombDefuser.isOnline() || UtilMath.offset(_bombDefuser.getLocation(), block.getLocation().add(0.5, 0, 0.5)) > 3)
 		{
 			_bombDefuser.setExp(0f);
-			_bombDefuser = null;			
+			_bombDefuser = null;
 			return;
 		}
-		
+
 		//Kit or Not?
 		float defuseRate = 0.005f;
 		if (UtilGear.isMat(_bombDefuser.getInventory().getItem(8), Material.SHEARS))
@@ -909,7 +903,7 @@ public class Minestrike extends TeamGame
 		{
 			player.playSound(player.getLocation(), Sound.LEVEL_UP, 1f, 1f);
 			_gunModule.removeScope(player);
-			
+
 			Recharge.Instance.Reset(player, "reload");
 		}
 
@@ -959,13 +953,13 @@ public class Minestrike extends TeamGame
 				ValidateKit(player, GetTeam(player));
 
 				if (GetKit(player) != null)
-					GetKit(player).ApplyKit(player);		
+					GetKit(player).ApplyKit(player);
 			}
 
 		//Remove Scope
 		for (Player player : GetPlayers(false))
 			_gunModule.removeScope(player);
-		
+
 		//Get Hit By Bullets
 		for (Player player : GetPlayers(false))
 			((CraftPlayer) player).getHandle().spectating = false;
@@ -975,7 +969,7 @@ public class Minestrike extends TeamGame
 		{
 			player.playSound(player.getLocation(), Sound.HORSE_ARMOR, 1f, 2f);
 			Manager.GetCondition().Factory().Blind("Respawn", player, null, 2, 0, false, false, false);
-			
+
 			if (!_shopManager.isDisabled())
 			{
 				UtilPlayer.message(player, F.main("Game", "You have " + F.elem(C.cGreen + "$" + _shopManager.getMoney(player)) + ". Open your Inventory to spend it."));
@@ -986,7 +980,7 @@ public class Minestrike extends TeamGame
 
 		//Reset grenades
 		_shopManager.resetGrenades();
-		
+
 		//Update Scoreboard Teams
 		for (GameTeam team : GetTeamList())
 			for (Player teamMember : team.GetPlayers(true))
@@ -1071,7 +1065,7 @@ public class Minestrike extends TeamGame
 			_gunModule.getBombHolder().getInventory().remove(Material.GOLD_SWORD);
 			_gunModule.setBombHolder(null);
 		}
-		
+
 		_gunModule.setBomb(null);
 		_gunModule.setBombItem(null);
 
@@ -1081,7 +1075,7 @@ public class Minestrike extends TeamGame
 		_bombPlanted = false;
 
 		_gunModule.reset();
-		
+
 		//Health
 		for (Player player : UtilServer.getPlayers())
 			player.setHealth(20);
@@ -1100,12 +1094,12 @@ public class Minestrike extends TeamGame
 		}
 
 		Gadget activeCostume = Manager.getCosmeticManager().getGadgetManager().getActive(event.getPlayer(), GadgetType.COSTUME);
-		
+
 		if (activeCostume != null)
 		{
 			activeCostume.disable(event.getPlayer());
 		}
-		
+
 		//Target Team
 		GameTeam targetTeam = null;
 		if (GetTeamList().get(0).GetPlayers(false).size() < GetTeamList().get(1).GetPlayers(false).size())
@@ -1118,7 +1112,7 @@ public class Minestrike extends TeamGame
 			targetTeam = GetTeamList().get(0);
 
 		SetPlayerTeam(event.getPlayer(), targetTeam, false);
-		
+
 		((CraftPlayer) event.getPlayer()).getHandle().spectating = true;
 	}
 
@@ -1130,7 +1124,7 @@ public class Minestrike extends TeamGame
 		if (team != null)
 		{
 			team.RemovePlayer(event.getPlayer());
-		}	
+		}
 	}
 
 	@EventHandler
@@ -1138,7 +1132,7 @@ public class Minestrike extends TeamGame
 	{
 		if (event.getType() != UpdateType.SEC)
 			return;
-		
+
 		if (_gunModule.getFreezeTime() <= 0)
 			return;
 
@@ -1312,7 +1306,7 @@ public class Minestrike extends TeamGame
 
 		_scoreObj.getScore(player.getName()).setScore((int)(player.getHealth() * 5));
 	}
-	
+
 	@EventHandler
 	public void debug(PlayerCommandPreprocessEvent event)
 	{
@@ -1330,13 +1324,13 @@ public class Minestrike extends TeamGame
 	public int getRound()
 	{
 		int rounds = 0;
-		
+
 		for (int i : _score.values())
 			rounds += i;
-		
+
 		return rounds;
 	}
-	
+
 	@Override
 	public Location GetSpectatorLocation()
 	{
@@ -1362,7 +1356,7 @@ public class Minestrike extends TeamGame
 		SpectatorSpawn.setX(vec.getX());
 		SpectatorSpawn.setY(vec.getY() + 7); //ADD 7
 		SpectatorSpawn.setZ(vec.getZ());
-		
+
 		// Move Up - Out Of Blocks
 		while (!UtilBlock.airFoliage(SpectatorSpawn.getBlock())
 				|| !UtilBlock.airFoliage(SpectatorSpawn.getBlock().getRelative(BlockFace.UP)))
@@ -1401,12 +1395,12 @@ public class Minestrike extends TeamGame
 
 		return SpectatorSpawn;
 	}
-	
+
 	public GunModule getGunModule()
 	{
 		return _gunModule;
 	}
-	
+
 	public ShopManager getShopManager()
 	{
 		return _shopManager;

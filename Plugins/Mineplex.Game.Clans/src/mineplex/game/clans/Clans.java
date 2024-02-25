@@ -16,8 +16,6 @@ import mineplex.core.CustomTagFix;
 import mineplex.core.FoodDupeFix;
 import mineplex.core.account.CoreClientManager;
 import mineplex.core.achievement.AchievementManager;
-import mineplex.core.antihack.AntiHack;
-import mineplex.core.antihack.guardians.GuardianManager;
 import mineplex.core.aprilfools.AprilFoolsManager;
 import mineplex.core.blockrestore.BlockRestore;
 import mineplex.core.chat.Chat;
@@ -146,11 +144,6 @@ public class Clans extends JavaPlugin
 
 		DisguiseManager disguiseManager = require(DisguiseManager.class);
 		Creature creature = new Creature(this);
-
-		AntiHack antiHack = require(AntiHack.class);
-		GuardianManager guardianManager = require(GuardianManager.class);
-
-		Bukkit.getScheduler().runTask(this, antiHack::enableAnticheat);
 
 		new EternalGiveawayManager(this, _clientManager, serverStatusManager);
 

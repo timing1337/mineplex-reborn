@@ -47,7 +47,6 @@ import org.bukkit.scheduler.BukkitRunnable;
 import mineplex.core.Managers;
 import mineplex.core.account.permissions.Permission;
 import mineplex.core.account.permissions.PermissionGroup;
-import mineplex.core.antihack.AntiHack;
 import mineplex.core.common.util.C;
 import mineplex.core.common.util.F;
 import mineplex.core.common.util.UtilAction;
@@ -1314,10 +1313,6 @@ public class GameFlagManager implements Listener
 	@EventHandler
 	public void AntiHackStrict(GameStateChangeEvent event)
 	{
-		if (event.GetState() == GameState.Prepare || event.GetState() == GameState.Live)
-			Managers.get(AntiHack.class).setStrict(event.GetGame().StrictAntiHack);
-		else
-			Managers.get(AntiHack.class).setStrict(true);
 	}
 
 	@EventHandler

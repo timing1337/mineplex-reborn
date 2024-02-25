@@ -28,11 +28,7 @@ import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.inventory.ItemStack;
 
-import com.mineplex.anticheat.checks.move.Glide;
-import com.mineplex.anticheat.checks.move.HeadRoll;
-
 import mineplex.core.Managers;
-import mineplex.core.antihack.AntiHack;
 import mineplex.core.common.util.C;
 import mineplex.core.common.util.F;
 import mineplex.core.common.util.UtilAlg;
@@ -103,17 +99,6 @@ public class TugOfWool extends TeamGame
 		DeathOut = false;
 		DeathSpectateSecs = 10;
 		HungerSet = 20;
-
-		AntiHack antiHack = Managers.get(AntiHack.class);
-		antiHack.addIgnoredCheck(Glide.class);
-		antiHack.addIgnoredCheck(HeadRoll.class);
-		registerChatStats(
-				Kills,
-				Deaths,
-				BlankLine,
-				DamageDealt,
-				DamageTaken
-		);
 	}
 
 	@Override

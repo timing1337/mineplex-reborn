@@ -26,10 +26,7 @@ import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
-import com.mineplex.anticheat.checks.combat.KillauraTypeD;
-
 import mineplex.core.Managers;
-import mineplex.core.antihack.AntiHack;
 import mineplex.core.common.util.C;
 import mineplex.core.common.util.UtilAlg;
 import mineplex.core.common.util.UtilMath;
@@ -128,7 +125,7 @@ public class CastleSiegeNew extends TeamGame
 				}, DESCRIPTION);
 
 		_help = TIPS;
-		
+
 		AnticheatDisabled = true;
 		StrictAntiHack = true;
 		HungerSet = 20;
@@ -168,10 +165,6 @@ public class CastleSiegeNew extends TeamGame
 
 		new CompassModule()
 				.register(this);
-
-		// Disable specific GWEN checks for this game
-		AntiHack antiHack = Managers.get(AntiHack.class);
-		antiHack.addIgnoredCheck(KillauraTypeD.class);
 	}
 
 	@Override

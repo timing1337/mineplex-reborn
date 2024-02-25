@@ -18,12 +18,7 @@ import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
 import org.bukkit.event.entity.EntityTargetEvent;
 import org.bukkit.event.entity.ItemSpawnEvent;
 
-import com.mineplex.anticheat.checks.move.Glide;
-import com.mineplex.anticheat.checks.move.HeadRoll;
-import com.mineplex.anticheat.checks.move.Speed;
-
 import mineplex.core.Managers;
-import mineplex.core.antihack.AntiHack;
 import mineplex.core.common.util.UtilAction;
 import mineplex.core.common.util.UtilAlg;
 import mineplex.core.common.util.UtilEnt;
@@ -97,12 +92,6 @@ public class Dragons extends SoloGame
 
 		new CompassModule()
 				.register(this);
-
-		// Disable specific GWEN checks for this game
-		AntiHack antiHack = Managers.get(AntiHack.class);
-		antiHack.addIgnoredCheck(Speed.class);
-		antiHack.addIgnoredCheck(Glide.class);
-		antiHack.addIgnoredCheck(HeadRoll.class);
 	}
 
 	@Override

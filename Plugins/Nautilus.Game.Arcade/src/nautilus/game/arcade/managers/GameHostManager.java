@@ -27,13 +27,9 @@ import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import com.mineplex.anticheat.MineplexAnticheat;
-import com.mineplex.anticheat.checks.move.Glide;
-
 import mineplex.core.Managers;
 import mineplex.core.account.permissions.Permission;
 import mineplex.core.account.permissions.PermissionGroup;
-import mineplex.core.antihack.AntiHack;
 import mineplex.core.common.util.C;
 import mineplex.core.common.util.F;
 import mineplex.core.common.util.UtilGear;
@@ -67,11 +63,10 @@ public class GameHostManager implements Listener
 		INCREASE_MAX_PLAYERS_100,
 	}
 
-	private final AntiHack _antiHack;
 	private List<GameType> _games = new ArrayList<>();
 
 	ArcadeManager Manager;
-	
+
 	private Player _host;
 	private PermissionGroup _hostRank;
 	private long _serverStartTime = System.currentTimeMillis();
@@ -86,22 +81,21 @@ public class GameHostManager implements Listener
 	private Set<String> _blacklist = new HashSet<>();
 
 	private PrivateServerShop _shop;
-	
+
 	private boolean _isEventServer = false;
-	
+
 	private Map<Player, Boolean> _permissionMap = new HashMap<>();
 
 	private boolean _voteInProgress = false;
 	private Map<String, GameType> _votes = new HashMap<>();
 	private int _voteNotificationStage = 1;
-	
+
 	public GameHostManager(ArcadeManager manager)
 	{
-		_antiHack = Managers.require(AntiHack.class);
 		Manager = manager;
 		_shop = new PrivateServerShop(manager, manager.GetClients(), manager.GetDonation());
 		Manager.getPluginManager().registerEvents(this, Manager.getPlugin());
-		
+
 		//Games
 		_games.add(GameType.Smash);
 		_games.add(GameType.BaconBrawl);
@@ -160,10 +154,10 @@ public class GameHostManager implements Listener
 		{
 			setDefaultConfig();
 		}
-		
+
 		generatePermissions();
 	}
-	
+
 	private void generatePermissions()
 	{
 		PermissionGroup.ADMIN.setPermission(Perm.AUTO_ADMIN_ACCESS, true, true);
@@ -188,10 +182,6 @@ public class GameHostManager implements Listener
 		{
 			return;
 		}
-
-		// Disable all checks in event servers
-		Stream.concat(AntiHack.ACTIONS.keySet().stream(), AntiHack.CHECKS.keySet().stream()).distinct().forEach(_antiHack::addIgnoredCheck);
-		JavaPlugin.getPlugin(MineplexAnticheat.class).getCheckManager().disableCheck(Glide.class);
 	}
 
 	@EventHandler
@@ -199,17 +189,17 @@ public class GameHostManager implements Listener
 	{
 		if (event.getType() != UpdateType.FAST)
 			return;
-		
+
 		//No Host - Not MPS
 		if (Manager.GetHost() == null || Manager.GetHost().length() == 0)
 			return;
-		
+
 		// Set as event server
 		if (Manager.GetGame() != null && Manager.GetGame().GetType() == GameType.Event)
 		{
 			setEventServer(true);
 		}
-		
+
 		// Admins update
 		for (Player player : UtilServer.getPlayers())
 		{
@@ -218,7 +208,7 @@ public class GameHostManager implements Listener
 				if (Manager.GetGame() == null || Manager.GetGame().GetState() == GameState.Recruit)
 					giveAdminItem(player);
 			}
-			
+
 			if (isHost(player) || (isAdmin(player, false) && (isEventServer() || isCommunityServer())))
 				_lastOnline = System.currentTimeMillis();
 		}
@@ -252,12 +242,12 @@ public class GameHostManager implements Listener
 	{
 		Player p = event.getPlayer();
 		boolean alwaysAllow = Manager.GetClients().Get(p.getUniqueId()).hasPermission(ArcadeManager.Perm.BYPASS_MPS_WHITELIST);
-		
+
 		if (alwaysAllow)
 		{
 			return;
 		}
-		
+
 		if (isCommunityServer())
 		{
 			if (getOwner().getMembers().containsKey(p.getUniqueId()))
@@ -314,13 +304,13 @@ public class GameHostManager implements Listener
 			_host = event.getPlayer();
 			_hostRank = Manager.GetClients().Get(_host).getPrimaryGroup();
 			System.out.println("Game Host Joined.");
-			
+
 			//Limit player count!
 			if (Manager.GetServerConfig().MaxPlayers > getMaxPlayerCap())
 			{
 				Manager.GetServerConfig().MaxPlayers = getMaxPlayerCap();
 			}
-			
+
 			if (isEventServer())
 			{
 				worldeditPermissionSet(event.getPlayer(), true);
@@ -330,37 +320,37 @@ public class GameHostManager implements Listener
 		{
 			System.out.println("Admin Joined.");
 			_onlineAdmins.add(event.getPlayer());
-			
+
 			if (isEventServer())
 			{
 				worldeditPermissionSet(event.getPlayer(), true);
 			}
 		}
 	}
-	
+
 	@EventHandler
 	public void adminQuit(PlayerQuitEvent event)
 	{
 		if (!isPrivateServer())
 			return;
-		
+
 		if (isHost(event.getPlayer()))
 		{
 			System.out.println("Game Host Quit.");
 			_host = null;
-			
+
 			if (isEventServer())
 				worldeditPermissionSet(event.getPlayer(), false);
 		}
 		else if (isAdmin(event.getPlayer(), false))
 		{
 			_onlineAdmins.remove(event.getPlayer());
-			
+
 			if (isEventServer())
 				worldeditPermissionSet(event.getPlayer(), false);
 		}
 	}
-		
+
 	public void worldeditPermissionSet(Player player, boolean hasPermission)
 	{
 		if (!_permissionMap.containsKey(player) || _permissionMap.get(player) != hasPermission)
@@ -369,28 +359,28 @@ public class GameHostManager implements Listener
 			{
 				player.addAttachment(plugin, "worldedit.*", hasPermission);
 			}
-			
+
 			_permissionMap.put(player, hasPermission);
-			
+
 			UtilPlayer.message(player, "World Edit Permissions: " + F.tf(hasPermission));
 		}
 	}
-	
+
 	@EventHandler
 	public void updateHostExpired(UpdateEvent event)
 	{
 		if (!isPrivateServer())
 			return;
-		
+
 		if (event.getType() != UpdateType.FAST)
 			return;
-	
+
 		if (Manager.GetGame() != null && Manager.GetGame().GetState() != GameState.Recruit)
 			return;
-		
+
 		if (_hostExpired)
 			return;
-		
+
 		if (UtilTime.elapsed(_lastOnline, _expireTime))
 		{
 			if (isCommunityServer())
@@ -402,16 +392,16 @@ public class GameHostManager implements Listener
 				setHostExpired(true, Manager.GetServerConfig().HostName + " has abandoned the server. Thanks for playing!");
 			}
 		}
-		
+
 		else if (UtilTime.elapsed(_serverStartTime, _serverExpireTime))
 			setHostExpired(true, "This server has expired! Thank you for playing!");
 	}
-	
+
 	public boolean isHostExpired()
 	{
 		if (!isPrivateServer())
 			return false;
-		
+
 		return _hostExpired;
 	}
 
@@ -427,7 +417,7 @@ public class GameHostManager implements Listener
 
 		_hostExpired = expired;
 	}
-	
+
 	private void giveAdminItem(Player player)
 	{
 		if (Manager.GetGame() == null)
@@ -435,11 +425,11 @@ public class GameHostManager implements Listener
 
 		if (UtilGear.isMat(player.getInventory().getItem(8), Material.SPECKLED_MELON))
 			return;
-		
+
 		if (player.getOpenInventory().getType() != InventoryType.CRAFTING &&
 			player.getOpenInventory().getType() != InventoryType.CREATIVE)
 			return;
-		
+
 		player.getInventory().setItem(8, ItemStackFactory.Instance.CreateStack(Material.SPECKLED_MELON, (byte)0, 1, C.cGreen + C.Bold + "/menu"));
 	}
 
@@ -450,12 +440,12 @@ public class GameHostManager implements Listener
 			player.getInventory().setItem(8, null);
 		}
 	}
-	
+
 	public Set<String> getWhitelist()
 	{
 		return _whitelist;
 	}
-	
+
 	public Set<String> getBlacklist()
 	{
 		return _blacklist;
@@ -501,14 +491,14 @@ public class GameHostManager implements Listener
 			msg += event.getMessage().split(" ")[i] + " ";
 		}
 		msg = msg.trim();
-		
+
 		msg = Manager.GetChat().filterMessage(event.getPlayer(), msg);
-		
+
 		if (msg == null)
 		{
 			return;
 		}
-		
+
 		Bukkit.broadcastMessage(C.cDGreen + C.Bold + event.getPlayer().getName() + " " + C.cGreen + msg);
 	}
 
@@ -536,7 +526,7 @@ public class GameHostManager implements Listener
 		_shop.openPageForPlayer(event.getPlayer(), new GameVotingPage(Manager, _shop, event.getPlayer()));
 		return;
 	}
-	
+
 	@EventHandler
 	public void menuCommand(PlayerCommandPreprocessEvent event)
 	{
@@ -545,30 +535,30 @@ public class GameHostManager implements Listener
 
 		if (!isPrivateServer())
 			return;
-		
+
 		if (!isAdmin(event.getPlayer(), true))
 			return;
-		
+
 		event.setCancelled(true);
 		openMenu(event.getPlayer());
 	}
-	
+
 	@EventHandler
 	public void menuInteract(PlayerInteractEvent event)
 	{
 		if (!isPrivateServer())
 			return;
-		
+
 		if (!isAdmin(event.getPlayer(), true))
 			return;
-		
+
 		if (!UtilGear.isMat(event.getPlayer().getItemInHand(), Material.SPECKLED_MELON))
 			return;
-		
+
 		openMenu(event.getPlayer());
 		event.setCancelled(true);
 	}
-	
+
 	private void openMenu(Player player)
 	{
 		_shop.attemptShopOpen(player);
@@ -592,7 +582,7 @@ public class GameHostManager implements Listener
 			Community c = cmanager.getLoadedCommunity(communityId);
 			return c.getMembers().containsKey(player.getUniqueId()) && c.getMembers().get(player.getUniqueId()).Role == CommunityRole.LEADER;
 		}
-		
+
 		return player.getName().equals(Manager.GetHost());
 	}
 
@@ -623,20 +613,20 @@ public class GameHostManager implements Listener
 		}
 
 		event.setCancelled(true);
-		
+
 		String[] args = event.getMessage().split(" ");
-		
+
 		for (int i = 1; i < args.length; i++)
 		{
 			String name = args[i].toLowerCase();
-			
+
 			if (_whitelist.add(name))
 			{
 				UtilPlayer.message(event.getPlayer(), F.main("Host", "Added " + F.elem(args[i]) + " to the whitelist."));
 			}
 		}
 	}
-	
+
 	public boolean hasPermission(Permission permission)
 	{
 		if (isCommunityServer())
@@ -655,7 +645,7 @@ public class GameHostManager implements Listener
 	public void ban(Player player)
 	{
 		_blacklist.add(player.getName());
-		
+
 		if (isCommunityServer())
 		{
 			Manager.GetPortal().sendToHub(player, "You were removed from this Mineplex Community Server.", Intent.KICK);
@@ -665,13 +655,13 @@ public class GameHostManager implements Listener
 			Manager.GetPortal().sendToHub(player, "You were removed from this Mineplex Private Server.", Intent.KICK);
 		}
 	}
-	
+
 	@EventHandler
 	public void kickBlacklist(UpdateEvent event)
 	{
 		if (event.getType() != UpdateType.SEC)
 			return;
-		
+
 		for (Player player : UtilServer.getPlayers())
 		{
 			if (_blacklist.contains(player.getName()))
@@ -687,7 +677,7 @@ public class GameHostManager implements Listener
 			}
 		}
 	}
-	
+
 	@EventHandler
 	public void onDisband(CommunityDisbandEvent event)
 	{
@@ -705,7 +695,7 @@ public class GameHostManager implements Listener
 		_adminList.add(player.getName());
 		_onlineAdmins.add(player);
 		UtilPlayer.message(player, F.main("Server", "You were given Co-Host privileges."));
-		
+
 		if (isEventServer())
 			worldeditPermissionSet(player, true);
 	}
@@ -723,7 +713,7 @@ public class GameHostManager implements Listener
 				player.closeInventory();
 			}
 			UtilPlayer.message(player, F.main("Server", "Your Co-Host privileges were removed."));
-						
+
 			if (isEventServer())
 			{
 				player.setGameMode(GameMode.SURVIVAL);
@@ -731,21 +721,21 @@ public class GameHostManager implements Listener
 			}
 		}
 	}
-	
+
 	public boolean isAdminOnline()
 	{
 		return _onlineAdmins.isEmpty();
 	}
-	
+
 	public void setDefaultConfig()
 	{
 		Manager.GetServerConfig().HotbarInventory = false;
-		
+
 		Manager.GetServerConfig().RewardAchievements = false;
 		Manager.GetServerConfig().RewardGems = false;
 		Manager.GetServerConfig().RewardItems = false;
 		Manager.GetServerConfig().RewardStats = false;
-		
+
 		Manager.GetServerConfig().GameAutoStart = true;
 		Manager.GetServerConfig().GameTimeout = true;
 		Manager.GetServerConfig().PlayerKickIdle = true;
@@ -766,7 +756,7 @@ public class GameHostManager implements Listener
 		{
 			return 60;
 		}
-		
+
 		return 40;
 	}
 
@@ -775,7 +765,7 @@ public class GameHostManager implements Listener
 	{
 		if (!isPrivateServer())
 			return;
-		
+
 		String serverName = Manager.getPlugin().getConfig().getString("serverstatus.name");
 		if (!isCommunityServer())
 		{
@@ -787,12 +777,12 @@ public class GameHostManager implements Listener
 		}
 		UtilPlayer.message(event.getPlayer(), C.Bold + "Friends can connect with " + C.cGreen + C.Bold + "/server " + serverName);
 	}
-	
+
 	public boolean isCommunityServer()
 	{
 		return Manager.GetHost() != null && Manager.GetHost().startsWith("COM-");
 	}
-	
+
 	public Community getOwner()
 	{
 		if (!isCommunityServer())
@@ -801,12 +791,12 @@ public class GameHostManager implements Listener
 		}
 		return Managers.get(CommunityManager.class).getLoadedCommunity(Integer.parseInt(Manager.GetHost().replace("COM-", "")));
 	}
-	
+
 	public boolean isEventServer()
 	{
 		return _isEventServer;
 	}
-	
+
 	public void setEventServer(boolean var)
 	{
 		_isEventServer = var;
@@ -826,24 +816,24 @@ public class GameHostManager implements Listener
 	{
 		return _voteInProgress;
 	}
-	
+
 	public PermissionGroup getHostRank()
 	{
 		return _hostRank;
 	}
-	
+
 	public void setHostRank(PermissionGroup group)
 	{
 		_hostRank = group;
 	}
-	
+
 	public Player getHost()
 	{
 		return _host;
 	}
-	
+
 	public void setHost(Player player)
 	{
 		_host = player;
-	}	
+	}
 }

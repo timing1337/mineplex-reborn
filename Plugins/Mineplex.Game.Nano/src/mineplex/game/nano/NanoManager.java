@@ -19,7 +19,6 @@ import mineplex.core.account.CoreClientManager;
 import mineplex.core.account.permissions.Permission;
 import mineplex.core.account.permissions.PermissionGroup;
 import mineplex.core.achievement.AchievementManager;
-import mineplex.core.antihack.AntiHack;
 import mineplex.core.boosters.BoosterManager;
 import mineplex.core.chat.Chat;
 import mineplex.core.chat.format.LevelFormatComponent;
@@ -112,9 +111,6 @@ public class NanoManager extends MiniPlugin implements IRelation
 	// Booster
 	private final BoosterManager _boosterManager;
 
-	// AntiCheat
-	private final AntiHack _antiHack;
-
 	// Packet
 	private final PacketHandler _packetHandler;
 
@@ -192,8 +188,6 @@ public class NanoManager extends MiniPlugin implements IRelation
 		_cosmeticManager = require(CosmeticManager.class);
 
 		_boosterManager = require(BoosterManager.class);
-
-		_antiHack = require(AntiHack.class);
 
 		_packetHandler = require(PacketHandler.class);
 
@@ -418,11 +412,6 @@ public class NanoManager extends MiniPlugin implements IRelation
 	public BoosterManager getBoosterManager()
 	{
 		return _boosterManager;
-	}
-
-	public AntiHack getAntiHack()
-	{
-		return _antiHack;
 	}
 
 	public PacketHandler getPacketHandler()

@@ -4,9 +4,6 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-import com.mineplex.MetadataRewriter;
-import com.mineplex.ProtocolVersion;
-
 import net.minecraft.server.v1_8_R3.*;
 import net.minecraft.server.v1_8_R3.DataWatcher.WatchableObject;
 
@@ -71,10 +68,10 @@ public abstract class DisguiseCreature extends DisguiseInsentient
         packet.f = (int)(var4 * 8000.0D);
         packet.g = (int)(var6 * 8000.0D);
         packet.h = (int)(var8 * 8000.0D);
-		
+
         packet.l = DataWatcher;
 		packet.m = DataWatcher.b();
-		
+
 		return packet;
 	}
 
@@ -85,6 +82,8 @@ public abstract class DisguiseCreature extends DisguiseInsentient
 	@Override
 	public Packet modifySpawnPacket(int protocol, Packet packet)
 	{
+		//TODO: Multi-protocol support
+		/*
 		if (protocol >= ProtocolVersion.v1_10_PRE)
 		{
 			PacketPlayOutSpawnEntityLiving newSpawn = (PacketPlayOutSpawnEntityLiving) getSpawnPacket();
@@ -131,7 +130,7 @@ public abstract class DisguiseCreature extends DisguiseInsentient
 			newSpawn.m = meta;
 			return newSpawn;
 		}
-
+		*/
 		return packet;
 	}
 
@@ -145,29 +144,6 @@ public abstract class DisguiseCreature extends DisguiseInsentient
 	@Override
 	public Packet modifyMetaPacket(int protocol, Packet packet)
 	{
-		if (protocol >= ProtocolVersion.v1_10_PRE)
-		{
-			PacketPlayOutEntityMetadata newMeta = new PacketPlayOutEntityMetadata();
-			newMeta.a = getEntityId();
-
-			List<WatchableObject> meta = MetadataRewriter.rewrite(getTypeId(false), protocol, DataWatcher.c()).objects;
-
-			for (int i = 0; i < meta.size(); i++)
-			{
-				WatchableObject object = meta.get(i);
-				int index = object.getIndex().a();
-				if (index >= 6)
-				{
-					index--;
-					meta.set(i, new WatchableObject(0, 0, null,
-							new DataIndex(index, object.getIndex().b()), object.getValue()));
-				}
-			}
-
-			newMeta.b = meta;
-			return newMeta;
-		}
-
 		return packet;
 	}
 }

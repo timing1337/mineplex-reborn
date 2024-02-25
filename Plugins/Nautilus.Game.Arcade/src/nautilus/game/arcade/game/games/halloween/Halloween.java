@@ -7,7 +7,6 @@ import java.util.HashSet;
 import java.util.Iterator;
 
 import net.minecraft.server.v1_8_R3.Packet;
-import net.minecraft.server.v1_8_R3.PacketPlayOutCustomSoundEffect;
 import net.minecraft.server.v1_8_R3.PacketPlayOutNamedSoundEffect;
 
 import org.bukkit.ChatColor;
@@ -28,8 +27,6 @@ import org.bukkit.event.entity.EntityExplodeEvent;
 import org.bukkit.event.entity.EntityTargetEvent;
 import org.bukkit.event.entity.ItemSpawnEvent;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
-
-import com.mineplex.ProtocolVersion;
 
 import mineplex.core.common.util.C;
 import mineplex.core.common.util.F;
@@ -81,17 +78,17 @@ public class Halloween extends SoloGame
 
 	protected int _maxMobs = 80;
 	protected ArrayList<CreatureBase<?>> _mobs = new ArrayList<>();
-	
+
 	protected HashMap<Player, Long> _damageTime = new HashMap<Player, Long>();
-	
+
 	protected HashSet<Player> _soundOff = new HashSet<Player>();
-	
+
 	protected UpdateType _updateCreatureMoveRate = UpdateType.FASTEST;
-	
+
 	protected boolean doVoices = true;
-	
+
 	public String Objective = null;
-	
+
 	public long total = 0;
 	public long move = 0;
 	public int moves = 0;
@@ -100,7 +97,7 @@ public class Halloween extends SoloGame
 	public long update = 0;
 	public long damage = 0;
 	public long target = 0;
-	
+
 	public long updateBossA = 0;
 	public long updateBossB = 0;
 	public long updateBossC = 0;
@@ -116,15 +113,15 @@ public class Halloween extends SoloGame
 	public long updateBossM = 0;
 	public long updateBossN = 0;
 	public long updateBossO = 0;
-	
+
 	public boolean debug = false;
 	public boolean bossDebug = false;
-	
-	public Halloween(ArcadeManager manager) 
+
+	public Halloween(ArcadeManager manager)
 	{
 		this(manager, GameType.Halloween,
 
-				new Kit[] 
+				new Kit[]
 						{
 				new KitFinn(manager),
 				new KitRobinHood(manager),
@@ -139,24 +136,24 @@ public class Halloween extends SoloGame
 				"Kill the Pumpkin King"
 								});
 	}
-	
+
 	protected Halloween(ArcadeManager manager, GameType gameType, Kit[] kits, String[] gameDesc)
 	{
 		super(manager, gameType, kits, gameDesc);
-		
+
 
 		this.DamagePvP = false;
 
 		this.WorldTimeSet = 16000;
 
-		this.ItemDrop = false; 
+		this.ItemDrop = false;
 		this.ItemPickup = false;
 
-		this.PrepareFreeze = false; 
+		this.PrepareFreeze = false;
 
 		//this.HungerSet = 20;
-		
-		this.WorldBoundaryKill = false; 
+
+		this.WorldBoundaryKill = false;
 
 		registerChatStats(
 				DamageDealt,
@@ -164,8 +161,8 @@ public class Halloween extends SoloGame
 				BlankLine,
 				new ChatStatData("kit", "Kit", true)
 		);
-		
-		_help = new String[] 
+
+		_help = new String[]
 				{
 				C.cGreen + "Giants one hit kill you! Stay away!!!",
 				C.cAqua + "Work together with your team mates.",
@@ -186,7 +183,7 @@ public class Halloween extends SoloGame
 	}
 
 	@Override
-	public void ParseData() 
+	public void ParseData()
 	{
 		_spawns = new ArrayList<ArrayList<Location>>();
 		_spawns.add(WorldData.GetDataLocs("RED"));
@@ -202,48 +199,48 @@ public class Halloween extends SoloGame
 		_waves.add(new Wave5(this));
 		_waves.add(new WaveBoss(this));
 		_waves.add(new WaveVictory(this, GetSpawnSet(3)));
-		
+
 		//Make zombies break doors
-		WorldData.World.setDifficulty(Difficulty.HARD); 
+		WorldData.World.setDifficulty(Difficulty.HARD);
 	}
 
 	@EventHandler(priority = EventPriority.MONITOR)
-	public void Clean(GameStateChangeEvent event) 
+	public void Clean(GameStateChangeEvent event)
 	{
 		if (event.GetState() != GameState.End)
 			return;
-		
+
 		for (CreatureBase<?> ent : _mobs)
 		{
 			ent.remove();
 		}
-		
+
 		_mobs.clear();
 		_spawns.clear();
 	}
-	
+
 	public ArrayList<CreatureBase<?>> getMobs()
 	{
 		return _mobs;
 	}
-	
+
 	@EventHandler(priority = EventPriority.MONITOR)
-	public void TeamGen(GameStateChangeEvent event) 
+	public void TeamGen(GameStateChangeEvent event)
 	{
 		if (event.GetState() != GameState.Live)
 			return;
 
 		GetTeamList().add(new GameTeam(this, "Pumpkin King", ChatColor.RED, WorldData.GetDataLocs("RED")));
 	}
-	
+
 	@EventHandler(priority = EventPriority.MONITOR)
-	public void VoiceCommand(GameStateChangeEvent event) 
+	public void VoiceCommand(GameStateChangeEvent event)
 	{
 		if (event.GetState() != GameState.Live)
 			return;
-		
+
 		if(!doVoices) return;
-		
+
 		Announce(C.Bold + "Type " + C.cGreen + C.Bold + "/voice" + C.cWhite + C.Bold + " to disable voice audio.");
 	}
 
@@ -252,10 +249,10 @@ public class Halloween extends SoloGame
 	{
 		if (!IsLive())
 			return;
-		
+
 		if (event.getType() != UpdateType.SLOW)
 			return;
-		
+
 		if (debug)
 		{
 			System.out.println("-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-");
@@ -271,7 +268,7 @@ public class Halloween extends SoloGame
 			System.out.println("Damage Time: " + UtilTime.convertString(damage, 4, TimeUnit.MILLISECONDS));
 			System.out.println("Target Time: " + UtilTime.convertString(target, 4, TimeUnit.MILLISECONDS));
 		}
-		
+
 		if (bossDebug)
 		{
 			System.out.println("-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-");
@@ -294,7 +291,7 @@ public class Halloween extends SoloGame
 
 		if (debug || bossDebug)
 			System.out.println("-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-");
-		
+
 		total = 0;
 		move = 0;
 		moves = 0;
@@ -303,7 +300,7 @@ public class Halloween extends SoloGame
 		update = 0;
 		damage = 0;
 		target = 0;
-		
+
 		updateBossA = 0;
 		updateBossB = 0;
 		updateBossC = 0;
@@ -320,18 +317,18 @@ public class Halloween extends SoloGame
 		updateBossN = 0;
 		updateBossO = 0;
 	}
-	
+
 	@EventHandler
 	public void SoundUpdate(UpdateEvent event)
 	{
 		long start = System.currentTimeMillis();
-		
+
 		if (event.getType() != UpdateType.SLOW)
 			return;
 
 		if (!IsLive())
 			return;
-		
+
 		if(_waves.get(_wave) instanceof WaveVictory ||
 				_waves.get(_wave) instanceof nautilus.game.arcade.game.games.halloween2016.wave.WaveVictory)
 			return;
@@ -341,7 +338,7 @@ public class Halloween extends SoloGame
 
 		for (Player player : UtilServer.getPlayers())
 			player.playSound(player.getLocation(), Sound.AMBIENCE_CAVE, 3f, 1f);
-		
+
 		total += System.currentTimeMillis() - start;
 		sound += System.currentTimeMillis() - start;
 	}
@@ -360,7 +357,7 @@ public class Halloween extends SoloGame
 			EndCheck();
 			return;
 		}
-		
+
 		long start = System.currentTimeMillis();
 
 		if (_waves.get(_wave).Update(_wave+1))
@@ -369,7 +366,7 @@ public class Halloween extends SoloGame
 
 			EndCheck();
 		}
-		
+
 		total += System.currentTimeMillis() - start;
 		wave += System.currentTimeMillis() - start;
 	}
@@ -385,7 +382,7 @@ public class Halloween extends SoloGame
 		return locSet.get(UtilMath.r(locSet.size()));
 	}
 
-	public void AddCreature(CreatureBase<?> mob) 
+	public void AddCreature(CreatureBase<?> mob)
 	{
 		_mobs.add(0, mob);
 	}
@@ -397,15 +394,15 @@ public class Halloween extends SoloGame
 
 	@EventHandler
 	public void CreatureMoveUpdate(UpdateEvent event)
-	{	
+	{
 		if (event.getType() != _updateCreatureMoveRate)
 			return;
 
 		if (_mobs.isEmpty())
 			return;
-		
+
 		long start = System.currentTimeMillis();
-		
+
 		CreatureBase<?> base = _mobs.remove(0);
 
 		if (base instanceof InterfaceMove)
@@ -416,7 +413,7 @@ public class Halloween extends SoloGame
 		}
 
 		_mobs.add(base);
-		
+
 		total += System.currentTimeMillis() - start;
 		move += System.currentTimeMillis() - start;
 	}
@@ -425,14 +422,14 @@ public class Halloween extends SoloGame
 	public void CreatureUpdate(UpdateEvent event)
 	{
 		long start = System.currentTimeMillis();
-		
+
 		if (!IsLive())
 			return;
 
 		//Clean
 		Iterator<CreatureBase<?>> mobIterator = _mobs.iterator();
 		while (mobIterator.hasNext())
-		{	
+		{
 			CreatureBase<?> base = mobIterator.next();
 
 			if (base.Updater(event))
@@ -442,11 +439,11 @@ public class Halloween extends SoloGame
 				mobIterator.remove();
 			}
 		}
-		
+
 		total += System.currentTimeMillis() - start;
 		update += System.currentTimeMillis() - start;
 	}
-	
+
 	public void onRemove(CreatureBase<?> mob)
 	{
 	}
@@ -455,10 +452,10 @@ public class Halloween extends SoloGame
 	public void CreatureDamage(CustomDamageEvent event)
 	{
 		long start = System.currentTimeMillis();
-		
+
 		for (CreatureBase<?> base : _mobs)
 			base.Damage(event);
-		
+
 		total += System.currentTimeMillis() - start;
 		damage += System.currentTimeMillis() - start;
 	}
@@ -467,10 +464,10 @@ public class Halloween extends SoloGame
 	public void CreatureTarget(EntityTargetEvent event)
 	{
 		long start = System.currentTimeMillis();
-		
+
 		for (CreatureBase<?> base : _mobs)
 			base.Target(event);
-		
+
 		total += System.currentTimeMillis() - start;
 		target += System.currentTimeMillis() - start;
 	}
@@ -483,18 +480,18 @@ public class Halloween extends SoloGame
 
 	@Override
 	public void EndCheck()
-	{	
+	{
 		if (!IsLive())
 			return;
 
 		if (_wave >= _waves.size())
-		{	
+		{
 			for (Player player : GetPlayers(false))
 			{
 				Manager.GetGame().AddGems(player, 30, "Killing the Pumpkin King", false, false);
 				Manager.GetGame().AddGems(player, 10, "Participation", false, false);
 			}
-			
+
 			if (Manager.IsRewardItems())
 			{
 				SetCustomWinLine("You earned the Pumpkin Mount!");
@@ -505,7 +502,7 @@ public class Halloween extends SoloGame
 					//Prevent game hopping
 					if (!player.isOnline())
 						continue;
-					
+
 					reward.giveReward(player, data -> {});
 
 					if (IsAlive(player))
@@ -515,22 +512,22 @@ public class Halloween extends SoloGame
 					Manager.getTrackManager().getTrack(HolidayCheerTrack.class).wonRound(player);
 				}
 			}
-			
+
 			AnnounceEnd(this.GetTeamList().get(0));
-			
-			SetState(GameState.End); 
+
+			SetState(GameState.End);
 		}
 
 		else if (GetPlayers(true).size() == 0)
 		{
 			playSound(HalloweenAudio.BOSS_WIN);
-			
+
 			for (Player player : GetPlayers(false))
 			{
 				Manager.GetGame().AddGems(player, 10, "Participation", false, false);
 				Manager.getTrackManager().getTrack(HolidayCheerTrack.class).wonRound(player);
 			}
-			
+
 			AnnounceEnd(this.GetTeamList().get(1));
 
 			SetState(GameState.End);
@@ -542,7 +539,7 @@ public class Halloween extends SoloGame
 	{
 		if (!IsLive())
 			return;
-		
+
 		if (event.getEntity() instanceof Fireball)
 		{
 			event.blockList().clear();
@@ -568,21 +565,21 @@ public class Halloween extends SoloGame
 	{
 		if (!IsLive())
 			return;
-		
+
 		if (!(event.getDamager() instanceof Player))
 			return;
-		
+
 		Player player = (Player) event.getDamager();
-		
+
 		if (!UtilPlayer.isSpectator(player) || IsAlive(player))
 			return;
-		
+
 		if (!(event.getEntity() instanceof Fireball))
 			return;
-		
+
 		event.setCancelled(true);
 	}
-	
+
 	@EventHandler
 	public void ItemSpawn(ItemSpawnEvent event)
 	{
@@ -598,7 +595,7 @@ public class Halloween extends SoloGame
 	{
 		return _maxMobs;
 	}
-	
+
 	@Override
 	@EventHandler
 	public void ScoreboardUpdate(UpdateEvent event)
@@ -608,20 +605,20 @@ public class Halloween extends SoloGame
 
 		//Wipe Last
 		Scoreboard.reset();
-		
+
 		//Rounds
 		Scoreboard.writeNewLine();
 		Scoreboard.write(C.cYellow + C.Bold + "Wave");
 		Scoreboard.write(Math.min(6, _wave+1) + " of 6");
-		
+
 		Scoreboard.writeNewLine();
 		Scoreboard.write(C.cYellow + C.Bold + "Monsters");
 		Scoreboard.write("" + _mobs.size());
-		
+
 		//Drawer
 		Scoreboard.writeNewLine();
 		Scoreboard.write(C.cYellow + C.Bold + "Players");
-		
+
 		if (GetPlayers(true).size() < 5)
 		{
 			for (Player player : GetPlayers(true))
@@ -633,22 +630,22 @@ public class Halloween extends SoloGame
 		{
 			Scoreboard.write(GetPlayers(true).size() + " Alive");
 		}
-		
+
 		if(Objective != null)
 		{
 			Scoreboard.writeNewLine();
 			Scoreboard.write(C.cYellow + C.Bold + "Objective");
 			Scoreboard.write(Objective);
 		}
-		
+
 		Scoreboard.draw();
 	}
-	
+
 	@EventHandler
 	public void soundOff(PlayerCommandPreprocessEvent event)
 	{
 		if(!doVoices) return;
-		
+
 		if (event.getMessage().equalsIgnoreCase("/voice"))
 		{
 			if (_soundOff.remove(event.getPlayer()))
@@ -658,10 +655,10 @@ public class Halloween extends SoloGame
 			else
 			{
 				_soundOff.add(event.getPlayer());
-				
+
 				UtilPlayer.message(event.getPlayer(), C.Bold + "Voice Audio: " + C.cRed + "Disabled");
 			}
-			
+
 			event.setCancelled(true);
 		}
 	}
@@ -679,6 +676,11 @@ public class Halloween extends SoloGame
 			if (!_soundOff.contains(player))
 			{
 				Packet packet;
+				packet = new PacketPlayOutNamedSoundEffect(audio.getAudioPath(),
+						player.getLocation().getBlockX(), player.getLocation().getBlockY(),
+						player.getLocation().getBlockZ(),
+						20f, 1f);
+				/*
 				int protocol = ((CraftPlayer) player).getHandle().getProtocol();
 				if (protocol >= ProtocolVersion.v1_12)
 				{
@@ -692,12 +694,13 @@ public class Halloween extends SoloGame
 							player.getLocation().getBlockZ(),
 							20f, 1f);
 				}
+				*/
 
 				UtilPlayer.sendPacket(player, packet);
 			}
 		}
 	}
-	
+
 	private int hungerTick = 0;
 
 	@EventHandler
@@ -705,17 +708,17 @@ public class Halloween extends SoloGame
 	{
 		if (event.getType() != UpdateType.FAST)
 			return;
-		
+
 		if (!IsLive())
 			return;
-		
+
 		if (_mobs.size() < 30)
 		{
 			for (Player player : GetPlayers(true))
 				UtilPlayer.hunger(player, 1);
 			return;
 		}
-		
+
 		int rate = 4;
 		if (_mobs.size() > 60)
 			rate = 3;
@@ -723,9 +726,9 @@ public class Halloween extends SoloGame
 			rate = 2;
 		if (_mobs.size() >= 80)
 			rate = 1;
-		
+
 		hungerTick = (hungerTick + 1)%rate;
-		
+
 		for (Player player : GetPlayers(true))
 		{
 			if (_damageTime.containsKey(player))
@@ -733,16 +736,16 @@ public class Halloween extends SoloGame
 				if (!UtilTime.elapsed(_damageTime.get(player), 2000))
 					continue;
 			}
-			
-			player.setSaturation(3f); 
+
+			player.setSaturation(3f);
 			player.setExhaustion(0f);
-			
+
 			if (player.getFoodLevel() <= 2)
 			{
 				if (Recharge.Instance.use(player, "Food Message", 6000, false, false))
 					UtilPlayer.message(player, F.main("Game", "Attack monsters to restore hunger!"));
 			}
-			
+
 			if (hungerTick == 0)
 			{
 				if (player.getFoodLevel() > 2)
@@ -752,16 +755,16 @@ public class Halloween extends SoloGame
 			}
 		}
 	}
-	
+
 	@EventHandler(priority = EventPriority.MONITOR)
 	public void HungerRestore(CustomDamageEvent event)
 	{
 		if (event.IsCancelled())
 			return;
-		
+
 		if (event.GetDamagerPlayer(true) == null)
 			return;
-		
+
 		if (event.GetDamage() <= 1)
 			return;
 
@@ -771,7 +774,7 @@ public class Halloween extends SoloGame
 
 		if (!Recharge.Instance.use(damager, "Hunger Restore", 100, false, false))
 			return;
-		
+
 		_damageTime.put(damager, System.currentTimeMillis());
 
 		if (event.GetCause() == DamageCause.PROJECTILE)

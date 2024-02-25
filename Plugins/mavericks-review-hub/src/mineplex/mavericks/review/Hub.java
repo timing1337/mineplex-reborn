@@ -11,7 +11,6 @@ import mineplex.core.FoodDupeFix;
 import mineplex.core.PacketsInteractionFix;
 import mineplex.core.account.CoreClientManager;
 import mineplex.core.achievement.AchievementManager;
-import mineplex.core.antihack.AntiHack;
 import mineplex.core.blockrestore.BlockRestore;
 import mineplex.core.boosters.BoosterManager;
 import mineplex.core.chat.Chat;
@@ -107,7 +106,6 @@ public class Hub extends JavaPlugin
 		DisguiseManager disguiseManager = require(DisguiseManager.class);
 
 		Punish punish = new Punish(this, _clientManager);
-		require(AntiHack.class);
 
 		IgnoreManager ignoreManager = new IgnoreManager(this, _clientManager, preferenceManager, portal);
 		StatsManager statsManager = new StatsManager(this, _clientManager);
@@ -120,7 +118,7 @@ public class Hub extends JavaPlugin
 
 		ProjectileManager projectileManager = new ProjectileManager(this);
 		HologramManager hologramManager = require(HologramManager.class);
-		
+
 		ServerConfiguration serverConfiguration = new ServerConfiguration(this, _clientManager);
 
 		// Inventory
@@ -138,11 +136,11 @@ public class Hub extends JavaPlugin
 		new CustomTagFix(this, packetHandler);
 		new PacketsInteractionFix(this, packetHandler);
 		new FoodDupeFix(this);
-		
+
 		new MavericksReviewManager(this, new MavericksBuildRepository(), new MavericksApprovedRepository());
 
 		require(ProfileCacheManager.class);
-		
+
 		new SimpleChatManager(this, _clientManager, achievementManager);
 
 		// Updates

@@ -6,11 +6,11 @@ package mineplex.googlesheets;
 public enum SpreadsheetType
 {
 
-	GEM_HUNTERS_CHESTS("11Noztgbpu_gUKkc5F4evKKfyxS-Jv1coE0IrBToX_gg"),
-	GEM_HUNTERS_SHOP("1OcYktxVZaW6Fm29Zh6w4Lb-UVyuN8r1x-TFb_3USYYI"),
-	MOBA_SKINS("1bgTz46jdnaywOXlmkWKZ5LNWfTDFGTzrTI7QrVEtkDA"),
-	QUESTS_SHEET("1Gy1a7GCVopmOLwYE3Sk1DNVCAIwT8ReaLu4wRe0sfDE"),
-	SMASH_KITS("1Z_SLBzjiIVqu25PMGw9TwNKR3wd9Y9sX7rSDBl_rpxk"),
+	GEM_HUNTERS_CHESTS("13DCxZV15MvoRsnGRiZw7KCjk0cJ56Byq8OGLBrqLKds"),
+	GEM_HUNTERS_SHOP("1dkdBISpehQPbMkDTj1joKEGBIIFto1yFIfAt2e-7o_4"),
+	MOBA_SKINS("1fLaZdCkjLGkBnJnM9ahn3ZjlomLc9nDzc9_XUnac-H8"),
+	QUESTS_SHEET("1RTJRAHrjJbelLo2151hZN9hsMhv4O7Y9Aauom6YDinU"),
+	SMASH_KITS("1uHaFeX0HEI-6gbZA23uSf_sCO5ABaSWk-yAW4SvlP7s"),
 	;
 	
 	private String _id;

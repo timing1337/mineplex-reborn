@@ -25,17 +25,17 @@ import net.minecraft.server.v1_8_R3.TileEntity;
 import net.minecraft.server.v1_8_R3.WorldServer;
 
 /**
- * An agent used to easily record and send multi-block update packets to players. The agent handles if the packet should be a 
+ * An agent used to easily record and send multi-block update packets to players. The agent handles if the packet should be a
  * MultiBlock packet or a chunk update. It also supports blocks across multiple chunks.
  */
 
 public class MultiBlockUpdaterAgent
 {
-	
+
 	private Map<Chunk, List<BlockVector>> _chunks = new HashMap<>();
-	
+
 	/**
-	 * Add a block to the list of blocks to send to the player. The agent supports blocks across different chunks and 
+	 * Add a block to the list of blocks to send to the player. The agent supports blocks across different chunks and
 	 * will not send duplicates.
 	 * @param block The block to send. The block is stored using a BlockVector, meaning that when the send method is called, it will use
 	 * the material and data found for the block at the moment you call the send method.
@@ -45,14 +45,14 @@ public class MultiBlockUpdaterAgent
 	{
 		Chunk c = ((CraftChunk)block.getChunk()).getHandle();
 		List<BlockVector> list = _chunks.computeIfAbsent(c,chunk -> new ArrayList<>());
-		
+
 		if(list.size() >= 64) return;
-		
+
 		BlockVector bv = block.getLocation().toVector().toBlockVector();
 		if(list.contains(bv)) return;
 		list.add(bv);
 	}
-	
+
 	/**
 	 * Sends all the record blocks to all online players. Players out of range will not receive packets.
 	 * @see #send(Collection)
@@ -61,7 +61,7 @@ public class MultiBlockUpdaterAgent
 	{
 		send(UtilServer.getPlayersCollection());
 	}
-	
+
 	/**
 	 * Clear all blocks for this agent.
 	 */
@@ -69,7 +69,7 @@ public class MultiBlockUpdaterAgent
 	{
 		_chunks.clear();
 	}
-	
+
 	/**
 	 * Send all the recorded blocks to the provided players. This will only send packets to players in range. If the blocks span multiple
 	 * chunks then players will only receive block updates for chunks close to them.
@@ -82,31 +82,31 @@ public class MultiBlockUpdaterAgent
 			for(Chunk c : _chunks.keySet())
 			{
 				if(!p.getWorld().equals(c.bukkitChunk.getWorld())) continue;
-				
+
 				int x = p.getLocation().getChunk().getX();
 				int z = p.getLocation().getChunk().getZ();
-				
+
 				int chunkDist = Math.max(Math.abs(c.locX-x), Math.abs(c.locZ-z));
-				
+
 				if(chunkDist > Bukkit.getViewDistance()) continue;
-								
+
 				sendPacket(c, p);
 			}
 		}
 	}
-	
+
 	private void sendPacket(Chunk c, Player...players)
 	{
 		List<BlockVector> list = _chunks.get(c);
-		
+
 		if(list == null) return;
-		
-		if(list.size() >= 64) 
+
+		if(list.size() >= 64)
 		{
 			for(Player p : players)
 			{
 				int protocol = UtilPlayer.getProtocol(p);
-				UtilPlayer.sendPacket(p, new PacketPlayOutMapChunk(protocol, c, true, 65535));
+				UtilPlayer.sendPacket(p, new PacketPlayOutMapChunk(c, true, 65535));
 			}
 		}
 		else
@@ -120,13 +120,13 @@ public class MultiBlockUpdaterAgent
 				short xyz = (short)((bv.getBlockX() & 0xF) << 12 | (bv.getBlockZ() & 0xF) << 8 | bv.getBlockY());
 				packet.b[i] = packet.new MultiBlockChangeInfo(xyz, c);
 			}
-			
+
 			for(Player p : players)
 			{
 				UtilPlayer.sendPacket(p, packet);
 			}
 		}
-		
+
 		Packet<?>[] tileEntities = new Packet[c.tileEntities.size()];
 		int i = 0;
 		for(TileEntity te : c.tileEntities.values())

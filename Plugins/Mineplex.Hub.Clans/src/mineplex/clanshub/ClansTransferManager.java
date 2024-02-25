@@ -9,13 +9,13 @@ import java.util.Map;
 import java.util.UUID;
 
 import org.apache.commons.lang.ArrayUtils;
+import org.apache.http.ProtocolVersion;
 import org.bukkit.craftbukkit.v1_8_R3.entity.CraftPlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import com.google.common.collect.Lists;
-import com.mineplex.ProtocolVersion;
 
 import mineplex.clanshub.queue.HubQueueManager;
 import mineplex.core.MiniDbClientPlugin;
@@ -50,10 +50,9 @@ public class ClansTransferManager extends MiniDbClientPlugin<SimpleClanToken>
 		STAFF_PAGE,
 		ALLOW_HARDCORE,
 	}
-	
-	private static final int[] PERMITTED_VERSIONS = {ProtocolVersion.v1_8, ProtocolVersion.v1_12, ProtocolVersion.v1_12_1, ProtocolVersion.v1_12_2};
+
 	private static final Map<Integer, String> VERSION_NAMES = new HashMap<>();
-	
+
 	static
 	{
 		for (Field field : ProtocolVersion.class.getFields())
@@ -78,40 +77,31 @@ public class ClansTransferManager extends MiniDbClientPlugin<SimpleClanToken>
 	private long _lastLoaded;
 	private ClansServerShop _serverShop;
 	private final HubQueueManager _queue = require(HubQueueManager.class);
-	
+
 	public ClansTransferManager(JavaPlugin plugin, CoreClientManager client, DonationManager donation, PartyManager party, Portal portal)
 	{
 		super("Server Transfer", plugin, client);
-		
+
 		_party = party;
 		_portal = portal;
 		_region = plugin.getConfig().getBoolean("serverstatus.us") ? Region.US : Region.EU;
 		_serverShop = new ClansServerShop(this, client, donation);
-		
+
 		generatePermissions();
 	}
-	
+
 	private void generatePermissions()
 	{
 		PermissionGroup.TRAINEE.setPermission(Perm.STAFF_PAGE, true, true);
 		PermissionGroup.TRAINEE.setPermission(Perm.ALLOW_HARDCORE, true, true);
 		PermissionGroup.CONTENT.setPermission(Perm.ALLOW_HARDCORE, true, true);
 	}
-	
+
 	private boolean checkCanJoinClans(Player player)
 	{
-		int protocol = ((CraftPlayer)player).getHandle().getProtocol();
-		if (ArrayUtils.contains(PERMITTED_VERSIONS, protocol))
-		{
-			return true;
-		}
-		
-		UtilPlayer.message(player, F.main(getName(), "Minecraft Version " + VERSION_NAMES.get(protocol) + " is not supported on Mineplex Clans.\n"
-		+ C.cGray + "Please change your Minecraft version to 1.8.8 or 1.12+ and reconnect!"));
-		
-		return false;
+		return true;
 	}
-	
+
 	/**
 	 * Gets the stored party manager
 	 * @return The stored party manager
@@ -120,7 +110,7 @@ public class ClansTransferManager extends MiniDbClientPlugin<SimpleClanToken>
 	{
 		return _party;
 	}
-	
+
 	/**
 	 * Gets a list of all loaded servers
 	 * @return A list of all loaded servers
@@ -137,7 +127,7 @@ public class ClansTransferManager extends MiniDbClientPlugin<SimpleClanToken>
 		}
 		return servers;
 	}
-	
+
 	/**
 	 * Gets the loaded ServerInfo with the given name
 	 * @param name The name to check
@@ -152,10 +142,10 @@ public class ClansTransferManager extends MiniDbClientPlugin<SimpleClanToken>
 				return server;
 			}
 		}
-		
+
 		return null;
 	}
-	
+
 	/**
 	 * Pulls all the clans servers from redis and loads them. SHOULD BE RUN ASYNC
 	 */
@@ -173,7 +163,7 @@ public class ClansTransferManager extends MiniDbClientPlugin<SimpleClanToken>
 			_servers.put(server, info);
 		}
 	}
-	
+
 	@EventHandler
 	public void reloadServers(UpdateEvent event)
 	{
@@ -193,7 +183,7 @@ public class ClansTransferManager extends MiniDbClientPlugin<SimpleClanToken>
 			runSync(after);
 		});
 	}
-	
+
 	@EventHandler
 	public void refreshPages(UpdateEvent event)
 	{
@@ -205,7 +195,7 @@ public class ClansTransferManager extends MiniDbClientPlugin<SimpleClanToken>
 			((ClansServerPage) page).update();
 		});
 	}
-	
+
 	@EventHandler
 	public void onUseNPC(NpcInteractEntityEvent event)
 	{
@@ -221,7 +211,7 @@ public class ClansTransferManager extends MiniDbClientPlugin<SimpleClanToken>
 			_portal.sendToHub(event.getPlayer(), "Returning to Mineplex!", Intent.PLAYER_REQUEST);
 		}
 	}
-	
+
 	@EventHandler
 	public void onUseNPC(NpcDamageByEntityEvent event)
 	{
@@ -230,7 +220,7 @@ public class ClansTransferManager extends MiniDbClientPlugin<SimpleClanToken>
 			return;
 		}
 		Player player = (Player) event.getDamager();
-		
+
 		if (event.getNpc().getName().contains("Clans") && Recharge.Instance.use(player, "Go to Clans", 1000, false, false))
 		{
 			if (checkCanJoinClans(player))
@@ -243,9 +233,9 @@ public class ClansTransferManager extends MiniDbClientPlugin<SimpleClanToken>
 			_portal.sendToHub(player, "Returning to Mineplex!", Intent.PLAYER_REQUEST);
 		}
 	}
-	
+
 	@Override
-	public String getQuery(int accountId, String uuid, String name) 
+	public String getQuery(int accountId, String uuid, String name)
 	{
 		return "SELECT clans.name, accountClan.clanRole, clanServer.serverName, clans.id FROM accountClan INNER JOIN clans ON clans.id = accountClan.clanId INNER JOIN clanServer ON clans.serverId = clanServer.id WHERE accountClan.accountId = " + accountId + ";";
 	}
@@ -254,7 +244,7 @@ public class ClansTransferManager extends MiniDbClientPlugin<SimpleClanToken>
 	public void processLoginResultSet(String playerName, UUID uuid, int accountId, ResultSet resultSet) throws SQLException
 	{
 		SimpleClanToken clanToken = new SimpleClanToken();
-		
+
 		while (resultSet.next())
 		{
 			String clanName = resultSet.getString(1);
@@ -263,7 +253,7 @@ public class ClansTransferManager extends MiniDbClientPlugin<SimpleClanToken>
 			int clanId = resultSet.getInt(4);
 			clanToken = new SimpleClanToken(clanName, clanRole, homeServer, clanId);
 		}
-		
+
 		Set(uuid, clanToken);
 	}
 

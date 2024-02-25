@@ -596,7 +596,10 @@ public abstract class Challenge implements Listener
 		{
 			if (block != Blocks.AIR)
 			{
-				chunksection = chunk.getSections()[y >> 4] = new ChunkSection(y >> 4 << 4, chunk, !nmsWorld.worldProvider.o());
+				//TODO: multiple-protocol support(??)
+				//chunksection = chunk.getSections()[y >> 4] = new ChunkSection(y >> 4 << 4, chunk, !nmsWorld.worldProvider.o());
+				chunksection = chunk.getSections()[y >> 4] = new ChunkSection(y >> 4 << 4, !nmsWorld.worldProvider.o());
+
 			}
 		}
 		chunksection.setType(i, j & 15, k, ibd);

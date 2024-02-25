@@ -2,8 +2,6 @@ package mineplex.serverdata.database;
 
 import java.util.concurrent.atomic.AtomicInteger;
 
-import org.omg.CORBA.ACTIVITY_REQUIRED;
-
 public class DatabaseRunnable
 {
 	private Runnable _runnable;
@@ -30,7 +28,7 @@ public class DatabaseRunnable
 	{
 		_failedAttempts.getAndIncrement();
 	}
-	
+
 	public int getFailedCounts()
 	{
 		return _failedAttempts.get();

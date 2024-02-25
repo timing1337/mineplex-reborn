@@ -80,7 +80,7 @@ public class TreasureManager extends MiniPlugin
 		addTreasureType(new IlluminatedTreasure());
 		addTreasureType(new OmegaTreasure());
 		addTreasureType(new MinestrikeTreasure());
-		addTreasureType(new MOBATreasure());
+		//addTreasureType(new MOBATreasure());
 		addTreasureType(new GingerbreadTreasure());
 		addTreasureType(new TrickOrTreatTreasure2017());
 		addTreasureType(new TrickOrTreatTreasure2016());

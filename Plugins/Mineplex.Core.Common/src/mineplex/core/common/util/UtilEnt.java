@@ -61,18 +61,18 @@ public class UtilEnt
 	//Custom Entity Names
 	private static HashMap<Entity, String> _nameMap = new HashMap<>();
 	private static HashMap<String, EntityType> creatureMap = new HashMap<>();
-	
+
 	private static Field _goalSelector;
 	private static Field _targetSelector;
 	private static Field _bsRestrictionGoal;
 	private static Field _pathfinderBList;
 	private static Field _pathfinderCList;
 
-	public static HashMap<Entity, String> GetEntityNames() 
+	public static HashMap<Entity, String> GetEntityNames()
 	{
 		return _nameMap;
 	}
-	
+
 	public static void silence(Entity entity, boolean silence)
 	{
 		net.minecraft.server.v1_8_R3.Entity nmsEntity = ((CraftEntity) entity).getHandle();
@@ -108,25 +108,25 @@ public class UtilEnt
 		}
 		return entity.hasMetadata("flag:" + flag);
 	}
-	
+
 	public static void ghost(Entity entity, boolean ghost, boolean invisible)
 	{
 		if (entity instanceof LivingEntity)
 		{
 			((CraftLivingEntity)entity).getHandle().setGhost(ghost);
 		}
-		
+
 //		((CraftEntity)entity).getHandle().Invisible = invisible;
 		((CraftEntity)entity).getHandle().setInvisible(invisible);
 	}
-	
+
 	public static void leash(LivingEntity leashed, Entity holder, boolean pull, boolean breakable)
 	{
 		leashed.setLeashHolder(holder);
-		
+
 		if (!(((CraftLivingEntity)leashed).getHandle() instanceof EntityInsentient))
 			return;
-		
+
 		((EntityInsentient)((CraftLivingEntity)leashed).getHandle()).setPullWhileLeashed(pull);
 		((EntityInsentient)((CraftLivingEntity)leashed).getHandle()).setShouldBreakLeash(breakable);
 	}
@@ -171,7 +171,7 @@ public class UtilEnt
 		}
 
 	}
-	
+
 	/**
 	 * See {@link #getEntitiesInsideEntity(Entity, List)}
 	 * Uses all players in the same world as the entity as input
@@ -180,7 +180,7 @@ public class UtilEnt
 	{
 		return getEntitiesInsideEntity(ent, ent.getWorld().getPlayers());
 	}
-	
+
 	/**
 	 * See {@link #getEntitiesInsideEntity(Entity, List)}
 	 * Uses all entities in the same world as the entity as input
@@ -189,7 +189,7 @@ public class UtilEnt
 	{
 		return getEntitiesInsideEntity(ent, ent.getWorld().getEntities());
 	}
-	
+
 	/**
 	 * See {@link #getEntitiesInsideEntity(Entity, List)}
 	 * Auto cast to list of players
@@ -198,7 +198,7 @@ public class UtilEnt
 	{
 		return getEntitiesInsideEntity(ent, players);
 	}
-	
+
 	/**
 	 * Returns entities which are inside the provided entity's boundingbox
 	 * @param ent The entity to check inside
@@ -208,9 +208,9 @@ public class UtilEnt
 	public static <T extends Entity> List<T> getEntitiesInsideEntity(Entity ent, List<T> entities)
 	{
 		AxisAlignedBB box = ((CraftEntity)ent).getHandle().getBoundingBox();
-		
+
 		List<T> list = new ArrayList<>();
-		
+
 		for(T e : entities)
 		{
 			AxisAlignedBB box2 = ((CraftEntity)e).getHandle().getBoundingBox();
@@ -218,7 +218,7 @@ public class UtilEnt
 		}
 		return list;
 	}
-	
+
 	/**
 	 * @return Returns true if the entities boundinbox collides or is inside the given bounding box
 	 */
@@ -226,10 +226,10 @@ public class UtilEnt
 	{
 		AxisAlignedBB box = ((CraftEntity)ent).getHandle().getBoundingBox();
 		AxisAlignedBB box2 = new AxisAlignedBB(a.getX(), a.getY(), a.getZ(), b.getX(), b.getY(), b.getZ());
-		
+
 		return box.b(box2);
 	}
-	
+
 	public static void vegetate(Entity entity)
 	{
 		vegetate(entity, false);
@@ -244,64 +244,64 @@ public class UtilEnt
 				_goalSelector = EntityInsentient.class.getDeclaredField("goalSelector");
 				_goalSelector.setAccessible(true);
     		}
-    		
+
     		if (_targetSelector == null)
     		{
 				_targetSelector = EntityInsentient.class.getDeclaredField("targetSelector");
 				_targetSelector.setAccessible(true);
     		}
-    		
+
     		if (_pathfinderBList == null)
     		{
     			_pathfinderBList = PathfinderGoalSelector.class.getDeclaredField("b");
     			_pathfinderBList.setAccessible(true);
     		}
-    		
+
     		if (_pathfinderCList == null)
     		{
     			_pathfinderCList = PathfinderGoalSelector.class.getDeclaredField("c");
     			_pathfinderCList.setAccessible(true);
     		}
-    		
+
     		if (entity instanceof CraftCreature)
     		{
     			EntityCreature creature = ((CraftCreature) entity).getHandle();
-    			
+
 	    		if (_bsRestrictionGoal == null)
 	    		{
 					_bsRestrictionGoal = EntityCreature.class.getDeclaredField("c");
 					_bsRestrictionGoal.setAccessible(true);
 	    		}
-	    		
+
 	    		_bsRestrictionGoal.set(creature, new PathfinderGoalMoveTowardsRestriction(creature, 0D));
     		}
-        	
+
     		if (((CraftEntity)entity).getHandle() instanceof EntityInsentient)
     		{
     			EntityInsentient creature = (EntityInsentient) ((CraftEntity) entity).getHandle();
-		        
+
 				creature.setVegetated(true);
 				creature.setSilent(mute);
 
 				((List<?>) _pathfinderBList.get(((PathfinderGoalSelector) _goalSelector.get(creature)))).clear();
     			((List<?>) _pathfinderCList.get(((PathfinderGoalSelector) _goalSelector.get(creature)))).clear();
-    			
+
     			((List<?>) _pathfinderBList.get(((PathfinderGoalSelector) _targetSelector.get(creature)))).clear();
     			((List<?>) _pathfinderCList.get(((PathfinderGoalSelector) _targetSelector.get(creature)))).clear();
     		}
-    		
+
     		if (((CraftEntity)entity).getHandle() instanceof EntityBat)
     		{
     			((EntityBat) ((CraftEntity) entity).getHandle()).setVegetated(true);
     		}
-	    	
+
     		if (((CraftEntity) entity).getHandle() instanceof EntityEnderDragon)
     		{
     			EntityEnderDragon creature = (EntityEnderDragon) ((CraftEntity) entity).getHandle();
-		        
+
     			creature.setVegetated(true);
     		}
-		} 
+		}
     	catch (IllegalArgumentException | IllegalAccessException | NoSuchFieldException | SecurityException e)
 		{
 			e.printStackTrace();
@@ -325,12 +325,12 @@ public class UtilEnt
 			creature.targetSelector = new PathfinderGoalSelector(((CraftWorld)entity.getWorld()).getHandle().methodProfiler);
 		}
 	}
-	
-	public static void addGoalSelector(Entity entity, int priority, PathfinderGoal goal) 
+
+	public static void addGoalSelector(Entity entity, int priority, PathfinderGoal goal)
 	{
 		try
 		{
-			if(((CraftEntity)entity).getHandle() instanceof EntityInsentient) 
+			if(((CraftEntity)entity).getHandle() instanceof EntityInsentient)
 			{
 				((EntityInsentient)((CraftEntity)entity).getHandle()).goalSelector.a(priority, goal);
 			}
@@ -340,35 +340,35 @@ public class UtilEnt
 			e.printStackTrace();
 		}
 	}
-	
+
     public static void Rotate(LivingEntity entity, float yaw, float pitch)
     {
 		EntityLiving handle = ((CraftLivingEntity) entity).getHandle();
-    	
+
 		while (yaw < -180.0F) yaw += 360.0F;
 		while (yaw >= 180.0F) yaw -= 360.0F;
-        
+
 		handle.yaw = yaw;
 		handle.aK = yaw;
 		handle.aI = yaw;
 		handle.aL = yaw;
 		handle.pitch = pitch;
     }
-	
+
 	public static void LookAt(LivingEntity entity, Location location)
 	{
 		if (!(entity.getWorld().equals(location.getWorld())))
 			return;
-		
+
 		Vector dir = entity.getEyeLocation().toVector().subtract(location.toVector()).normalize();
 		Location loc = entity.getEyeLocation().clone();
-        
+
         loc.setYaw(180 - (float) Math.toDegrees(TrigMath.atan2(dir.getX(), dir.getZ())));
         loc.setPitch(90 - (float) Math.toDegrees(Math.acos(dir.getY())));
-        
+
         Rotate(entity, loc.getYaw(), loc.getPitch());
 	}
-	
+
 	public static void populate()
 	{
 		if (creatureMap.isEmpty())
@@ -409,19 +409,19 @@ public class UtilEnt
 			creatureMap.put("Rabbit", EntityType.RABBIT);
 		}
 	}
-	
+
 	/**
 	 * Set whether this entity should be ticked normally when far away. By default entities are only ticked once every 20 ticks
 	 * when they are outside the activation range.
-	 * 
+	 *
 	 *  Default ranges are calculated in a AABB fashion from their closest player:
 	 *  	animalActivationRange = 32
 	 *  	monsterActivationRange = 32
   	 *  	miscActivationRange = 16
-  	 *  
+  	 *
   	 *  Entities that are unaffected by range (always active):
   	 *  	Players, Projectiles, Enderdragon, Wither, Fireballs, Lightning strikes, TNT, Ender Crystals and Fireworks.
-  	 *  
+  	 *
   	 *  You can make entities which are by default active (Projectiles etc) not load when far away
   	 *  or make entities that are not active by default (mobs, animals etc) load when far away
 	 */
@@ -438,26 +438,26 @@ public class UtilEnt
 			e.printStackTrace();
 		}
 	}
-	
+
 	public static String getName(Entity ent)
 	{
 		if (ent == null)
 			return "Null";
-		
+
 		if (ent.getType() == EntityType.PLAYER)
 			return ((Player)ent).getName();
-		
+
 		if (GetEntityNames().containsKey(ent))
 			return GetEntityNames().get(ent);
-		
+
 		if (ent instanceof LivingEntity)
 		{
 			LivingEntity le = (LivingEntity)ent;
 			if (le.getCustomName() != null)
 				return le.getCustomName();
 		}
-		
-		return getName(ent.getType());  
+
+		return getName(ent.getType());
 	}
 
 	public static String getName(EntityType type)
@@ -481,11 +481,11 @@ public class UtilEnt
 		{
 			if (cur.equalsIgnoreCase(arg))
 				return cur;
-			
+
 			if (cur.toLowerCase().contains(arg))
 				matchList.add(cur);
 		}
-			
+
 
 		//No / Non-Unique
 		if (matchList.size() != 1)
@@ -530,11 +530,11 @@ public class UtilEnt
 		{
 			if (cur.equalsIgnoreCase(arg))
 				return creatureMap.get(cur);
-			
+
 			if (cur.toLowerCase().contains(arg))
 				matchList.add(creatureMap.get(cur));
 		}
-			
+
 
 		//No / Non-Unique
 		if (matchList.size() != 1)
@@ -568,8 +568,8 @@ public class UtilEnt
 
 		return matchList.get(0);
 	}
-	
-	public static HashMap<LivingEntity, Double> getInRadius(Location loc,	double dR) 
+
+	public static HashMap<LivingEntity, Double> getInRadius(Location loc,	double dR)
 	{
 		HashMap<LivingEntity, Double> ents = new HashMap<>();
 
@@ -577,21 +577,21 @@ public class UtilEnt
 		{
 			if (!(cur instanceof LivingEntity) || UtilPlayer.isSpectator(cur))
 				continue;
-			
+
 			LivingEntity ent = (LivingEntity)cur;
-			
+
 			//Feet
 			double offset = UtilMath.offset(loc, ent.getLocation());
-			
+
 			if (offset < dR)
 			{
 				ents.put(ent, 1 - (offset / dR));
 				continue;
 			}
-			
+
 			//Eyes
 			offset = UtilMath.offset(loc, ent.getEyeLocation());
-			
+
 			if (offset < dR)
 			{
 				ents.put(ent, 1 - (offset / dR));
@@ -600,8 +600,8 @@ public class UtilEnt
 
 		return ents;
 	}
-	
-	public static HashMap<Entity, Double> getAllInRadius(Location loc,	double dR) 
+
+	public static HashMap<Entity, Double> getAllInRadius(Location loc,	double dR)
 	{
 		HashMap<Entity, Double> ents = new HashMap<Entity, Double>();
 
@@ -609,10 +609,10 @@ public class UtilEnt
 		{
 			if (UtilPlayer.isSpectator(cur))
 				continue;
-			
+
 			//Loc
 			double offset = UtilMath.offset(loc, cur.getLocation());
-			
+
 			if (offset < dR)
 			{
 				ents.put(cur, 1 - (offset / dR));
@@ -621,7 +621,7 @@ public class UtilEnt
 
 		return ents;
 	}
-	
+
 	public static boolean hitBox(Location loc, LivingEntity ent, double mult, EntityType disguise)
 	{
 		if (disguise != null)
@@ -631,11 +631,11 @@ public class UtilEnt
 				return UtilMath.offset(loc, ent.getLocation().add(0, 0.4, 0)) < 0.6 * mult;
 			}
 		}
-		
+
 		if (ent instanceof Player)
 		{
 			Player player = (Player)ent;
-			
+
 			if (UtilMath.offset(loc, player.getEyeLocation()) < 0.4 * mult)
 			{
 				return true;
@@ -645,7 +645,7 @@ public class UtilEnt
 				if (loc.getY() >= player.getLocation().getY() - 0.2*mult && loc.getY() <= player.getEyeLocation().getY() + 0.2*mult)
 				{
 					return true;
-				}		
+				}
 			}
 		}
 		else
@@ -663,55 +663,55 @@ public class UtilEnt
 						return true;
 			}
 		}
-			
-		
+
+
 
 		return false;
 	}
-	
+
 	public static float getStepHeight(Entity ent)
 	{
 		return ((CraftEntity)ent).getHandle().S;
 	}
-	
+
 	public static void setStepHeight(Entity ent, float stepHeight)
 	{
 		((CraftEntity)ent).getHandle().S = stepHeight;
 	}
-	
-	public static boolean isGrounded(Entity ent) 
-	{ 
-		
+
+	public static boolean isGrounded(Entity ent)
+	{
+
 		if(!(ent instanceof Player)) {
 			return ent.isOnGround();
 		}
-		
+
 		AxisAlignedBB box = ((CraftEntity)ent).getHandle().getBoundingBox();
 		Location bottom_corner_1 = new Location(ent.getWorld(), box.a, ent.getLocation().getY()-0.1, box.c);
 		Location bottom_corner_2 = new Location(ent.getWorld(), box.d, ent.getLocation().getY()-0.1, box.f);
-		
-		for(Block b : UtilBlock.getInBoundingBox(bottom_corner_1, bottom_corner_2)){
-			if(UtilBlock.solid(b)) return true;
-		}
-		return false;
-	}
-	
-	public static boolean isGrounded(Entity ent, Location loc) 
-	{ 
-		AxisAlignedBB box = ((CraftEntity)ent).getHandle().getBoundingBox();
-		Location bottom_corner_1 = new Location(ent.getWorld(), box.a, loc.getY()-0.1, box.c);
-		Location bottom_corner_2 = new Location(ent.getWorld(), box.d, loc.getY()-0.1, box.f);
-		
+
 		for(Block b : UtilBlock.getInBoundingBox(bottom_corner_1, bottom_corner_2)){
 			if(UtilBlock.solid(b)) return true;
 		}
 		return false;
 	}
 
-	public static void PlayDamageSound(LivingEntity damagee) 
+	public static boolean isGrounded(Entity ent, Location loc)
+	{
+		AxisAlignedBB box = ((CraftEntity)ent).getHandle().getBoundingBox();
+		Location bottom_corner_1 = new Location(ent.getWorld(), box.a, loc.getY()-0.1, box.c);
+		Location bottom_corner_2 = new Location(ent.getWorld(), box.d, loc.getY()-0.1, box.f);
+
+		for(Block b : UtilBlock.getInBoundingBox(bottom_corner_1, bottom_corner_2)){
+			if(UtilBlock.solid(b)) return true;
+		}
+		return false;
+	}
+
+	public static void PlayDamageSound(LivingEntity damagee)
 	{
 		Sound sound = Sound.HURT_FLESH;
-		
+
 		if (damagee.getType() == EntityType.BAT)				sound = Sound.BAT_HURT;
 		else if (damagee.getType() == EntityType.BLAZE)			sound = Sound.BLAZE_HIT;
 		else if (damagee.getType() == EntityType.CAVE_SPIDER)	sound = Sound.SPIDER_IDLE;
@@ -740,18 +740,18 @@ public class UtilEnt
 		//else if (damagee.getType() == EntityType.WITCH)		sound = Sound.;
 		else if (damagee.getType() == EntityType.WITHER)		sound = Sound.WITHER_HURT;
 		else if (damagee.getType() == EntityType.WOLF)			sound = Sound.WOLF_HURT;
-		else if (damagee.getType() == EntityType.ZOMBIE)		sound = Sound.ZOMBIE_HURT;	
+		else if (damagee.getType() == EntityType.ZOMBIE)		sound = Sound.ZOMBIE_HURT;
 
 		damagee.getWorld().playSound(damagee.getLocation(), sound, 1.5f + (float)(0.5f * Math.random()), 0.8f + (float)(0.4f * Math.random()));
 	}
 
-	public static boolean onBlock(Player player) 
+	public static boolean onBlock(Player player)
 	{
 		//Side Standing
 		double xMod = player.getLocation().getX() % 1;
 		if (player.getLocation().getX() < 0)
 			xMod += 1;
-		
+
 		double zMod = player.getLocation().getZ() % 1;
 		if (player.getLocation().getZ() < 0)
 			zMod += 1;
@@ -760,33 +760,33 @@ public class UtilEnt
 		int xMax = 0;
 		int zMin = 0;
 		int zMax = 0;
-		
+
 		if (xMod < 0.3)	xMin = -1;
 		if (xMod > 0.7)	xMax = 1;
-		
+
 		if (zMod < 0.3)	zMin = -1;
 		if (zMod > 0.7)	zMax = 1;
 
 		for (int x=xMin ; x<=xMax ; x++)
 		{
 			for (int z=zMin ; z<=zMax ; z++)
-			{				
+			{
 				//Standing on SOMETHING
 				if (player.getLocation().add(x, -0.5, z).getBlock().getType() != Material.AIR && !player.getLocation().add(x, -0.5, z).getBlock().isLiquid())
 					return true;
-				
+
 				//Inside a Lillypad
 				if (player.getLocation().add(x, 0, z).getBlock().getType() == Material.WATER_LILY)
 					return true;
-				
+
 				//Fences/Walls
 				Material beneath = player.getLocation().add(x, -1.5, z).getBlock().getType();
 				if (player.getLocation().getY() % 0.5 == 0 &&
 					(beneath.toString().contains("FENCE") || beneath == Material.COBBLE_WALL))
 					return true;
-			}	
+			}
 		}
-		
+
 		return false;
 	}
 
@@ -868,17 +868,17 @@ public class UtilEnt
 		return CreatureLook(ent, 0, yaw);
 	}
 
-	public static void CreatureMove(Entity ent, Location target, float speed) 
+	public static void CreatureMove(Entity ent, Location target, float speed)
 	{
 		if (!(ent instanceof Creature))
 			return;
-		
+
 		if (UtilMath.offsetSquared(ent.getLocation(), target) < 0.01)
 			return;
 
 		EntityCreature ec = ((CraftCreature)ent).getHandle();
 		NavigationAbstract nav = ec.getNavigation();
-		
+
 		if (UtilMath.offsetSquared(ent.getLocation(), target) > 16 * 16)
 		{
 			Location newTarget = ent.getLocation();
@@ -892,29 +892,29 @@ public class UtilEnt
 			nav.a(target.getX(), target.getY(), target.getZ(), speed);
 		}
 	}
-	
-	public static boolean CreatureMoveFast(Entity ent, Location target, float speed) 
+
+	public static boolean CreatureMoveFast(Entity ent, Location target, float speed)
 	{
 		return CreatureMoveFast(ent, target, speed, true);
 	}
-	
-	public static boolean CreatureMoveFast(Entity ent, Location target, float speed, boolean slow) 
+
+	public static boolean CreatureMoveFast(Entity ent, Location target, float speed, boolean slow)
 	{
 		if (!(ent instanceof Creature))
 			return false;
-		
+
 		if (UtilMath.offsetSquared(ent.getLocation(), target) < 0.01)
 			return false;
-		
+
 		if (UtilMath.offsetSquared(ent.getLocation(), target) < 4)
 			speed = Math.min(speed, 1f);
-		
+
 		EntityCreature ec = ((CraftCreature)ent).getHandle();
 		ec.getControllerMove().a(target.getX(), target.getY(), target.getZ(), speed);
-		
+
 		return true;
 	}
-	
+
 	/**
 	 * Returns true if the entity got a path that will lead it closer to the current navigation path finding target.
 	 * It will return false, it it is as close as it can get. Using this got an advantage compared to distance checking, as the target
@@ -931,10 +931,10 @@ public class UtilEnt
 	{
 		return getNewEntityId(true);
 	}
-	
+
 	/**
 	 * Use false if you don't want to modify the next entityid to be used.
-	 * 
+	 *
 	 * Normally you want true if you want a unique entityid to use.
 	 **/
 	public static int getNewEntityId(boolean modifynumber)
@@ -956,7 +956,7 @@ public class UtilEnt
 		}
 		return -1;
     }
-	
+
 	public static Entity getEntityById(int entityId)
 	{
 		for (World world : Bukkit.getWorlds())
@@ -969,10 +969,10 @@ public class UtilEnt
 				}
 			}
 		}
-		
+
 		return null;
 	}
-	
+
 	public static void setAI(LivingEntity entity, boolean ai)
 	{
 		if(entity instanceof ArmorStand)
@@ -986,17 +986,17 @@ public class UtilEnt
 			((EntityInsentient)e.getHandle()).k(!ai);
 		}
 	}
-	
+
 	public static double getBlockSizeOfSlime(int size)
 	{
 		return .51 * ((double) size);
 	}
-	
+
 	public static void setBoundingBox(Entity ent, double width, double height)
 	{
 		((CraftEntity)ent).getHandle().setSize((float) width, (float)height);
 	}
-	
+
 	public static double getHeight(Entity ent)
 	{
 		return ((CraftEntity)ent).getHandle().length;
@@ -1006,12 +1006,12 @@ public class UtilEnt
 	{
 		return ((CraftEntity)ent).getHandle().width;
 	}
-	
+
 	public static void SetMetadata(Entity entity, String key, Object value)
 	{
 		entity.setMetadata(key, new FixedMetadataValue(UtilServer.getPlugin(), value));
 	}
-	
+
 	// Nicer than doing entity.getMetadata(key).get(0);
 	@SuppressWarnings("unchecked")
 	public static <T> T GetMetadata(Entity entity, String key)
@@ -1020,10 +1020,10 @@ public class UtilEnt
 		{
 			return null;
 		}
-		
+
 		return (T) entity.getMetadata(key).get(0).value();
 	}
-	
+
 	public static void removeMetadata(Entity entity, String key)
 	{
 		entity.removeMetadata(key, UtilServer.getPlugin());
@@ -1072,9 +1072,9 @@ public class UtilEnt
 
 	public static void registerEntityType(Class<? extends net.minecraft.server.v1_8_R3.Entity> customClass, EntityType entityType, String name)
 	{
-		EntityTypes.getNameToClassMap().remove(name);
-		EntityTypes.getIdToClassMap().remove((int) entityType.getTypeId());
-		EntityTypes.register(customClass, name, (int) entityType.getTypeId());
+		// EntityTypes.getNameToClassMap().remove(name);
+		// EntityTypes.getIdToClassMap().remove((int) entityType.getTypeId());
+		// EntityTypes.register(customClass, name, (int) entityType.getTypeId());
 	}
 
 	public static void spawnEntity(net.minecraft.server.v1_8_R3.Entity entity, Location location)

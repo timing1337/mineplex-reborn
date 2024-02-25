@@ -16,8 +16,6 @@
         <dependency>
             <groupId>com.mineplex</groupId>
             <artifactId>spigot</artifactId>
-            <version>1.8.8-1.9-SNAPSHOT</version>
-            <scope>compile</scope>
         </dependency>
         <dependency>
             <groupId>org.zeroturnaround</groupId>

@@ -10,7 +10,6 @@ import mineplex.core.TwitchIntegrationFix;
 import mineplex.core.account.CoreClientManager;
 import mineplex.core.achievement.AchievementManager;
 import mineplex.core.admin.command.AdminCommands;
-import mineplex.core.antihack.AntiHack;
 import mineplex.core.blockrestore.BlockRestore;
 import mineplex.core.boosters.BoosterManager;
 import mineplex.core.chat.Chat;
@@ -133,8 +132,6 @@ public class Hub extends JavaPlugin implements IRelation
 		ProjectileManager throwManager = new ProjectileManager(this);
 
 		Portal portal = new Portal();
-
-		require(AntiHack.class);
 
 		IgnoreManager ignoreManager = new IgnoreManager(this, clientManager, preferenceManager, portal);
 

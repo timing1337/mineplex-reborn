@@ -46,12 +46,8 @@ import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import com.google.common.collect.Lists;
-import com.mineplex.anticheat.checks.move.Glide;
-import com.mineplex.anticheat.checks.move.HeadRoll;
-import com.mineplex.anticheat.checks.move.Speed;
 
 import mineplex.core.Managers;
-import mineplex.core.antihack.AntiHack;
 import mineplex.core.common.Pair;
 import mineplex.core.common.util.C;
 import mineplex.core.common.util.F;
@@ -257,11 +253,6 @@ public class BawkBawkBattles extends TeamGame implements IThrown
 		FixSpawnFacing = false;
 
 		Manager.GetCreature().SetDisableCustomDrops(true);
-		
-		AntiHack antiHack = Managers.get(AntiHack.class);
-		antiHack.addIgnoredCheck(Speed.class);
-		antiHack.addIgnoredCheck(Glide.class);
-		antiHack.addIgnoredCheck(HeadRoll.class);
 
 		populateChallenges();
 
@@ -312,7 +303,7 @@ public class BawkBawkBattles extends TeamGame implements IThrown
 
 		/*
 		 * Removed:
-		 * 
+		 *
 		 * Cloud Fall
 		 * Dogs Vs Cats
 		 * Fishing Day
@@ -1646,7 +1637,7 @@ public class BawkBawkBattles extends TeamGame implements IThrown
 			}
 		}
 	}
-	
+
 	@Override
 	public void ChunkUnload(ProjectileUser data)
 	{

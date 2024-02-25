@@ -15,7 +15,6 @@ import mineplex.core.TwitchIntegrationFix;
 import mineplex.core.account.CoreClientManager;
 import mineplex.core.achievement.AchievementManager;
 import mineplex.core.admin.command.AdminCommands;
-import mineplex.core.antihack.RelationProvider;
 import mineplex.core.blockrestore.BlockRestore;
 import mineplex.core.blood.Blood;
 import mineplex.core.boosters.BoosterManager;
@@ -83,19 +82,6 @@ public class NanoGames extends JavaPlugin
 	@Override
 	public void onEnable()
 	{
-		getServer().getServicesManager().register(RelationProvider.class, (player, target) ->
-		{
-			if (target instanceof Player)
-			{
-				return _gameManager.canHurt(player, (Player) target);
-			}
-			else
-			{
-				Game game = _gameManager.getGame();
-				return target instanceof LivingEntity && game != null && game.isLive();
-			}
-		}, this, ServicePriority.Normal);
-
 		Bukkit.setSpawnRadius(0);
 		getConfig().addDefault(Constants.WEB_CONFIG_KEY, Constants.WEB_ADDRESS);
 		getConfig().set(Constants.WEB_CONFIG_KEY, getConfig().getString(Constants.WEB_CONFIG_KEY));

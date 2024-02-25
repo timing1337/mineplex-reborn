@@ -8,9 +8,6 @@ import org.bukkit.Location;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 
-import com.mineplex.anticheat.checks.move.Glide;
-
-import mineplex.core.antihack.AntiHack;
 import mineplex.core.common.util.UtilServer;
 import mineplex.core.lifetimes.Lifetimed;
 import mineplex.core.lifetimes.ListenerComponent;
@@ -98,8 +95,6 @@ public abstract class Game extends ListenerComponent implements Lifetimed, TeamC
 		_endComponent = new GameEndComponent(this);
 
 		new GeneralStatsTracker(this);
-		
-		manager.getAntiHack().addIgnoredCheck(Glide.class);
 	}
 
 	public final void setupGameWorld(File mapZip)
@@ -138,9 +133,6 @@ public abstract class Game extends ListenerComponent implements Lifetimed, TeamC
 		disable();
 
 		super.deactivate();
-
-		AntiHack antiHack = _manager.getAntiHack();
-		antiHack.resetIgnoredChecks();
 	}
 
 	public final NanoManager getManager()

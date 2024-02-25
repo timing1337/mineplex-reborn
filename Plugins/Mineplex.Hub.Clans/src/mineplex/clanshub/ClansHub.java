@@ -10,9 +10,6 @@ import mineplex.core.CustomTagFix;
 import mineplex.core.PacketsInteractionFix;
 import mineplex.core.account.CoreClientManager;
 import mineplex.core.achievement.AchievementManager;
-import mineplex.core.antihack.AntiHack;
-import mineplex.core.antihack.guardians.AntiHackGuardian;
-import mineplex.core.antihack.guardians.GuardianManager;
 import mineplex.core.aprilfools.AprilFoolsManager;
 import mineplex.core.blockrestore.BlockRestore;
 import mineplex.core.boosters.BoosterManager;
@@ -114,9 +111,9 @@ public class ClansHub extends JavaPlugin
 		DisguiseManager disguiseManager = require(DisguiseManager.class);
 		IncognitoManager incognito = new IncognitoManager(this, clientManager, packetHandler);
 		PreferencesManager preferenceManager = new PreferencesManager(this, incognito, clientManager);
-		
+
 		incognito.setPreferencesManager(preferenceManager);
-		
+
 		Creature creature = new Creature(this);
 		NpcManager npcManager = new NpcManager(this, creature);
 		InventoryManager inventoryManager = new InventoryManager(this, clientManager);
@@ -124,19 +121,11 @@ public class ClansHub extends JavaPlugin
 		CastleManager castleManager = new CastleManager(this, clientManager, hologramManager, false);
 		PetManager petManager = new PetManager(this, clientManager, donationManager, inventoryManager, disguiseManager, creature, blockRestore);
 		PollManager pollManager = new PollManager(this, clientManager, donationManager);
-		
+
 		//Main Modules
 		new TitanGiveawayManager(this, clientManager, serverStatusManager);
 
 		Portal portal = new Portal();
-
-		AntiHack antiHack = require(AntiHack.class);
-		GuardianManager guardianManager = require(GuardianManager.class);
-
-		for (int i = 0; i < 8; i++)
-		{
-			guardianManager.registerGuardian(new AntiHackGuardian(new Location(Bukkit.getWorld("world"), 0, 195, 0), 25, -8, 195, 185, 17, -16));
-		}
 
         IgnoreManager ignoreManager = new IgnoreManager(this, clientManager, preferenceManager, portal);
 
@@ -169,9 +158,9 @@ public class ClansHub extends JavaPlugin
 		new EternalGiveawayManager(this, clientManager, serverStatusManager);
 
 		CombatManager combatManager = require(CombatManager.class);
-		
+
 		DamageManager damage = new DamageManager(this, combatManager, npcManager, disguiseManager, condition);
-		
+
 		Teleport teleport = new Teleport(this, clientManager);
 
 		//Updates

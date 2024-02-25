@@ -9,7 +9,7 @@ public enum MinecraftVersion
 {
 	Version1_13("1.13", 393),
 	Version1_9("1.9", 48),
-	Version1_8("1.8", Integer.MIN_VALUE), //Any player will at minimum be 1.8, we can't handle anything below that
+	Version1_8("1.8.8", Integer.MIN_VALUE), //Any player will at minimum be 1.8, we can't handle anything below that
 	;
 	
 	private final String _friendlyName;

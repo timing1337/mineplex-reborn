@@ -76,11 +76,9 @@ public class GamePlayerManager extends GameManager implements ComponentHook<Game
 		switch (event.getState())
 		{
 			case Prepare:
-				_manager.getAntiHack().enableAnticheat();
 				UtilServer.CallEvent(new CoreGameStartEvent(NanoManager.getGameDisplay()));
 				break;
 			case End:
-				_manager.getAntiHack().disableAnticheat();
 				UtilServer.CallEvent(new CoreGameStopEvent(NanoManager.getGameDisplay()));
 				break;
 			case Dead:

@@ -28,12 +28,7 @@ import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.util.Vector;
 
-import com.mineplex.anticheat.checks.move.Glide;
-import com.mineplex.anticheat.checks.move.HeadRoll;
-import com.mineplex.anticheat.checks.move.Speed;
-
 import mineplex.core.Managers;
-import mineplex.core.antihack.AntiHack;
 import mineplex.core.common.util.C;
 import mineplex.core.common.util.MapUtil;
 import mineplex.core.common.util.UtilAction;
@@ -109,11 +104,6 @@ public class Sploor extends TeamGame
 		_endComponent.setTimeout(TimeUnit.MINUTES.toMillis(2));
 
 		new TeamArmourComponent(this);
-
-		AntiHack antiHack = Managers.get(AntiHack.class);
-		antiHack.addIgnoredCheck(Speed.class);
-		antiHack.addIgnoredCheck(Glide.class);
-		antiHack.addIgnoredCheck(HeadRoll.class);
 
 		_scoreboardComponent.setSidebar((player, scoreboard) ->
 		{

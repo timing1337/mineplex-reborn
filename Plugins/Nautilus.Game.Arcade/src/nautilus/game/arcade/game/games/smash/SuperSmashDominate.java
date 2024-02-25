@@ -12,12 +12,7 @@ import org.bukkit.event.entity.EntityRegainHealthEvent;
 import org.bukkit.event.entity.EntityRegainHealthEvent.RegainReason;
 import org.bukkit.event.player.PlayerInteractEvent;
 
-import com.mineplex.anticheat.checks.move.Glide;
-import com.mineplex.anticheat.checks.move.HeadRoll;
-import com.mineplex.anticheat.checks.move.Speed;
-
 import mineplex.core.Managers;
-import mineplex.core.antihack.AntiHack;
 import mineplex.core.common.util.F;
 import mineplex.core.common.util.UtilInv;
 import mineplex.core.common.util.UtilPlayer;
@@ -47,25 +42,25 @@ import nautilus.game.arcade.kit.Kit;
 import nautilus.game.arcade.managers.chat.ChatStatData;
 
 public class SuperSmashDominate extends Domination
-{       
+{
 	public SuperSmashDominate(ArcadeManager manager)
-	{ 
+	{
 		super(manager, GameType.SmashDomination,
- 
+
 				new Kit[]
 						{
-				
+
 				new KitSkeleton(manager),
 				new KitGolem(manager),
 				new KitSpider(manager),
 				new KitSlime(manager),
-				
+
 				new KitCreeper(manager),
 				new KitEnderman(manager),
 				new KitSnowman(manager),
 				new KitWolf(manager),
-				
-				
+
+
 				new KitBlaze(manager),
 				new KitWitch(manager),
 				new KitChicken(manager),
@@ -88,33 +83,28 @@ public class SuperSmashDominate extends Domination
 				BlankLine,
 				new ChatStatData("kit", "Kit", true)
 		);
-		
-		AntiHack antiHack = Managers.get(AntiHack.class);
-		antiHack.addIgnoredCheck(Speed.class);
-		antiHack.addIgnoredCheck(Glide.class);
-		antiHack.addIgnoredCheck(HeadRoll.class);
-	} 
-	
+	}
+
 	@EventHandler(priority = EventPriority.LOWEST)
 	public void FallDamage(CustomDamageEvent event)
 	{
 		if (event.IsCancelled())
 			return;
-		
+
 		if (event.GetCause() == DamageCause.FALL)
 			event.SetCancelled("No Fall Damage");
 	}
-	
+
 	@EventHandler(priority = EventPriority.HIGH)
 	public void Knockback(CustomDamageEvent event)
 	{
 		if (event.IsCancelled())
 			return;
-		
+
 		if (event.GetDamageePlayer() != null)
 			event.AddKnockback("Smash Knockback", 1 + 0.1 * (20 - event.GetDamageePlayer().getHealth()));
 	}
-	
+
 	@EventHandler(priority = EventPriority.HIGH)
 	public void ArenaWalls(CustomDamageEvent event)
 	{
@@ -125,29 +115,29 @@ public class SuperSmashDominate extends Domination
 		{
 			event.GetDamageeEntity().eject();
 			event.GetDamageeEntity().leaveVehicle();
-			
+
 			if (event.GetDamageePlayer() != null)
 				event.GetDamageeEntity().getWorld().strikeLightningEffect(event.GetDamageeEntity().getLocation());
-			
+
 			event.AddMod("Smash", "Super Smash Mobs", 5000, false);
-		}	
+		}
 	}
-	
+
 	@EventHandler
 	public void HealthChange(EntityRegainHealthEvent event)
 	{
 		if (event.getRegainReason() == RegainReason.SATIATED)
 			event.setCancelled(true);
 	}
-	
+
 	@EventHandler(priority = EventPriority.MONITOR)
 	public void EntityDeath(EntityDeathEvent event)
 	{
 		event.getDrops().clear();
 	}
-	
+
 	@Override
-	public void SetKit(Player player, Kit kit, boolean announce) 
+	public void SetKit(Player player, Kit kit, boolean announce)
 	{
 		GameTeam team = GetTeam(player);
 		if (team != null)
@@ -170,50 +160,50 @@ public class SuperSmashDominate extends Domination
 			UtilInv.Update(player);
 		}
 	}
-	
+
 	@EventHandler(priority = EventPriority.LOWEST)
 	public void AbilityDescription(PlayerInteractEvent event)
 	{
 		if (event.isCancelled())
 			return;
-		
+
 		Player player = event.getPlayer();
-		
+
 		if (player.getItemInHand() == null)
 			return;
-		
+
 		if (player.getItemInHand().getItemMeta() == null)
 			return;
-		
+
 		if (player.getItemInHand().getItemMeta().getDisplayName() == null)
 			return;
-		
+
 		if (player.getItemInHand().getItemMeta().getLore() == null)
 			return;
-		
+
 		if (Manager.GetGame() == null || Manager.GetGame().GetState() != GameState.Recruit)
 			return;
-		
+
 		for (int i=player.getItemInHand().getItemMeta().getLore().size() ; i<=7 ; i++)
 			UtilPlayer.message(player, " ");
-		
+
 		UtilPlayer.message(player, ArcadeFormat.Line);
 
 		UtilPlayer.message(player, "§aAbility - §f§l" + player.getItemInHand().getItemMeta().getDisplayName());
-		
+
 		//Perk Descs
 		for (String line : player.getItemInHand().getItemMeta().getLore())
 		{
 			UtilPlayer.message(player, line);
 		}
-		
+
 		UtilPlayer.message(player, ArcadeFormat.Line);
-		
+
 		player.playSound(player.getLocation(), Sound.NOTE_PLING, 1f, 2f);
-		
+
 		event.setCancelled(true);
 	}
-	
+
 	@EventHandler
 	public void ExplosionDamageCancel(EntityDamageEvent event)
 	{
@@ -222,13 +212,13 @@ public class SuperSmashDominate extends Domination
 			event.setCancelled(true);
 		}
 	}
-	
+
 	@Override
 	public double GetKillsGems(Player killer, Player killed, boolean assist)
 	{
 		return 2;
 	}
-	
+
 	@EventHandler
 	public void BlockFade(BlockFadeEvent event)
 	{

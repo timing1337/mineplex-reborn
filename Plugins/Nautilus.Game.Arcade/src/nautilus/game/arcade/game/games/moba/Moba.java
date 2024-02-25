@@ -20,15 +20,8 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.entity.ProjectileHitEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 
-import com.mineplex.anticheat.checks.combat.KillauraTypeD;
-import com.mineplex.anticheat.checks.move.Glide;
-import com.mineplex.anticheat.checks.move.HeadRoll;
-import com.mineplex.anticheat.checks.move.Speed;
-
 import mineplex.core.Managers;
 import mineplex.core.account.permissions.Permission;
-import mineplex.core.account.permissions.PermissionGroup;
-import mineplex.core.antihack.AntiHack;
 import mineplex.core.common.util.F;
 import mineplex.core.common.util.UtilAlg;
 import mineplex.core.common.util.UtilServer;
@@ -176,13 +169,6 @@ public class Moba extends TeamGame
 				.setGiveCompassToSpecs(true)
 				.setGiveCompassToAlive(false)
 				.register(this);
-
-		// Disable specific GWEN checks for this game
-		AntiHack antiHack = Managers.get(AntiHack.class);
-		antiHack.addIgnoredCheck(Speed.class);
-		antiHack.addIgnoredCheck(Glide.class);
-		antiHack.addIgnoredCheck(HeadRoll.class);
-		antiHack.addIgnoredCheck(KillauraTypeD.class);
 	}
 
 	protected <T extends Listener> T registerManager(T listener)

@@ -16,42 +16,42 @@ import org.bukkit.entity.Player;
 
 public abstract class GameTutorial
 {
-	
+
 	public ArcadeManager Manager;
-	
+
 	private TutorialPhase[] _phases;
 	private GameTeam _team;
 	private HashMap<Player, Location> _players;
-	
+
 	private TutorialPhase _currentPhase;
-	
+
 	private boolean _hasEnded;
 	private boolean _hasStarted;
-	
+
 	private int _tick;
-	
+
 	private long _started;
 
-	public boolean SetTutorialPositions = true; 
+	public boolean SetTutorialPositions = true;
 	public boolean TeleportOnEnd = true;
 	public boolean RunTasksSync = true;
 	public boolean PlayTutorialSounds = false;
 	public boolean ShowPrepareTimer = false;
 	public boolean CustomEnding = false;
 	public boolean TutorialNotification = false;
-	
+
 	public long TimeBetweenPhase = 0;
 	public long StartAfterTutorial = 5000;
 	public long CustomEndingTime = 5000;
-	
+
 	public GameTutorial(ArcadeManager manager, TutorialPhase[] phases)
 	{
 		Manager = manager;
 		_phases = phases;
 		_players = new HashMap<>();
 	}
-	
-	/** 
+
+	/**
 	 *	start the Tutorial (never use this)
 	 */
 	final public void start()
@@ -60,14 +60,14 @@ public abstract class GameTutorial
 		_tick = 0;
 		for (TutorialPhase phase : _phases)
 			phase.setTutorial(this);
-		
+
 		if (TutorialNotification)
 		{
 			TutorialPhase phase = getPhase(1);
 			for (TutorialText text : phase.getText())
 			{
 				int index = text.ID();
-				text.setID(index + 1); 
+				text.setID(index + 1);
 			}
 			TutorialText[] newText = new TutorialText[phase.getText().length + 1];
 			for (int i = 0; i < newText.length; i++)
@@ -84,7 +84,7 @@ public abstract class GameTutorial
 			}
 			phase.setText(newText);
 		}
-			
+
 		Manager.GetChat().setChatSilence(60000, false);
 		_started = System.currentTimeMillis();
 		Manager.getPluginManager().callEvent(new GameTutorialStartEvent(this));
@@ -95,14 +95,14 @@ public abstract class GameTutorial
 		{
 			@Override
 			public void run()
-			{	
+			{
 				nextPhase(true);
 			}
 		}, 40);
 		_currentPhase.teleport();
 	}
-	
-	/** 
+
+	/**
 	 * Stting next Phase/ending Tutorial
 	 */
 	protected void nextPhase(boolean phaseOne)
@@ -110,7 +110,7 @@ public abstract class GameTutorial
 		TutorialPhase from = _currentPhase;
 		if (!phaseOne)
 			_currentPhase = getNextPhase();
-			
+
 		if (_currentPhase == null)
 		{
 			// has ended
@@ -142,12 +142,12 @@ public abstract class GameTutorial
 			}
 		}
 	}
-	
+
 	public void setTeam(GameTeam team)
 	{
 		_team = team;
 	}
-	
+
 	private void endTutorial()
 	{
 		VisibilityManager vm = Managers.require(VisibilityManager.class);
@@ -163,9 +163,9 @@ public abstract class GameTutorial
 					{
 						if (player == other)
 							continue;
-						
+
 						vm.showPlayer(other, player, "Game Tutorial");
-					}	
+					}
 					player.setAllowFlight(false);
 					player.setFlying(false);
 				}
@@ -187,7 +187,7 @@ public abstract class GameTutorial
 		Manager.GetChat().setChatSilence(StartAfterTutorial, false);
 		Manager.GetGame().PrepareTime = (System.currentTimeMillis() - Manager.GetGame().GetStateTime()) + StartAfterTutorial;
 	}
-	
+
 	protected TutorialPhase getNextPhase()
 	{
 		// getting next TutorialPhase
@@ -204,7 +204,7 @@ public abstract class GameTutorial
 		}
 		return null;
 	}
-	
+
 	private void preparePlayers()
 	{
 		for (Player player : UtilServer.getPlayers())
@@ -217,10 +217,10 @@ public abstract class GameTutorial
 				player.setAllowFlight(true);
 				player.setFlying(true);
 				i++;
-			}	
+			}
 		}
 	}
-	
+
 	public TutorialPhase getPhase(int index)
 	{
 		for (TutorialPhase phase : _phases)
@@ -230,27 +230,27 @@ public abstract class GameTutorial
 		}
 		return null;
 	}
-	
+
 	public boolean hasEnded()
 	{
 		return _hasEnded;
 	}
-	
+
 	public boolean hasStarted()
 	{
 		return _hasStarted;
 	}
-	
+
 	public HashMap<Player, Location> getPlayers()
 	{
 		return _players;
 	}
-	
+
 	public GameTeam getTeam()
 	{
 		return _team;
 	}
-	
+
 	/**
 	 * only available if CustomEnding is enabled
 	 * You can end the tutorial with this method
@@ -260,13 +260,13 @@ public abstract class GameTutorial
 	{
 		if (CustomEnding)
 		{
-			// Ending 
+			// Ending
 			onEnd();
 			_hasEnded = true;
-			Thread thread = _currentPhase.getThread(); 
+			Thread thread = _currentPhase.getThread();
 			if (thread.isAlive())
 				thread.destroy();
-				
+
 			endTutorial();
 			final GameTutorial tutorial = this;
 			Manager.runSyncLater(new Runnable()
@@ -300,41 +300,41 @@ public abstract class GameTutorial
 		_tick++;
 		return _tick;
 	}
-	
+
 	public TutorialPhase[] getPhases()
 	{
 		return _phases;
 	}
-	
+
 	public TutorialPhase getCurrentPhase()
 	{
 		return _currentPhase;
 	}
-	
+
 	public long getTutorialStart()
 	{
 		return _started;
 	}
-	
+
 	public long getRunning()
 	{
 		return System.currentTimeMillis() - _started;
 	}
-	
+
 	public long getPhaseTime()
 	{
 		return _currentPhase.getPhaseTime();
 	}
-	
+
 	/*
 	 * some overrideable methods that can be used to synchronize the tutorial events
 	 */
-	
+
 	public void onTick(int tick){}
-	
+
 	public void onStart(){}
-	
+
 	public void onPhaseChange(TutorialPhase phase){}
-	
-	public void onEnd(){}	
+
+	public void onEnd(){}
 }

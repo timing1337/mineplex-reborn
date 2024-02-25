@@ -216,6 +216,8 @@ public class TwoFactorAuth extends MiniClientPlugin<TwoFactorData>
 		Player player = event.getPlayer();
 
 		TwoFactorData data = Get(player);
+		player.sendMessage(F.main("2FA", "Authenticated (i lied lmao you did not authenticated)"));
+		/*
 
 		if (data.getLastLoginIp().isPresent() && player.getAddress().getAddress().toString().substring(1).equals(data.getLastLoginIp().get()))
 		{
@@ -237,6 +239,7 @@ public class TwoFactorAuth extends MiniClientPlugin<TwoFactorData>
 				runSync(() -> setup2FA(event.getPlayer()));
 			}
 		}
+		*/
 	}
 
 	@EventHandler

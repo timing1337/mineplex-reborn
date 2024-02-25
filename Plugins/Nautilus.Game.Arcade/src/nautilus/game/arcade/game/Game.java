@@ -53,7 +53,6 @@ import com.mojang.authlib.GameProfile;
 import mineplex.core.Managers;
 import mineplex.core.account.permissions.Permission;
 import mineplex.core.account.permissions.PermissionGroup;
-import mineplex.core.antihack.AntiHack;
 import mineplex.core.arcadeevents.CoreGameStartEvent;
 import mineplex.core.arcadeevents.CoreGameStopEvent;
 import mineplex.core.command.CommandCenter;
@@ -135,7 +134,7 @@ import nautilus.game.arcade.world.WorldData;
 public abstract class Game extends ListenerComponent implements Lifetimed
 {
 	private final static int MAX_TICK_SPEED_MEASUREMENT = 40;
-	
+
 	public long getGameLiveTime()
 	{
 		return _gameLiveTime;
@@ -267,7 +266,7 @@ public abstract class Game extends ListenerComponent implements Lifetimed
 	public boolean WorldSoilTrample = false;
 	public boolean WorldBoneMeal = false;
 	public boolean WorldChunkUnload = false;
-	
+
 	public boolean AllowFlintAndSteel = false;
 
 	public int HungerSet = -1;
@@ -305,7 +304,7 @@ public abstract class Game extends ListenerComponent implements Lifetimed
 	public boolean SoupEnabled = true;
 
 	public boolean GiveClock = true;
-	
+
 	public boolean AllowParticles = true;
 	public boolean ShowWeaponNames = true;
 
@@ -316,9 +315,9 @@ public abstract class Game extends ListenerComponent implements Lifetimed
 	public boolean PlaySoundGameStart = true;
 
 	public double XpMult = 1;
-	
+
 	public boolean SpeedMeasurement = false;
-	
+
 	// Chat Stats
 	public final ChatStatData Kills = new ChatStatData("Kills", "Kills", true);
 	public final ChatStatData Assists = new ChatStatData("Assists", "Assists", true);
@@ -336,7 +335,7 @@ public abstract class Game extends ListenerComponent implements Lifetimed
 
 	// Gems
 	public boolean CrownsEnabled = false;
-	
+
 	public double GemMultiplier = 1;
 	public boolean GemHunterEnabled = true;
 	public boolean GemBoosterEnabled = true;
@@ -380,10 +379,10 @@ public abstract class Game extends ListenerComponent implements Lifetimed
 	public boolean FixSpawnFacing = true;
 
 	public boolean AllowEntitySpectate = true;
-	
+
 	// Used for "%player% is your teammate"
 	public boolean ShowTeammateMessage = false;
-	
+
 	public boolean ShowEveryoneSpecChat = true;
 
 	// Split Kit XP
@@ -402,7 +401,7 @@ public abstract class Game extends ListenerComponent implements Lifetimed
 	public boolean WinEffectEnabled = true;
 
 	private Map<Class<? extends Module>, Module> _modules = new HashMap<>();
-	
+
 	private HashMap<UUID, LinkedList<Triple<Double, Double, Double>>> _playerPastLocs = new HashMap<>();
 	private Set<DebugCommand> _debugCommands = new HashSet<>();
 
@@ -410,7 +409,7 @@ public abstract class Game extends ListenerComponent implements Lifetimed
 	{
 		DEBUG_COMMANDS
 	}
-	
+
 	public Game(ArcadeManager manager, GameType gameType, Kit[] kits, String[] gameDesc)
 	{
 		Manager = manager;
@@ -710,7 +709,7 @@ public abstract class Game extends ListenerComponent implements Lifetimed
 			{
 				color = ChatColor.DARK_GREEN;
 				int modulo = GetTeamList().size() % 14;
-				
+
 				if (modulo == 0) 		if (WorldData.getAllSpawnLocations().size() > 1)		color = ChatColor.RED;
 				if (modulo == 1) 		color = ChatColor.YELLOW;
 				if (modulo == 2) 		color = ChatColor.GREEN;
@@ -755,12 +754,10 @@ public abstract class Game extends ListenerComponent implements Lifetimed
 			// Speed Builders, Master Builders, Draw My Thing, Castle Siege
 			if (!AnticheatDisabled)
 			{
-				Managers.get(AntiHack.class).enableAnticheat();
 			}
 		}
 		else if (_gameState == Game.GameState.End && !this.AnticheatDisabled)
 		{
-			Managers.get(AntiHack.class).disableAnticheat();
 		}
 
 
@@ -909,8 +906,8 @@ public abstract class Game extends ListenerComponent implements Lifetimed
 					perk.unregisteredEvents();
 				}
 			}
-			
-			
+
+
 		}
 	}
 
@@ -2125,38 +2122,36 @@ public abstract class Game extends ListenerComponent implements Lifetimed
 	{
 		cleanupModules();
 		cleanupCommands();
-		Managers.get(AntiHack.class).resetIgnoredChecks();
-		Managers.get(AntiHack.class).setStrict(false);
 		getLifetime().end();
 		getStatTrackers().forEach(HandlerList::unregisterAll);
 		getArcadeManager().getMissionsManager().clearTrackers(tracker -> tracker instanceof GameMissionTracker);
 	}
-	
+
 	@EventHandler
 	public void registerLocs(UpdateEvent event)
 	{
 		if (!SpeedMeasurement)
 			return;
-		
+
 		if (event.getType() != UpdateType.TICK)
 			return;
-		
+
 		for (Player player : GetPlayers(true))
 		{
 			if (!_playerPastLocs.containsKey(player.getUniqueId()))
 				_playerPastLocs.put(player.getUniqueId(), new LinkedList<>());
-			
+
 			LinkedList<Triple<Double, Double, Double>> locList = _playerPastLocs.get(player.getUniqueId());
 			locList.add(Triple.of(player.getLocation().getX(), player.getLocation().getY(), player.getLocation().getZ()));
-			
+
 			if (locList.size() > MAX_TICK_SPEED_MEASUREMENT)
 				locList.removeFirst();
 		}
 	}
-	
+
 	/**
 	 * The players Location while the specified amount of ticks ago
-	 * 
+	 *
 	 * @param player to check
 	 * @param ticksAgo amount of time ago
 	 * @return Location of the specified time
@@ -2167,33 +2162,33 @@ public abstract class Game extends ListenerComponent implements Lifetimed
 		{
 			throw new IllegalStateException("Speed Measurements are not enabled");
 		}
-		
+
 		if (!IsAlive(player))
 		{
 			throw new IllegalArgumentException("this only works for ingame players");
 		}
-		
+
 		if (ticksAgo > MAX_TICK_SPEED_MEASUREMENT)
 		{
 			throw new IllegalArgumentException("ticksAgo needs to be 1 - 40");
 		}
-		
+
 		if (!_playerPastLocs.containsKey(player.getUniqueId()))
 			return player.getLocation();
-		
+
 		int tick = MAX_TICK_SPEED_MEASUREMENT - ticksAgo;
-		
+
 		LinkedList<Triple<Double, Double, Double>> pastLocs = _playerPastLocs.get(player.getUniqueId());
 		if (pastLocs.size() < tick)
 			return player.getLocation();
-		
+
 		Triple<Double, Double, Double> triple = _playerPastLocs.get(player.getUniqueId()).get(tick);
 		return new Location(player.getWorld(), triple.getLeft(), triple.getMiddle(), triple.getRight(), player.getLocation().getYaw(), player.getLocation().getPitch());
 	}
 
 	/**
 	 * The Vector of movement for the specified time
-	 * 
+	 *
 	 * @param player to check
 	 * @param ticksAgo amount of time ago
 	 * @return vector of movement
@@ -2203,10 +2198,10 @@ public abstract class Game extends ListenerComponent implements Lifetimed
 		Location past = getPastLocation(player, ticksAgo);
 		return player.getLocation().toVector().subtract(past.clone().toVector());
 	}
-	
+
 	/**
 	 * The amount of blocks moved for the specified time
-	 * 
+	 *
 	 * @param player
 	 * @param ticksAgo amount of time ago
 	 * @return blocks moved
@@ -2216,7 +2211,7 @@ public abstract class Game extends ListenerComponent implements Lifetimed
 		Location past = getPastLocation(player, ticksAgo);
 		return UtilMath.offset(past, player.getLocation());
 	}
-	
+
 	public void cleanupModules()
 	{
 		for (Module module : this._modules.values())

@@ -32,13 +32,10 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import com.google.common.collect.Sets;
-import com.mineplex.anticheat.checks.move.Glide;
-import com.mineplex.anticheat.checks.move.Speed;
 
 import mineplex.core.Managers;
 import mineplex.core.account.permissions.Permission;
 import mineplex.core.account.permissions.PermissionGroup;
-import mineplex.core.antihack.AntiHack;
 import mineplex.core.blockrestore.BlockRestore;
 import mineplex.core.common.util.C;
 import mineplex.core.common.util.F;
@@ -151,10 +148,6 @@ public abstract class SuperSmash extends Game
 		PlayerGameMode = GameMode.ADVENTURE;
 
 		registerMissions(new AirborneTracker(this));
-
-		AntiHack antiHack = Managers.get(AntiHack.class);
-		antiHack.addIgnoredCheck(Glide.class);
-		antiHack.addIgnoredCheck(Speed.class);
 
 		manager.GetExplosion().SetRegenerate(true);
 		manager.GetExplosion().setRegenerateTime(TimeUnit.SECONDS.toMillis(30));

@@ -15,9 +15,6 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
-import com.mineplex.anticheat.checks.move.Glide;
-import com.mineplex.anticheat.checks.move.Speed;
-
 import mineplex.core.common.util.C;
 import mineplex.core.common.util.MapUtil;
 import mineplex.core.common.util.UtilBlock;
@@ -105,9 +102,6 @@ public class Wizards extends ScoredSoloGame
 		_compassComponent.setGiveToAlive(true);
 
 		new DoubleJumpComponent(this);
-
-		_manager.getAntiHack().addIgnoredCheck(Speed.class);
-		_manager.getAntiHack().addIgnoredCheck(Glide.class);
 	}
 
 	@Override

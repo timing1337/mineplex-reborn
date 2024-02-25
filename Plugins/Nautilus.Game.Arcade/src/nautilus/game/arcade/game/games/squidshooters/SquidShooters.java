@@ -20,12 +20,7 @@ import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.util.Vector;
 
-import com.mineplex.anticheat.checks.move.Glide;
-import com.mineplex.anticheat.checks.move.HeadRoll;
-import com.mineplex.anticheat.checks.move.Speed;
-
 import mineplex.core.Managers;
-import mineplex.core.antihack.AntiHack;
 import mineplex.core.common.Pair;
 import mineplex.core.common.util.C;
 import mineplex.core.common.util.UtilAction;
@@ -76,11 +71,6 @@ public class SquidShooters extends SoloGame
 		DeathOut = false;
 		NightVision = true;
 		WorldTimeSet = 6000;
-
-		AntiHack antiHack = Managers.get(AntiHack.class);
-		antiHack.addIgnoredCheck(Speed.class);
-		antiHack.addIgnoredCheck(Glide.class);
-		antiHack.addIgnoredCheck(HeadRoll.class);
 	}
 
 	@Override

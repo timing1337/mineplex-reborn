@@ -17,9 +17,6 @@ import mineplex.core.PacketsInteractionFix;
 import mineplex.core.TwitchIntegrationFix;
 import mineplex.core.account.CoreClientManager;
 import mineplex.core.achievement.AchievementManager;
-import mineplex.core.antihack.AntiHack;
-import mineplex.core.antihack.RelationProvider;
-import mineplex.core.antihack.logging.AntihackLogger;
 import mineplex.core.aprilfools.AprilFoolsManager;
 import mineplex.core.blockrestore.BlockRestore;
 import mineplex.core.blood.Blood;
@@ -80,7 +77,6 @@ import mineplex.core.website.WebsiteLinkManager;
 import mineplex.minecraft.game.core.combat.CombatManager;
 import mineplex.minecraft.game.core.damage.DamageManager;
 
-import nautilus.game.arcade.anticheatmetadata.GameInfoMetadata;
 import nautilus.game.arcade.game.GameServerConfig;
 import static mineplex.core.Managers.require;
 
@@ -88,28 +84,16 @@ public class Arcade extends JavaPlugin
 {
 
 	private ArcadeManager _gameManager;
-	 
+
 	private ServerConfiguration _serverConfiguration;
 
-	@Override     
-	public void onEnable() 
+	@Override
+	public void onEnable()
 	{
-		getServer().getServicesManager().register(RelationProvider.class, (player, target) ->
-		{
-			if (target instanceof Player)
-			{
-				return _gameManager.canHurt(player, (Player) target);
-			}
-			else
-			{
-				return target instanceof LivingEntity && _gameManager.GetGame() != null && _gameManager.GetGame().IsLive();
-			}
-		}, this, ServicePriority.Normal);
-
 		Bukkit.setSpawnRadius(0);
 		//Delete Old Games Folders
 		DeleteFolders();
- 
+
 		//Configs
 		getConfig().addDefault(Constants.WEB_CONFIG_KEY, Constants.WEB_ADDRESS);
 		getConfig().set(Constants.WEB_CONFIG_KEY, getConfig().getString(Constants.WEB_CONFIG_KEY));
@@ -123,9 +107,9 @@ public class Arcade extends JavaPlugin
 		CommandCenter.Instance.setClientManager(clientManager);
 		require(ProfileCacheManager.class);
 
-		
-		ItemStackFactory.Initialize(this, false);  
-		Recharge.Initialize(this);   
+
+		ItemStackFactory.Initialize(this, false);
+		Recharge.Initialize(this);
 		require(VisibilityManager.class);
 		Give.Initialize(this);
 
@@ -138,7 +122,7 @@ public class Arcade extends JavaPlugin
 		DonationManager donationManager = require(DonationManager.class);
 
 		_serverConfiguration = new ServerConfiguration(this, clientManager);
-		
+
 		PacketHandler packetHandler = require(PacketHandler.class);
 
 		IncognitoManager incognito = new IncognitoManager(this, clientManager, packetHandler);
@@ -150,15 +134,13 @@ public class Arcade extends JavaPlugin
 		Teleport teleport = new Teleport(this, clientManager);
 		Portal portal = new Portal();
 		new FileUpdater(GenericServer.HUB);
-		
+
 		DisguiseManager disguiseManager = require(DisguiseManager.class);
 
 		NpcManager npcmanager = new NpcManager(this, creature);
 		DamageManager damageManager = new DamageManager(this, require(CombatManager.class), npcmanager, disguiseManager, null);
 
 		Punish punish = new Punish(this, clientManager);
-
-		require(AntiHack.class);
 
         IgnoreManager ignoreManager = new IgnoreManager(this, clientManager, preferenceManager, portal);
 		StatsManager statsManager = new StatsManager(this, clientManager);
@@ -174,10 +156,10 @@ public class Arcade extends JavaPlugin
 		new ReportPlugin(this, reportManager);
 
 		BlockRestore blockRestore = require(BlockRestore.class);
-		
+
 		ProjectileManager projectileManager = new ProjectileManager(this);
 		HologramManager hologramManager = require(HologramManager.class);
-		
+
 		//Inventory
 		InventoryManager inventoryManager = new InventoryManager(this, clientManager);
 		CastleManager castleManager = new CastleManager(this, clientManager, hologramManager, false);
@@ -193,14 +175,12 @@ public class Arcade extends JavaPlugin
 
 		CustomDataManager customDataManager = require(CustomDataManager.class);
 
-		//Arcade Manager  
+		//Arcade Manager
 		PollManager pollManager = new PollManager(this, clientManager, donationManager);
 		_gameManager = new ArcadeManager(this, serverStatusManager, ReadServerConfig(), clientManager, donationManager, damageManager, statsManager, incognito, achievementManager, disguiseManager, creature, teleport, new Blood(this), chat, portal, preferenceManager, inventoryManager, packetHandler, cosmeticManager, projectileManager, petManager, hologramManager, pollManager, npcmanager, customDataManager, punish, eloManager, thankManager, boosterManager);
 
-		require(AntihackLogger.class).registerMetadata(new GameInfoMetadata());
-
 		//new BroadcastManager(this, _gameManager);
-		
+
 		new MemoryFix(this);
 		new CustomTagFix(this, packetHandler);
 		new PacketsInteractionFix(this, packetHandler);
@@ -209,7 +189,7 @@ public class Arcade extends JavaPlugin
 		require(TwoFactorAuth.class);
 		require(WebsiteLinkManager.class);
 		require(TwitchIntegrationFix.class);
-		
+
 		AprilFoolsManager.getInstance();
 
 		require(CustomItemFrames.class);
@@ -222,8 +202,8 @@ public class Arcade extends JavaPlugin
 		SpigotConfig.debug = false;
 	}
 
-	@Override 
-	public void onDisable() 
+	@Override
+	public void onDisable()
 	{
 		for (Player player : UtilServer.getPlayers())
 			player.kickPlayer("Server Shutdown");
@@ -235,7 +215,7 @@ public class Arcade extends JavaPlugin
 		getServer().getPluginManager().callEvent(new ServerShutdownEvent(this));
 	}
 
-	public GameServerConfig ReadServerConfig() 
+	public GameServerConfig ReadServerConfig()
 	{
 		GameServerConfig config = new GameServerConfig();
 
@@ -314,7 +294,7 @@ public class Arcade extends JavaPlugin
 		return _gameManager;
 	}
 
-	private void DeleteFolders() 
+	private void DeleteFolders()
 	{
 		File curDir = new File(".");
 

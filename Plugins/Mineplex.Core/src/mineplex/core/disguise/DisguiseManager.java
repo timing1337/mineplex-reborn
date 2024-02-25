@@ -36,7 +36,6 @@ import net.minecraft.server.v1_8_R3.PacketPlayOutPlayerInfo;
 import net.minecraft.server.v1_8_R3.PacketPlayOutSpawnEntity;
 import net.minecraft.server.v1_8_R3.PacketPlayOutSpawnEntityLiving;
 import net.minecraft.server.v1_8_R3.PacketPlayOutUpdateAttributes;
-import net.minecraft.server.v1_8_R3.PacketPlayOutVehicleMove;
 import net.minecraft.server.v1_8_R3.WorldServer;
 import net.minecraft.server.v1_8_R3.WorldSettings;
 
@@ -397,7 +396,7 @@ public class DisguiseManager extends MiniPlugin implements IPacketHandler
 		final Packet packet = packetInfo.getPacket();
 		final Player owner = packetInfo.getPlayer();
 		final PacketVerifier packetVerifier = packetInfo.getVerifier();
-		final int protocol = ((CraftPlayer) owner).getHandle().getProtocol();
+		final int protocol = ((CraftPlayer) owner).getHandle().playerConnection.networkManager.getVersion();
 
 		if (packet instanceof PacketPlayOutPlayerInfo)
 		{
@@ -697,8 +696,8 @@ public class DisguiseManager extends MiniPlugin implements IPacketHandler
 				EntityPlayer nmsPlayer = ((CraftPlayer) player).getHandle();
 				if (disguise.getEntity() == nmsPlayer)
 					continue;
-
-				int protocol = nmsPlayer.getProtocol();
+					
+				int protocol = nmsPlayer.playerConnection.networkManager.getVersion();
 				UtilPlayer.sendPacket(player, disguise.modifyMetaPacket(protocol, disguise.getMetadataPacket()));
 			}
 		}
@@ -822,9 +821,9 @@ public class DisguiseManager extends MiniPlugin implements IPacketHandler
 		List<Packet> packets = new ArrayList<>();
 
 		EntityPlayer nmsPlayer = ((CraftPlayer) player).getHandle();
-		int protocol = nmsPlayer.getProtocol();
+		int protocol = nmsPlayer.playerConnection.networkManager.getVersion();
 
-		PacketPlayOutMapChunk chunk = new PacketPlayOutMapChunk(protocol, _bedChunk, true, '\uffff');
+		PacketPlayOutMapChunk chunk = new PacketPlayOutMapChunk(_bedChunk, true, '\uffff');
 		chunk.a = BED_POS_NORTH[0] >> 4;
 		chunk.b = BED_POS_NORTH[2] >> 4;
 
@@ -875,7 +874,7 @@ public class DisguiseManager extends MiniPlugin implements IPacketHandler
 			double d2 = posZ + (targetZ - posZ) / (double) partitions;
 
 
-			PacketPlayOutMapChunk chunk = new PacketPlayOutMapChunk(protocol, _bedChunk, true, '\uffff');
+			PacketPlayOutMapChunk chunk = new PacketPlayOutMapChunk(_bedChunk, true, '\uffff');
 			chunk.a = (int) Math.floor(d0) >> 4;
 			chunk.b = (int) Math.floor(d2) >> 4;
 			packets.add(chunk);

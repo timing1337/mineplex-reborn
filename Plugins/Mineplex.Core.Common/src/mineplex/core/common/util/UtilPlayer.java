@@ -26,7 +26,6 @@ import net.minecraft.server.v1_8_R3.EntityPlayer;
 import net.minecraft.server.v1_8_R3.EntityTracker;
 import net.minecraft.server.v1_8_R3.EntityTrackerEntry;
 import net.minecraft.server.v1_8_R3.Packet;
-import net.minecraft.server.v1_8_R3.PacketPlayOutCustomSoundEffect;
 import net.minecraft.server.v1_8_R3.PacketPlayOutNamedSoundEffect;
 import net.minecraft.server.v1_8_R3.PacketPlayOutWorldBorder;
 import net.minecraft.server.v1_8_R3.PlayerConnection;
@@ -50,8 +49,6 @@ import org.bukkit.potion.PotionEffect;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.util.BlockIterator;
 import org.bukkit.util.Vector;
-
-import com.mineplex.ProtocolVersion;
 
 import mineplex.core.common.MinecraftVersion;
 
@@ -922,7 +919,7 @@ public class UtilPlayer
 	public static MinecraftVersion getVersion(Player player)
 	{
 		int version = ((CraftPlayer) player).getHandle().playerConnection.networkManager.getVersion();
-		
+
 		return MinecraftVersion.fromInt(version);
 	}
 
@@ -1170,14 +1167,7 @@ public class UtilPlayer
 		int protocol = getProtocol(player);
 		Location location = player.getLocation();
 
-		if (protocol >= ProtocolVersion.v1_12)
-		{
-			packet = new PacketPlayOutCustomSoundEffect(sound.getAudioPath(), location.getX(), location.getY(), location.getZ(), 20, 1);
-		}
-		else
-		{
-			packet = new PacketPlayOutNamedSoundEffect(sound.getAudioPath(), location.getBlockX(), location.getBlockY(), location.getBlockZ(), 20, 1);
-		}
+		packet = new PacketPlayOutNamedSoundEffect(sound.getAudioPath(), location.getBlockX(), location.getBlockY(), location.getBlockZ(), 20, 1);
 
 		sendPacket(player, packet);
 	}
@@ -1211,7 +1201,7 @@ public class UtilPlayer
 
 	public static int getProtocol(Player player)
 	{
-		return ((CraftPlayer) player).getHandle().getProtocol();
+		return 1;
 	}
 
 	/**

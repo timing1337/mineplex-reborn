@@ -39,7 +39,6 @@
         <module>Mineplex.ServerData</module>
         <module>Mineplex.ServerMonitor</module>
         <module>Mineplex.StaffServer</module>
-        <module>Mineplex.Votifier</module>
         <module>Mineplex.Game.Nano</module>
         <module>Nautilus.Game.Arcade</module>
         <module>Nautilus.Game.Arcade.UHC.WorldGen</module>
@@ -50,12 +49,12 @@
 
     <repositories>
         <repository>
-            <id>mineplex</id>
-            <url>http://dev.mineplex.com:8081/nexus/content/groups/public/</url>
-        </repository>
-        <repository>
             <id>spigotmc-public</id>
             <url>https://hub.spigotmc.org/nexus/content/groups/public/</url>
+        </repository>
+        <repository>
+            <id>bungeecord-repo</id>
+            <url>https://oss.sonatype.org/content/repositories/snapshots</url>
         </repository>
     </repositories>
 
@@ -78,12 +77,6 @@
                 <artifactId>gson</artifactId>
                 <version>2.2.1</version>
                 <scope>compile</scope>
-            </dependency>
-            <dependency>
-                <groupId>com.vexsoftware</groupId>
-                <artifactId>votifier</artifactId>
-                <version>1.9</version>
-                <scope>provided</scope>
             </dependency>
             <dependency>
                 <groupId>javax.mail</groupId>
@@ -112,8 +105,8 @@
             <dependency>
                 <groupId>net.md-5</groupId>
                 <artifactId>bungeecord-proxy</artifactId>
-                <version>1.8-SNAPSHOT</version>
-                <scope>provided</scope>
+                <version>1.20-R0.3-SNAPSHOT</version>
+                <scope>compile</scope>
             </dependency>
             <dependency>
                 <groupId>org.apache.commons</groupId>
@@ -155,7 +148,8 @@
                 <groupId>com.mineplex</groupId>
                 <artifactId>spigot</artifactId>
                 <version>1.8.8-1.9-SNAPSHOT</version>
-                <scope>compile</scope>
+                <scope>system</scope>
+                <systemPath>D:/mineplex-reborn/spigot/spigot-1.8.8-1.9-SNAPSHOT.jar</systemPath>
             </dependency>
             <dependency>
                 <groupId>redis.clients</groupId>
@@ -175,7 +169,11 @@
                 <version>1.3</version>
                 <scope>test</scope>
             </dependency>
-
+            <dependency>
+                <groupId>io.netty</groupId>
+                <artifactId>netty-all</artifactId>
+                <version>4.1.107.Final</version>
+            </dependency>
         </dependencies>
     </dependencyManagement>
 

@@ -12,7 +12,6 @@ import mineplex.core.CustomTagFix;
 import mineplex.core.FoodDupeFix;
 import mineplex.core.account.CoreClientManager;
 import mineplex.core.achievement.AchievementManager;
-import mineplex.core.antihack.AntiHack;
 import mineplex.core.blockrestore.BlockRestore;
 import mineplex.core.boosters.BoosterManager;
 import mineplex.core.chat.Chat;
@@ -102,9 +101,9 @@ import static mineplex.core.Managers.require;
 
 /**
  * Gem Hunters main class <br>
- * 
+ *
  * TODO make documentation and a nice header
- * 
+ *
  * @author Sam
  */
 public class GemHunters extends JavaPlugin
@@ -178,7 +177,7 @@ public class GemHunters extends JavaPlugin
 		// Disguises
 		DisguiseManager disguiseManager = require(DisguiseManager.class);
 		require(PlayerDisguiseManager.class);
-		
+
 		// Creatures
 		Creature creature = new Creature(this);
 		creature.SetDisableCustomDrops(true);
@@ -186,14 +185,6 @@ public class GemHunters extends JavaPlugin
 		// The old classic Damage Manager
 		DamageManager damageManager = new DamageManager(this, require(CombatManager.class), new NpcManager(this, creature), disguiseManager, new ConditionManager(this));
 		damageManager.SetEnabled(false);
-		
-		// GWEN
-		AntiHack antiHack = require(AntiHack.class);
-		Bukkit.getScheduler().runTask(this, () ->
-		{
-			antiHack.setStrict(true);
-			antiHack.enableAnticheat();
-		});
 
 		// Block Restore
 		BlockRestore blockRestore = require(BlockRestore.class);
@@ -296,7 +287,7 @@ public class GemHunters extends JavaPlugin
 		new TimeCycle(this);
 		new UndergroundMobs(this);
 		new Leaderboards();
-		
+
 		// UpdateEvent!!!
 		require(Updater.class);
 

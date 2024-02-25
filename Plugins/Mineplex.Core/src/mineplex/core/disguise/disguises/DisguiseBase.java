@@ -10,6 +10,7 @@ import java.util.function.Supplier;
 import net.minecraft.server.v1_8_R3.*;
 
 import org.bukkit.craftbukkit.v1_8_R3.entity.CraftEntity;
+import org.bukkit.craftbukkit.v1_8_R3.entity.CraftPlayer;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.event.entity.CreatureSpawnEvent;
@@ -89,7 +90,7 @@ public abstract class DisguiseBase
 
 		for (EntityPlayer player : tracker.get(getEntity().getId()).trackedPlayers)
 		{
-			int protocol = player.getProtocol();
+			int protocol = player.playerConnection.networkManager.getVersion();
 			if (!protocolPredicate.test(protocol))
 				continue;
 

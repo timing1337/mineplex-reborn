@@ -63,10 +63,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.FireworkMeta;
 import org.bukkit.util.Vector;
 
-import com.mineplex.anticheat.checks.combat.KillauraTypeA;
-
 import mineplex.core.Managers;
-import mineplex.core.antihack.AntiHack;
 import mineplex.core.common.MinecraftVersion;
 import mineplex.core.common.util.C;
 import mineplex.core.common.util.F;
@@ -370,9 +367,6 @@ public class HideSeek extends TeamGame
 				.register(this);
 
 		StrictAntiHack = true;
-		
-		AntiHack antiHack = Managers.get(AntiHack.class);
-		antiHack.addIgnoredCheck(KillauraTypeA.class);
 	}
 
 	@EventHandler

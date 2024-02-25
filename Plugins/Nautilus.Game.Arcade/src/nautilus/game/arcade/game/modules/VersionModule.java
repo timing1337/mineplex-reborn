@@ -40,9 +40,11 @@ public class VersionModule extends Module
 	@EventHandler(priority = EventPriority.LOWEST)
 	public void onPlayerPreLogin(AsyncPlayerPreLoginEvent event)
 	{
+		/*
 		if (MinecraftVersion.fromInt(event.spigot().getVersion()) != _minecraftVersion)
 		{
 			event.disallow(AsyncPlayerPreLoginEvent.Result.KICK_OTHER, C.cGold + C.Bold + "Please use Minecraft " + _minecraftVersion.friendlyName() + " or newer to play this game!");
 		}
+		*/
 	}
 }

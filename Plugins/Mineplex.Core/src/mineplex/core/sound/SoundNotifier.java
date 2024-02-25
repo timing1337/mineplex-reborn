@@ -5,9 +5,6 @@ import java.util.Iterator;
 import java.util.Set;
 
 import com.google.common.collect.Sets;
-import com.mineplex.spigot.MissingSoundEvent;
-
-import org.bukkit.event.EventHandler;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import mineplex.core.MiniPlugin;
@@ -76,6 +73,7 @@ public class SoundNotifier extends MiniPlugin
 		}.runTaskTimerAsynchronously(_plugin, delay, delay);
 	}
 
+	/*
 	@EventHandler
 	public void onMissingSound(MissingSoundEvent event)
 	{
@@ -86,6 +84,7 @@ public class SoundNotifier extends MiniPlugin
 			_messages.add(message);
 		}
 	}
+	*/
 
 	private void sendSlackMessage(String message)
 	{

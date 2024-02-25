@@ -13,7 +13,6 @@ import java.util.concurrent.atomic.AtomicIntegerFieldUpdater;
 
 import net.minecraft.server.v1_8_R3.EntityPlayer;
 import net.minecraft.server.v1_8_R3.PacketPlayInTabComplete;
-import net.minecraft.server.v1_8_R3.PacketPlayOutDeclareCommands;
 import net.minecraft.server.v1_8_R3.PacketPlayOutTabComplete;
 import net.minecraft.server.v1_8_R3.PlayerConnection;
 
@@ -26,7 +25,6 @@ import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import com.google.common.collect.Lists;
-import com.mineplex.ProtocolVersion;
 
 import mineplex.core.Managers;
 import mineplex.core.account.CoreClient;
@@ -153,12 +151,12 @@ public class CommandCenter implements Listener, IPacketHandler
 				_playerLastCommand.put(event.getPlayer().getUniqueId(), commandLabel);
 
 				command.SetAliasUsed(commandLabel);
-				
+
 				if (command instanceof LoggedCommand)
 				{
 					((LoggedCommand) command).execute(System.currentTimeMillis(), event.getPlayer().getName(), commandName, argString);
 				}
-				
+
 				command.Execute(event.getPlayer(), args);
 			}
 			else
@@ -218,11 +216,14 @@ public class CommandCenter implements Listener, IPacketHandler
 	public void onPlayerJoin(PlayerJoinEvent event)
 	{
 		int protocol = UtilPlayer.getProtocol(event.getPlayer());
+		//TODO: Protocol Support
+		/* 
 		if (protocol >= ProtocolVersion.v1_13)
 		{
 			List<String> commands = getCommands(event.getPlayer());
 			UtilPlayer.sendPacket(event.getPlayer(), new PacketPlayOutDeclareCommands(commands));
 		}
+		*/
 	}
 
 	@Override
@@ -231,11 +232,14 @@ public class CommandCenter implements Listener, IPacketHandler
 		if (packetInfo.getPacket() instanceof PacketPlayInTabComplete)
 		{
 			EntityPlayer nmsPlayer = ((CraftPlayer) packetInfo.getPlayer()).getHandle();
+			//TODO: Protocol Support
+			/* 
 			if (nmsPlayer.getProtocol() >= ProtocolVersion.v1_13)
 			{
 				return;
 			}
-
+			*/
+			
 			PacketPlayInTabComplete packet = (PacketPlayInTabComplete) packetInfo.getPacket();
 
 			String message = packet.a();
