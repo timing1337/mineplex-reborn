@@ -1,11 +1,11 @@
 -- phpMyAdmin SQL Dump
--- version 5.1.1
+-- version 5.2.1
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: May 24, 2023 at 06:19 AM
--- Server version: 10.4.22-MariaDB
--- PHP Version: 7.4.27
+-- Generation Time: Feb 26, 2024 at 03:07 PM
+-- Server version: 10.4.32-MariaDB
+-- PHP Version: 8.0.30
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -30,7 +30,7 @@ SET time_zone = "+00:00";
 CREATE TABLE `accountcrowns` (
   `accountId` int(11) NOT NULL,
   `crownCount` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
@@ -42,7 +42,7 @@ CREATE TABLE `accountcustomdata` (
   `accountId` int(11) NOT NULL,
   `customDataId` int(11) NOT NULL,
   `data` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
@@ -53,7 +53,7 @@ CREATE TABLE `accountcustomdata` (
 CREATE TABLE `accountfavouritenano` (
   `accountId` int(11) NOT NULL,
   `gameId` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
@@ -67,7 +67,7 @@ CREATE TABLE `accountfriend` (
   `uuidTarget` varchar(100) DEFAULT NULL,
   `status` varchar(100) DEFAULT NULL,
   `favourite` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
@@ -79,7 +79,7 @@ CREATE TABLE `accountfrienddata` (
   `accountId` int(11) NOT NULL,
   `status` int(11) NOT NULL,
   `favourite` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
@@ -90,7 +90,7 @@ CREATE TABLE `accountfrienddata` (
 CREATE TABLE `accountignore` (
   `uuidIgnorer` varchar(255) NOT NULL,
   `uuidIgnored` varchar(255) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
@@ -103,7 +103,7 @@ CREATE TABLE `accountinventory` (
   `accountId` int(11) NOT NULL,
   `itemId` int(11) NOT NULL,
   `count` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
@@ -115,7 +115,7 @@ CREATE TABLE `accountkits` (
   `accountId` int(11) NOT NULL,
   `kitId` int(11) NOT NULL,
   `active` bit(1) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
@@ -128,7 +128,7 @@ CREATE TABLE `accountkitstats` (
   `kitId` int(11) NOT NULL,
   `statId` int(11) NOT NULL,
   `value` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
@@ -139,7 +139,7 @@ CREATE TABLE `accountkitstats` (
 CREATE TABLE `accountlevelreward` (
   `accountId` int(11) NOT NULL,
   `level` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
@@ -155,8 +155,8 @@ CREATE TABLE `accountmissions` (
   `y` int(11) NOT NULL,
   `startTime` bigint(11) NOT NULL,
   `progress` int(11) NOT NULL DEFAULT 0,
-  `complete` bit(1) NOT NULL DEFAULT b'0'
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+  `complete` int(1) NOT NULL DEFAULT 0
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
@@ -169,7 +169,7 @@ CREATE TABLE `accountpolls` (
   `accountId` int(11) NOT NULL,
   `pollId` int(11) NOT NULL,
   `value` tinyint(1) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
@@ -190,7 +190,7 @@ CREATE TABLE `accountpunishments` (
   `Removed` tinyint(1) NOT NULL DEFAULT 0,
   `RemovedReason` varchar(255) DEFAULT NULL,
   `RemovedAdmin` varchar(255) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
@@ -203,7 +203,7 @@ CREATE TABLE `accountranks` (
   `accountId` int(11) NOT NULL,
   `rankIdentifier` varchar(40) DEFAULT 'PLAYER',
   `primaryGroup` tinyint(1) DEFAULT 1
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
@@ -219,7 +219,7 @@ CREATE TABLE `accounts` (
   `coins` int(11) NOT NULL DEFAULT 0,
   `lastLogin` mediumtext DEFAULT NULL,
   `totalPlayTime` mediumtext DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
@@ -231,7 +231,7 @@ CREATE TABLE `accountstatsalltime` (
   `accountId` int(11) NOT NULL,
   `statId` int(11) NOT NULL,
   `value` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
@@ -242,7 +242,7 @@ CREATE TABLE `accountstatsalltime` (
 CREATE TABLE `accounttasks` (
   `accountId` int(11) NOT NULL,
   `taskId` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
@@ -254,7 +254,7 @@ CREATE TABLE `accountteamspeak` (
   `accountId` int(11) NOT NULL,
   `teamspeakId` int(11) NOT NULL,
   `linkDate` datetime NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
@@ -271,7 +271,7 @@ CREATE TABLE `accountthanktransactions` (
   `claimed` bit(1) NOT NULL,
   `sentTime` time NOT NULL,
   `claimTime` time NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
@@ -282,7 +282,7 @@ CREATE TABLE `accountthanktransactions` (
 CREATE TABLE `accounttitle` (
   `accountId` int(11) NOT NULL,
   `trackName` varchar(255) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
@@ -294,7 +294,7 @@ CREATE TABLE `accountwinstreak` (
   `accountId` int(11) NOT NULL,
   `gameId` int(11) NOT NULL,
   `value` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
@@ -314,7 +314,7 @@ CREATE TABLE `bonus` (
   `voteStreak` int(11) NOT NULL,
   `maxVoteStreak` int(11) NOT NULL,
   `tickets` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
@@ -330,7 +330,7 @@ CREATE TABLE `botspam` (
   `createdBy` varchar(100) NOT NULL,
   `enabledBy` varchar(100) NOT NULL,
   `disabledBy` varchar(100) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
@@ -342,7 +342,7 @@ CREATE TABLE `communities` (
   `id` int(11) NOT NULL,
   `name` varchar(15) NOT NULL,
   `region` varchar(5) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
@@ -353,7 +353,7 @@ CREATE TABLE `communities` (
 CREATE TABLE `communityinvites` (
   `accountId` int(11) NOT NULL,
   `communityId` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
@@ -364,7 +364,7 @@ CREATE TABLE `communityinvites` (
 CREATE TABLE `communityjoinrequests` (
   `accountId` int(11) NOT NULL,
   `communityId` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
@@ -377,7 +377,7 @@ CREATE TABLE `communitymembers` (
   `communityId` int(11) NOT NULL,
   `communityRole` varchar(20) NOT NULL,
   `readingChat` bit(1) NOT NULL DEFAULT b'1'
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
@@ -389,7 +389,7 @@ CREATE TABLE `communitysettings` (
   `settingId` int(11) NOT NULL,
   `communityId` int(11) NOT NULL,
   `settingValue` varchar(255) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
@@ -400,7 +400,7 @@ CREATE TABLE `communitysettings` (
 CREATE TABLE `customdata` (
   `id` int(11) NOT NULL,
   `name` varchar(255) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
@@ -412,7 +412,7 @@ CREATE TABLE `elorating` (
   `accountId` int(11) NOT NULL,
   `gameType` int(11) NOT NULL,
   `elo` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
@@ -423,7 +423,7 @@ CREATE TABLE `elorating` (
 CREATE TABLE `eternalgiveaway` (
   `accountId` int(11) NOT NULL,
   `uuid` varchar(255) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
@@ -435,7 +435,7 @@ CREATE TABLE `forumlink` (
   `accountId` int(11) NOT NULL,
   `userId` int(11) NOT NULL,
   `powerPlayStatus` tinyint(1) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
@@ -446,7 +446,7 @@ CREATE TABLE `forumlink` (
 CREATE TABLE `hubnews` (
   `newsId` int(11) NOT NULL,
   `newsValue` text NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
@@ -457,7 +457,7 @@ CREATE TABLE `hubnews` (
 CREATE TABLE `incognitostaff` (
   `accountId` int(11) NOT NULL,
   `status` tinyint(1) DEFAULT 0
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
@@ -469,7 +469,7 @@ CREATE TABLE `items` (
   `id` int(11) NOT NULL,
   `name` varchar(100) DEFAULT NULL,
   `rarity` int(11) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
@@ -483,7 +483,7 @@ CREATE TABLE `kitprogression` (
   `xp` int(11) NOT NULL,
   `level` int(11) NOT NULL,
   `upgrade_level` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
@@ -511,7 +511,7 @@ CREATE TABLE `newnpcsnew` (
   `metadata` varchar(255) NOT NULL,
   `skin_value` varchar(255) DEFAULT NULL,
   `skin_signature` varchar(255) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
@@ -541,7 +541,7 @@ CREATE TABLE `npcs` (
   `info` blob DEFAULT NULL,
   `infoRadius` float DEFAULT NULL,
   `infoDelay` int(11) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
@@ -552,7 +552,7 @@ CREATE TABLE `npcs` (
 CREATE TABLE `playermap` (
   `accountId` int(11) NOT NULL,
   `playerName` varchar(255) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
@@ -570,7 +570,7 @@ CREATE TABLE `polls` (
   `answerD` varchar(256) DEFAULT NULL,
   `coinReward` int(11) NOT NULL,
   `displayType` int(11) NOT NULL DEFAULT 0
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
@@ -582,7 +582,7 @@ CREATE TABLE `powerplayclaims` (
   `accountId` int(11) NOT NULL,
   `claimYear` int(11) NOT NULL,
   `claimMonth` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
@@ -594,7 +594,7 @@ CREATE TABLE `powerplaysubs` (
   `accountId` int(11) NOT NULL,
   `startDate` date NOT NULL,
   `duration` varchar(255) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
@@ -606,7 +606,7 @@ CREATE TABLE `preferences` (
   `accountId` int(11) NOT NULL,
   `preference` int(11) NOT NULL,
   `value` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
@@ -618,7 +618,7 @@ CREATE TABLE `rankbenefits` (
   `id` int(11) NOT NULL,
   `accountId` int(11) DEFAULT NULL,
   `benefit` varchar(100) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
@@ -630,7 +630,7 @@ CREATE TABLE `reporthandlers` (
   `reportId` bigint(20) NOT NULL,
   `handlerId` int(11) NOT NULL,
   `aborted` tinyint(1) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
@@ -643,7 +643,7 @@ CREATE TABLE `reportresults` (
   `resultId` int(11) NOT NULL,
   `reason` text NOT NULL,
   `closedTime` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
@@ -658,7 +658,7 @@ CREATE TABLE `reports` (
   `snapshotId` int(11) NOT NULL,
   `assignedTeam` int(11) NOT NULL,
   `region` text NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
@@ -672,7 +672,7 @@ CREATE TABLE `salesannouncements` (
   `message` varchar(256) DEFAULT NULL,
   `enabled` tinyint(1) DEFAULT NULL,
   `clans` tinyint(1) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
@@ -683,7 +683,7 @@ CREATE TABLE `salesannouncements` (
 CREATE TABLE `specificyoutube` (
   `accountId` int(11) NOT NULL,
   `clicktime` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
@@ -694,7 +694,7 @@ CREATE TABLE `specificyoutube` (
 CREATE TABLE `stats` (
   `id` int(11) NOT NULL,
   `name` varchar(100) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
@@ -705,7 +705,7 @@ CREATE TABLE `stats` (
 CREATE TABLE `tasks` (
   `id` int(11) NOT NULL,
   `name` varchar(255) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
@@ -716,7 +716,7 @@ CREATE TABLE `tasks` (
 CREATE TABLE `twofactor` (
   `accountId` int(11) NOT NULL,
   `secretKey` varchar(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
@@ -728,7 +728,7 @@ CREATE TABLE `twofactor_history` (
   `accountId` int(11) NOT NULL,
   `ip` int(11) NOT NULL,
   `loginTime` datetime NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
@@ -739,7 +739,7 @@ CREATE TABLE `twofactor_history` (
 CREATE TABLE `youtube` (
   `accountId` int(11) NOT NULL,
   `clicktime` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Indexes for dumped tables

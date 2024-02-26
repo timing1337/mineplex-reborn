@@ -108,7 +108,7 @@ public class Chat extends MiniPlugin
 	}
 
 	// Cleanspeak
-	private static final String FILTER_URL = "https://chat.mineplex.com:8003/content/item/moderate";
+	private static final String FILTER_URL = "https://127.0.0.1/content/item/moderate";
 	private static final String APP_ID = "34018d65-466d-4a91-8e92-29ca49f022c4";
 	private static final String API_KEY = "oUywMpwZcIzZO5AWnfDx";
 
