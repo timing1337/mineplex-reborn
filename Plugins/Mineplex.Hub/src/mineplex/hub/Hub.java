@@ -91,9 +91,13 @@ public class Hub extends JavaPlugin implements IRelation
 		getConfig().addDefault(Constants.WEB_CONFIG_KEY, Constants.WEB_ADDRESS);
 		getConfig().set(Constants.WEB_CONFIG_KEY, getConfig().getString(Constants.WEB_CONFIG_KEY));
 
-		getConfig().addDefault("enableHubGames", false);
-		getConfig().addDefault("enableParkour", false);
-		getConfig().addDefault("enableSecretAreas", false);
+		//TODO: Move this to their correct modules, im too lazy and is it really necessary?
+		getConfig().addDefault("hubFeature.enableHubGames", false);
+		getConfig().set("hubFeature.enableHubGames", getConfig().getString("hubFeature.enableHubGames"));
+		getConfig().addDefault("hubFeature.enableParkour", false);
+		getConfig().set("hubFeature.enableParkour", getConfig().getString("hubFeature.enableParkour"));
+		getConfig().addDefault("hubFeature.enableSecretAreas", false);
+		getConfig().set("hubFeature.enableSecretAreas", getConfig().getString("hubFeature.enableSecretAreas"));
 
 		saveConfig();
 

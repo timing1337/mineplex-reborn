@@ -15,6 +15,7 @@ import java.util.UUID;
 
 import net.minecraft.server.v1_8_R3.EntityInsentient;
 
+import net.minecraft.server.v1_8_R3.WorldServer;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.DyeColor;
@@ -24,6 +25,7 @@ import org.bukkit.Sound;
 import org.bukkit.World;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.craftbukkit.v1_8_R3.CraftWorld;
 import org.bukkit.craftbukkit.v1_8_R3.entity.CraftCreature;
 import org.bukkit.craftbukkit.v1_8_R3.entity.CraftLivingEntity;
 import org.bukkit.entity.Ageable;
@@ -124,6 +126,13 @@ public class NpcManager extends MiniPlugin
 	public NpcManager(JavaPlugin plugin, Creature creature)
 	{
 		super("NpcManager", plugin);
+
+		//Workaround: Mineplex Servers aren't supposed to be turned on back after it shut down (a.k.a it gets deleted)
+		//This leads to mobs aren't properly despawned if we want to turn the server back on :D
+		//So we kill them instead :D
+		//Not sure if this is a good idea
+		WorldServer world = ((CraftWorld)getPlugin().getServer().getWorld("world")).getHandle();
+		world.entityList.forEach(entity -> world.kill(entity));
 
 		_creature = creature;
 

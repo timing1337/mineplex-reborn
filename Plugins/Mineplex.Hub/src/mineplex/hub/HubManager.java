@@ -261,7 +261,7 @@ public class HubManager extends MiniClientPlugin<HubClient>
 
 		// Disable saving, enable chunk unloading
 		//nmsWorld.spigotConfig.saveWorld = false;
-		//nmsWorld.spigotConfig.clearChunksOnTick = true;
+		nmsWorld.spigotConfig.clearChunksOnTick = true;
 
 		// Unload chunks every 60 seconds
 		new BukkitRunnable()

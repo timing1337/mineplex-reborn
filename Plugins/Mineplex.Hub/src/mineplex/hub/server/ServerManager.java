@@ -11,6 +11,8 @@ import java.util.Map.Entry;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
+import mineplex.core.boosters.Booster;
+import mineplex.core.common.util.*;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.entity.LivingEntity;
@@ -36,10 +38,6 @@ import mineplex.core.account.permissions.Permission;
 import mineplex.core.account.permissions.PermissionGroup;
 import mineplex.core.achievement.AchievementManager;
 import mineplex.core.boosters.BoosterManager;
-import mineplex.core.common.util.F;
-import mineplex.core.common.util.UtilAction;
-import mineplex.core.common.util.UtilAlg;
-import mineplex.core.common.util.UtilTime;
 import mineplex.core.donation.DonationManager;
 import mineplex.core.game.status.GameInfo;
 import mineplex.core.game.status.GameInfo.GameJoinStatus;
@@ -214,16 +212,48 @@ public class ServerManager extends MiniPlugin
 			return;
 		}
 
+		//Massive thanks to nekoli
+		//Original source code: https://discord.com/channels/1108057325564084375/1108057331226398922/1170459604841398282
+		((StoredNPC) npc).addInfoVariable("{B}", () ->
+		{
+			String name = "&e&lPUNCH TO PLAY";
+			Booster booster = null;
+
+			for (String group : groups)
+			{
+				ServerGroup bg = getServerGroupByPrefix(group);
+				if (bg != null && !bg.getPrefix().endsWith("2") && bg.getBoosterGroup() != null && !bg.getBoosterGroup().isEmpty())
+				{
+					booster = _boosterManager.getActiveBooster(bg.getBoosterGroup());
+				}
+
+				if (booster != null)
+				{
+					name = C.cAquaB + "Amplified by " + C.cWhite + booster.getPlayerName() + C.cAqua + " - " + C.cWhite + booster.getTimeRemainingString();
+				}
+			}
+
+			return name;
+		});
+
 		((StoredNPC) npc).addInfoVariable("{P}", () ->
 		{
 			int playerCount = 0;
 
+
 			for (String group : groups)
 			{
+				ServerGroup offline = getServerGroupByPrefix(group);
+
+				if (offline != null && !offline.getPrefix().endsWith("2") && offline.getRequiredTotalServers() == 0)
+				{
+					return "Offline";
+				}
+
 				playerCount += getGroupTagPlayerCount(group);
 			}
 
-			return String.valueOf(playerCount);
+			return (playerCount + " Players");
 		});
 	}
 

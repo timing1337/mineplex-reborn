@@ -108,9 +108,9 @@ public class Chat extends MiniPlugin
 	}
 
 	// Cleanspeak
-	private static final String FILTER_URL = "https://127.0.0.1/content/item/moderate";
-	private static final String APP_ID = "34018d65-466d-4a91-8e92-29ca49f022c4";
-	private static final String API_KEY = "oUywMpwZcIzZO5AWnfDx";
+	private static String FILTER_URL;
+	private static String APP_ID;
+	private static String API_KEY;
 
 	private final IncognitoManager _incognitoManager;
 	private final CoreClientManager _clientManager;
@@ -142,7 +142,34 @@ public class Chat extends MiniPlugin
 			e.printStackTrace();
 		}
 
+		setupConfigValues();
 		generatePermissions();
+
+		FILTER_URL = getPlugin().getConfig().getString("chatfilter.filterUrl");
+		API_KEY = getPlugin().getConfig().getString("chatfilter.appKey");
+		APP_ID = getPlugin().getConfig().getString("chatfilter.appId");
+	}
+
+
+	//Configuration cause damn they are allergic to making those
+	private void setupConfigValues() {
+		try {
+			getPlugin().getConfig().addDefault("chatfilter.enable", false);
+			getPlugin().getConfig().set("chatfilter.enable", getPlugin().getConfig().getString("chatfilter.enable"));
+
+			getPlugin().getConfig().addDefault("chatfilter.filterUrl", "https://127.0.0.1/content/item/moderate");
+			getPlugin().getConfig().set("chatfilter.filterUrl", getPlugin().getConfig().getString("chatfilter.filterUrl"));
+
+			getPlugin().getConfig().addDefault("chatfilter.appId", "APP_ID_HERE");
+			getPlugin().getConfig().set("chatfilter.appId", getPlugin().getConfig().getString("chatfilter.appId"));
+
+			getPlugin().getConfig().addDefault("chatfilter.appKey", "APP_KEY_HERE");
+			getPlugin().getConfig().set("chatfilter.appKey", getPlugin().getConfig().getString("chatfilter.appKey"));
+		}
+		catch (Exception e)
+		{
+			e.printStackTrace();
+		}
 	}
 
 	private void generatePermissions()
@@ -562,8 +589,9 @@ public class Chat extends MiniPlugin
 
 	public List<String> filterMessages(Player player, boolean useBackup, String... messages)
 	{
-		if (_clientManager.Get(player).hasPermission(Perm.BYPASS_CHAT_FILTER)
-				&& _preferencesManager.get(player).isActive(Preference.BYPASS_CHAT_FILTER))
+		if(!getPlugin().getConfig().getBoolean("chatfilter")) return Arrays.stream(messages).collect(Collectors.toList());
+
+		if (_clientManager.Get(player).hasPermission(Perm.BYPASS_CHAT_FILTER) && _preferencesManager.get(player).isActive(Preference.BYPASS_CHAT_FILTER))
 		{
 			return Arrays.stream(messages).collect(Collectors.toList());
 		}

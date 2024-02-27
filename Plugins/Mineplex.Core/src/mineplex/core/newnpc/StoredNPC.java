@@ -156,7 +156,14 @@ public class StoredNPC extends SimpleNPC
 				})
 				.collect(Collectors.toList());
 
-		textList.add(0, _colouredName);
+		//Do this for name too :D
+		String infoName = _colouredName;
+		for (Entry<String, Supplier<String>> entry : _infoVariables.entrySet())
+		{
+			infoName = ChatColor.translateAlternateColorCodes('&', infoName.replace(entry.getKey(), entry.getValue().get()));
+		}
+
+		textList.add(0, infoName);
 		getNameTag().setText(textList.toArray(new String[0]));
 	}
 
