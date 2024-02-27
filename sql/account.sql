@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Feb 26, 2024 at 03:07 PM
+-- Generation Time: Feb 27, 2024 at 06:16 AM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.0.30
 
@@ -309,11 +309,11 @@ CREATE TABLE `bonus` (
   `ranktime` date DEFAULT NULL,
   `votetime` date DEFAULT NULL,
   `clansvotetime` date DEFAULT NULL,
-  `dailyStreak` int(11) NOT NULL,
-  `maxDailyStreak` int(11) NOT NULL,
-  `voteStreak` int(11) NOT NULL,
-  `maxVoteStreak` int(11) NOT NULL,
-  `tickets` int(11) NOT NULL
+  `dailyStreak` int(11) NOT NULL DEFAULT 0,
+  `maxDailyStreak` int(11) NOT NULL DEFAULT 0,
+  `voteStreak` int(11) NOT NULL DEFAULT 0,
+  `maxVoteStreak` int(11) NOT NULL DEFAULT 0,
+  `tickets` int(11) NOT NULL DEFAULT 0
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
@@ -503,7 +503,7 @@ CREATE TABLE `newnpcsnew` (
   `yaw` int(11) NOT NULL,
   `pitch` int(11) NOT NULL,
   `in_hand` varchar(255) NOT NULL,
-  `in_hand_data` bit(64) NOT NULL,
+  `in_hand_data` tinyint(4) DEFAULT NULL,
   `helmet` varchar(255) DEFAULT NULL,
   `chestplate` varchar(255) DEFAULT NULL,
   `leggings` varchar(255) DEFAULT NULL,
@@ -847,6 +847,12 @@ ALTER TABLE `items`
   ADD KEY `mameIndex` (`name`);
 
 --
+-- Indexes for table `newnpcsnew`
+--
+ALTER TABLE `newnpcsnew`
+  ADD PRIMARY KEY (`id`);
+
+--
 -- Indexes for table `polls`
 --
 ALTER TABLE `polls`
@@ -940,6 +946,12 @@ ALTER TABLE `hubnews`
 -- AUTO_INCREMENT for table `items`
 --
 ALTER TABLE `items`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `newnpcsnew`
+--
+ALTER TABLE `newnpcsnew`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
