@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Feb 27, 2024 at 06:16 AM
+-- Generation Time: Feb 29, 2024 at 05:12 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.0.30
 
@@ -240,6 +240,7 @@ CREATE TABLE `accountstatsalltime` (
 --
 
 CREATE TABLE `accounttasks` (
+  `id` int(11) NOT NULL,
   `accountId` int(11) NOT NULL,
   `taskId` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
@@ -623,6 +624,17 @@ CREATE TABLE `rankbenefits` (
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `reportcategorytypes`
+--
+
+CREATE TABLE `reportcategorytypes` (
+  `id` tinyint(4) UNSIGNED NOT NULL,
+  `name` varchar(16) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `reporthandlers`
 --
 
@@ -630,6 +642,21 @@ CREATE TABLE `reporthandlers` (
   `reportId` bigint(20) NOT NULL,
   `handlerId` int(11) NOT NULL,
   `aborted` tinyint(1) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `reportreasons`
+--
+
+CREATE TABLE `reportreasons` (
+  `reportId` int(11) UNSIGNED NOT NULL,
+  `reporterId` int(11) NOT NULL,
+  `reason` varchar(100) NOT NULL,
+  `server` varchar(50) NOT NULL,
+  `weight` int(11) NOT NULL DEFAULT 0,
+  `time` datetime NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
@@ -643,6 +670,18 @@ CREATE TABLE `reportresults` (
   `resultId` int(11) NOT NULL,
   `reason` text NOT NULL,
   `closedTime` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `reportresulttypes`
+--
+
+CREATE TABLE `reportresulttypes` (
+  `id` tinyint(4) UNSIGNED NOT NULL,
+  `globalStat` tinyint(1) NOT NULL,
+  `name` varchar(16) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
@@ -663,6 +702,28 @@ CREATE TABLE `reports` (
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `reportteammemberships`
+--
+
+CREATE TABLE `reportteammemberships` (
+  `accountId` int(11) NOT NULL,
+  `teamId` tinyint(4) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `reportteams`
+--
+
+CREATE TABLE `reportteams` (
+  `id` tinyint(4) NOT NULL,
+  `name` varchar(50) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `salesannouncements`
 --
 
@@ -672,6 +733,65 @@ CREATE TABLE `salesannouncements` (
   `message` varchar(256) DEFAULT NULL,
   `enabled` tinyint(1) DEFAULT NULL,
   `clans` tinyint(1) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `snapshotmessagemap`
+--
+
+CREATE TABLE `snapshotmessagemap` (
+  `snapshotId` int(11) NOT NULL,
+  `messageId` bigint(20) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `snapshotmessages`
+--
+
+CREATE TABLE `snapshotmessages` (
+  `id` bigint(20) NOT NULL,
+  `senderId` int(11) NOT NULL,
+  `server` varchar(25) NOT NULL,
+  `time` datetime NOT NULL DEFAULT current_timestamp(),
+  `message` varchar(150) NOT NULL,
+  `snapshotType` tinyint(3) UNSIGNED NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `snapshotrecipients`
+--
+
+CREATE TABLE `snapshotrecipients` (
+  `messageId` bigint(20) NOT NULL,
+  `recipientId` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `snapshots`
+--
+
+CREATE TABLE `snapshots` (
+  `id` int(11) NOT NULL,
+  `creator` int(11) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `snapshottypes`
+--
+
+CREATE TABLE `snapshottypes` (
+  `id` tinyint(3) UNSIGNED NOT NULL,
+  `name` varchar(25) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
@@ -798,6 +918,12 @@ ALTER TABLE `accounts`
   ADD UNIQUE KEY `nameIndex` (`name`);
 
 --
+-- Indexes for table `accounttasks`
+--
+ALTER TABLE `accounttasks`
+  ADD PRIMARY KEY (`id`);
+
+--
 -- Indexes for table `accountteamspeak`
 --
 ALTER TABLE `accountteamspeak`
@@ -866,9 +992,42 @@ ALTER TABLE `rankbenefits`
   ADD KEY `accountId` (`accountId`);
 
 --
+-- Indexes for table `reportcategorytypes`
+--
+ALTER TABLE `reportcategorytypes`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `reportreasons`
+--
+ALTER TABLE `reportreasons`
+  ADD PRIMARY KEY (`reportId`,`reporterId`),
+  ADD KEY `reportReasons_accounts_id_fk` (`reporterId`);
+
+--
+-- Indexes for table `reportresulttypes`
+--
+ALTER TABLE `reportresulttypes`
+  ADD PRIMARY KEY (`id`);
+
+--
 -- Indexes for table `reports`
 --
 ALTER TABLE `reports`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `reportteammemberships`
+--
+ALTER TABLE `reportteammemberships`
+  ADD PRIMARY KEY (`accountId`,`teamId`),
+  ADD KEY `reportTeams_accountId_index` (`accountId`),
+  ADD KEY `reportTeams_reportTeamTypes_id_fk` (`teamId`);
+
+--
+-- Indexes for table `reportteams`
+--
+ALTER TABLE `reportteams`
   ADD PRIMARY KEY (`id`);
 
 --
@@ -877,6 +1036,42 @@ ALTER TABLE `reports`
 ALTER TABLE `salesannouncements`
   ADD PRIMARY KEY (`id`),
   ADD KEY `typeIndex` (`clans`);
+
+--
+-- Indexes for table `snapshotmessagemap`
+--
+ALTER TABLE `snapshotmessagemap`
+  ADD PRIMARY KEY (`snapshotId`,`messageId`),
+  ADD KEY `snapshotMessageMap_snapshotMessages_id_fk` (`messageId`);
+
+--
+-- Indexes for table `snapshotmessages`
+--
+ALTER TABLE `snapshotmessages`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `reportChatLog_accounts_id_fk` (`senderId`),
+  ADD KEY `reportChatMessages_reportMessageTypes_id_fk` (`snapshotType`);
+
+--
+-- Indexes for table `snapshotrecipients`
+--
+ALTER TABLE `snapshotrecipients`
+  ADD PRIMARY KEY (`messageId`,`recipientId`),
+  ADD KEY `reportMessageRecipients_accounts_id_fk` (`recipientId`);
+
+--
+-- Indexes for table `snapshots`
+--
+ALTER TABLE `snapshots`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `snapshots_accounts_id_fk` (`creator`);
+
+--
+-- Indexes for table `snapshottypes`
+--
+ALTER TABLE `snapshottypes`
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `reportMessageTypes_id_uindex` (`id`);
 
 --
 -- Indexes for table `stats`
@@ -916,6 +1111,12 @@ ALTER TABLE `accountranks`
 -- AUTO_INCREMENT for table `accounts`
 --
 ALTER TABLE `accounts`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `accounttasks`
+--
+ALTER TABLE `accounttasks`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
@@ -979,6 +1180,18 @@ ALTER TABLE `salesannouncements`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
+-- AUTO_INCREMENT for table `snapshotmessages`
+--
+ALTER TABLE `snapshotmessages`
+  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `snapshots`
+--
+ALTER TABLE `snapshots`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
 -- AUTO_INCREMENT for table `stats`
 --
 ALTER TABLE `stats`
@@ -1025,6 +1238,46 @@ ALTER TABLE `bonus`
 --
 ALTER TABLE `rankbenefits`
   ADD CONSTRAINT `rankbenefits_ibfk_1` FOREIGN KEY (`accountId`) REFERENCES `accounts` (`id`);
+
+--
+-- Constraints for table `reportreasons`
+--
+ALTER TABLE `reportreasons`
+  ADD CONSTRAINT `reportReasons_accounts_id_fk ` FOREIGN KEY (`reporterId`) REFERENCES `accounts` (`id`);
+
+--
+-- Constraints for table `reportteammemberships`
+--
+ALTER TABLE `reportteammemberships`
+  ADD CONSTRAINT `reportTeams_accounts_id_fk` FOREIGN KEY (`accountId`) REFERENCES `accounts` (`id`),
+  ADD CONSTRAINT `reportTeams_reportTeamTypes_id_fk` FOREIGN KEY (`teamId`) REFERENCES `reportteams` (`id`);
+
+--
+-- Constraints for table `snapshotmessagemap`
+--
+ALTER TABLE `snapshotmessagemap`
+  ADD CONSTRAINT `snapshotMessageMap_snapshotMessages_id_fk` FOREIGN KEY (`messageId`) REFERENCES `snapshotmessages` (`id`),
+  ADD CONSTRAINT `snapshotMessageMap_snapshots_id_fk` FOREIGN KEY (`snapshotId`) REFERENCES `snapshots` (`id`);
+
+--
+-- Constraints for table `snapshotmessages`
+--
+ALTER TABLE `snapshotmessages`
+  ADD CONSTRAINT `reportChatLog_accounts_id_fk` FOREIGN KEY (`senderId`) REFERENCES `accounts` (`id`),
+  ADD CONSTRAINT `reportChatMessages_reportMessageTypes_id_fk` FOREIGN KEY (`snapshotType`) REFERENCES `snapshottypes` (`id`);
+
+--
+-- Constraints for table `snapshotrecipients`
+--
+ALTER TABLE `snapshotrecipients`
+  ADD CONSTRAINT `reportMessageRecipients_accounts_id_fk` FOREIGN KEY (`recipientId`) REFERENCES `accounts` (`id`),
+  ADD CONSTRAINT `snapshotRecipients_snapshotMessages_id_fk` FOREIGN KEY (`messageId`) REFERENCES `snapshotmessages` (`id`);
+
+--
+-- Constraints for table `snapshots`
+--
+ALTER TABLE `snapshots`
+  ADD CONSTRAINT `snapshots_accounts_id_fk` FOREIGN KEY (`creator`) REFERENCES `accounts` (`id`);
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
