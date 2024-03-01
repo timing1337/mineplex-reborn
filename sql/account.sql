@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Feb 29, 2024 at 05:12 PM
+-- Generation Time: Mar 01, 2024 at 09:03 AM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.0.30
 
@@ -213,12 +213,26 @@ CREATE TABLE `accountranks` (
 
 CREATE TABLE `accounts` (
   `id` int(11) NOT NULL,
-  `uuid` varchar(100) DEFAULT NULL,
-  `name` varchar(40) DEFAULT NULL,
-  `gems` int(11) DEFAULT 0,
+  `uuid` varchar(100) NOT NULL,
+  `name` varchar(40) NOT NULL,
+  `gems` int(11) NOT NULL DEFAULT 0,
   `coins` int(11) NOT NULL DEFAULT 0,
   `lastLogin` mediumtext DEFAULT NULL,
   `totalPlayTime` mediumtext DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `accountshardtransactions`
+--
+
+CREATE TABLE `accountshardtransactions` (
+  `id` int(11) NOT NULL,
+  `accountId` int(11) NOT NULL,
+  `source` varchar(40) NOT NULL,
+  `amount` int(11) NOT NULL,
+  `date` timestamp NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
@@ -283,6 +297,21 @@ CREATE TABLE `accountthanktransactions` (
 CREATE TABLE `accounttitle` (
   `accountId` int(11) NOT NULL,
   `trackName` varchar(255) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `accounttransactions`
+--
+
+CREATE TABLE `accounttransactions` (
+  `id` int(11) NOT NULL,
+  `accountId` int(11) NOT NULL,
+  `date` timestamp NOT NULL DEFAULT current_timestamp(),
+  `salesPackageName` text NOT NULL,
+  `gems` int(11) NOT NULL,
+  `coins` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
@@ -918,6 +947,12 @@ ALTER TABLE `accounts`
   ADD UNIQUE KEY `nameIndex` (`name`);
 
 --
+-- Indexes for table `accountshardtransactions`
+--
+ALTER TABLE `accountshardtransactions`
+  ADD PRIMARY KEY (`id`);
+
+--
 -- Indexes for table `accounttasks`
 --
 ALTER TABLE `accounttasks`
@@ -928,6 +963,12 @@ ALTER TABLE `accounttasks`
 --
 ALTER TABLE `accountteamspeak`
   ADD PRIMARY KEY (`accountId`);
+
+--
+-- Indexes for table `accounttransactions`
+--
+ALTER TABLE `accounttransactions`
+  ADD PRIMARY KEY (`id`);
 
 --
 -- Indexes for table `bonus`
@@ -1102,6 +1143,12 @@ ALTER TABLE `accountpolls`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
+-- AUTO_INCREMENT for table `accountpunishments`
+--
+ALTER TABLE `accountpunishments`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
 -- AUTO_INCREMENT for table `accountranks`
 --
 ALTER TABLE `accountranks`
@@ -1114,9 +1161,21 @@ ALTER TABLE `accounts`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
+-- AUTO_INCREMENT for table `accountshardtransactions`
+--
+ALTER TABLE `accountshardtransactions`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
 -- AUTO_INCREMENT for table `accounttasks`
 --
 ALTER TABLE `accounttasks`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `accounttransactions`
+--
+ALTER TABLE `accounttransactions`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
