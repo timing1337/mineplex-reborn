@@ -165,6 +165,8 @@ public class Chat extends MiniPlugin
 
 			getPlugin().getConfig().addDefault("chatfilter.appKey", "APP_KEY_HERE");
 			getPlugin().getConfig().set("chatfilter.appKey", getPlugin().getConfig().getString("chatfilter.appKey"));
+
+			getPlugin().saveConfig();
 		}
 		catch (Exception e)
 		{

@@ -47,12 +47,13 @@ public class PlayerCount implements Listener, Runnable
 
 		_repository = new RedisDataRepository<BungeeServer>(ServerManager.getConnection(true, ServerManager.SERVER_STATUS_LABEL), ServerManager.getConnection(false, ServerManager.SERVER_STATUS_LABEL),
 													Region.ALL, BungeeServer.class, "bungeeServers");
-		
+
+
 		if (_region == Region.US)
-			_secondRepository = new RedisDataRepository<BungeeServer>(new ConnectionData("localhost", 6379, ConnectionType.MASTER, "ServerStatus"), new ConnectionData("localhost", 6379, ConnectionType.SLAVE, "ServerStatus"),
+			_secondRepository = new RedisDataRepository<BungeeServer>(new ConnectionData("10.81.1.156", 6379, ConnectionType.MASTER, "ServerStatus"), new ConnectionData("10.81.1.156", 6379, ConnectionType.SLAVE, "ServerStatus"),
 				Region.ALL, BungeeServer.class, "bungeeServers");
 		else
-			_secondRepository = new RedisDataRepository<BungeeServer>(new ConnectionData("localhost", 6379, ConnectionType.MASTER, "ServerStatus"), new ConnectionData("localhost", 6379, ConnectionType.SLAVE, "ServerStatus"),
+			_secondRepository = new RedisDataRepository<BungeeServer>(new ConnectionData("10.81.1.156", 6379, ConnectionType.MASTER, "ServerStatus"), new ConnectionData("10.81.1.156", 6379, ConnectionType.SLAVE, "ServerStatus"),
 					Region.ALL, BungeeServer.class, "bungeeServers");
 	}
 	
