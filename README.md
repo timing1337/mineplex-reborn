@@ -1,5 +1,8 @@
 # mineplex-reborn
 
+## Credits:
+- nekoli, for the maps!
+
 ## Before compiling
 Some feature might be stripped from the original source due to lack of resources (multi protocol support, missing resources...)
 Feel free to add them back by checking git diff or even better recompile everything from [**original source**](https://git.crepe.moe/timing/mineplex-original)
