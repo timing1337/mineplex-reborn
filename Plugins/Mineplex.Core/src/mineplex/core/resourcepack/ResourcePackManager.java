@@ -240,7 +240,8 @@ public class ResourcePackManager extends MiniPlugin implements CommandCallback<R
 			for (Player player : Bukkit.getOnlinePlayers())
 			{
 				//player.setResourcePack("http://file.mineplex.com/ResReset.zip");
-				player.setResourcePack("https://up.nitro.moe/mineplex/ResReset.zip");
+				//TODO: Versioning for these, defaulting to 1.8
+				player.setResourcePack("https://up.nitro.moe/mineplex/ResReset18.zip");
 			}
 		}
 		else
@@ -275,6 +276,7 @@ public class ResourcePackManager extends MiniPlugin implements CommandCallback<R
 		}
 		
 		//player.setResourcePack("http://file.mineplex.com/ResReset.zip");
-		player.setResourcePack("https://up.nitro.moe/mineplex/ResReset.zip");
+		//TODO: Versioning for these, defaulting to 1.8
+		player.setResourcePack("https://up.nitro.moe/mineplex/ResReset18.zip");
 	}
 }

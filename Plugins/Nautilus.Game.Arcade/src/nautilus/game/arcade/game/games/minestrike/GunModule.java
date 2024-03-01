@@ -1908,8 +1908,9 @@ public class GunModule implements Listener
 	{
 		if (event.getMessage().equalsIgnoreCase("/rpoff"))
 		{
+			//TODO: Versioning for these, defaulting to 1.8
 			//event.getPlayer().setResourcePack("http://file.mineplex.com/ResReset.zip");
-			event.getPlayer().setResourcePack("https://up.nitro.moe/mineplex/ResReset.zip");
+			event.getPlayer().setResourcePack("https://up.nitro.moe/mineplex/ResReset18.zip");
 			
 			UtilPlayer.message(event.getPlayer(), F.main("Resource Pack", "Resource Pack: " + C.cRed + "Disabled"));
 			UtilPlayer.message(event.getPlayer(), F.main("Resource Pack", "Type " + F.elem("/rpon") + " to enable."));
