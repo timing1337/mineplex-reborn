@@ -108,14 +108,14 @@ public enum GameType implements Voteable
 	Christmas(Christmas.class, GameDisplay.Christmas, new Pair[] 
 			{
 				//Pair.create(MinecraftVersion.ALL, "http://file.mineplex.com/ResChristmas.zip")
-				Pair.create(MinecraftVersion.Version1_8, "http://198.20.72.74/ResChristmas.zip")
+				Pair.create(MinecraftVersion.Version1_8, "https://up.nitro.moe/mineplex/ResChristmas.zip")
 			}, true),
 	ChristmasNew(ChristmasNew.class, GameDisplay.ChristmasNew, new Pair[]
 			{
 				//Pair.create(MinecraftVersion.Version1_8, "http://file.mineplex.com/ResChristmas2.zip"),
 				//Pair.create(MinecraftVersion.Version1_9, "http://file.mineplex.com/ResChristmas219.zip")
-				Pair.create(MinecraftVersion.Version1_8, "http://198.20.72.74/ResChristmas2.zip"),
-				Pair.create(MinecraftVersion.Version1_9, "http://198.20.72.74/ResChristmas219.zip")
+				Pair.create(MinecraftVersion.Version1_8, "https://up.nitro.moe/mineplex/ResChristmas2.zip"),
+				Pair.create(MinecraftVersion.Version1_9, "https://up.nitro.moe/mineplex/ResChristmas219.zip")
 			}, false),
 	DeathTag(DeathTag.class, GameDisplay.DeathTag),
 	DragonEscape(DragonEscape.class, GameDisplay.DragonEscape),
@@ -126,8 +126,8 @@ public enum GameType implements Voteable
 	Draw(Draw.class, GameDisplay.Draw, new Pair[]
 			{
 				//Pair.create(MinecraftVersion.ALL, "http://file.mineplex.com/ResDrawMyThing.zip")
-				Pair.create(MinecraftVersion.Version1_8, "http://198.20.72.74/ResDrawMyThing.zip"),
-				Pair.create(MinecraftVersion.Version1_13, "http://198.20.72.74/ResDrawMyThing113.zip")
+				Pair.create(MinecraftVersion.Version1_8, "https://up.nitro.moe/mineplex/ResDrawMyThing.zip"),
+				Pair.create(MinecraftVersion.Version1_13, "https://up.nitro.moe/mineplex/ResDrawMyThing113.zip")
 			}, true),
 	ElytraRings(ElytraRings.class, GameDisplay.ElytraRings),
 	Evolution(Evolution.class, GameDisplay.Evolution),
@@ -135,7 +135,7 @@ public enum GameType implements Voteable
 	Halloween(Halloween.class, GameDisplay.Halloween, new Pair[] 
 			{
 				//Pair.create(MinecraftVersion.ALL, "http://file.mineplex.com/ResHalloween.zip")
-				Pair.create(MinecraftVersion.Version1_8, "http://198.20.72.74/ResHalloween.zip")
+				Pair.create(MinecraftVersion.Version1_8, "https://up.nitro.moe/mineplex/ResHalloween.zip")
 			}, true),
 	Halloween2016(Halloween2016.class, GameDisplay.Halloween2016),
 	HideSeek(HideSeek.class, GameDisplay.HideSeek),
@@ -146,9 +146,9 @@ public enum GameType implements Voteable
 			{
 				//Pair.create(MinecraftVersion.Version1_8, "http://file.mineplex.com/ResMinestrike.zip"),
 				//Pair.create(MinecraftVersion.Version1_9, "http://file.mineplex.com/ResMinestrike19.zip")
-				Pair.create(MinecraftVersion.Version1_8, "http://198.20.72.74/ResMinestrike.zip"),
-				Pair.create(MinecraftVersion.Version1_9, "http://198.20.72.74/ResMinestrike19.zip"),
-				Pair.create(MinecraftVersion.Version1_13, "http://198.20.72.74/ResMinestrike113.zip")
+				Pair.create(MinecraftVersion.Version1_8, "https://up.nitro.moe/mineplex/ResMinestrike.zip"),
+				Pair.create(MinecraftVersion.Version1_9, "https://up.nitro.moe/mineplex/ResMinestrike19.zip"),
+				Pair.create(MinecraftVersion.Version1_13, "https://up.nitro.moe/mineplex/ResMinestrike113.zip")
 			}, true),
 	BawkBawkBattles(BawkBawkBattles.class, GameDisplay.BawkBawkBattles),
 	MinecraftLeague(MinecraftLeague.class, GameDisplay.Minecraft_League),
@@ -186,7 +186,7 @@ public enum GameType implements Voteable
 	Wizards(Wizards.class, GameDisplay.Wizards, new Pair[] 
 			{
 				//Pair.create(MinecraftVersion.ALL, "http://file.mineplex.com/ResWizards.zip")
-				Pair.create(MinecraftVersion.Version1_8, "http://198.20.72.74/ResWizards.zip")
+				Pair.create(MinecraftVersion.Version1_8, "https://up.nitro.moe/mineplex/ResWizards.zip")
 			}, true),
 	ZombieSurvival(ZombieSurvival.class, GameDisplay.ZombieSurvival),
 	Build(Build.class, GameDisplay.Build),
@@ -208,8 +208,8 @@ public enum GameType implements Voteable
 			{
 				//Pair.create(MinecraftVersion.Version1_8, "http://file.mineplex.com/ResStrikeGames18.zip"),
 				//Pair.create(MinecraftVersion.Version1_9, "http://file.mineplex.com/ResStrikeGames19.zip")
-				Pair.create(MinecraftVersion.Version1_8, "http://198.20.72.74/ResStrikeGames18.zip"),
-				Pair.create(MinecraftVersion.Version1_9, "http://198.20.72.74/ResStrikeGames19.zip")
+				Pair.create(MinecraftVersion.Version1_8, "https://up.nitro.moe/mineplex/ResStrikeGames18.zip"),
+				Pair.create(MinecraftVersion.Version1_9, "https://up.nitro.moe/mineplex/ResStrikeGames19.zip")
 			}, true),
 
 	CakeWars4(CakeWars.class, new GameMode[]

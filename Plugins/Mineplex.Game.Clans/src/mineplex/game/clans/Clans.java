@@ -166,8 +166,8 @@ public class Clans extends JavaPlugin
 				{
 						//Pair.create(MinecraftVersion.Version1_8, "http://file.mineplex.com/ResClans.zip"),
 						//Pair.create(MinecraftVersion.Version1_9, "http://file.mineplex.com/ResClans19.zip")
-						Pair.create(MinecraftVersion.Version1_8, "http://198.20.72.74/ResClans.zip"),
-						Pair.create(MinecraftVersion.Version1_9, "http://198.20.72.74/ResClans19.zip")
+						Pair.create(MinecraftVersion.Version1_8, "https://up.nitro.moe/mineplex/ResClans.zip"),
+						Pair.create(MinecraftVersion.Version1_9, "https://up.nitro.moe/mineplex/ResClans19.zip")
 				}, true);
 
 		SnapshotManager snapshotManager = new SnapshotManager(this, new SnapshotRepository(serverStatusManager.getCurrentServerName(), getLogger()));
