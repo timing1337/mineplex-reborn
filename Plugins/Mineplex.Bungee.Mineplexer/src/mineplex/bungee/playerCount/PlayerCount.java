@@ -21,7 +21,7 @@ import net.md_5.bungee.event.EventHandler;
 public class PlayerCount implements Listener, Runnable
 {
 	private DataRepository<BungeeServer> _repository;
-	private DataRepository<BungeeServer> _secondRepository;
+	//private DataRepository<BungeeServer> _secondRepository;
 	private Region _region;
 	
 	private ListenerInfo _listenerInfo;
@@ -49,12 +49,15 @@ public class PlayerCount implements Listener, Runnable
 													Region.ALL, BungeeServer.class, "bungeeServers");
 
 
+		/*
 		if (_region == Region.US)
 			_secondRepository = new RedisDataRepository<BungeeServer>(new ConnectionData("10.81.1.156", 6379, ConnectionType.MASTER, "ServerStatus"), new ConnectionData("10.81.1.156", 6379, ConnectionType.SLAVE, "ServerStatus"),
 				Region.ALL, BungeeServer.class, "bungeeServers");
 		else
 			_secondRepository = new RedisDataRepository<BungeeServer>(new ConnectionData("10.81.1.156", 6379, ConnectionType.MASTER, "ServerStatus"), new ConnectionData("10.81.1.156", 6379, ConnectionType.SLAVE, "ServerStatus"),
 					Region.ALL, BungeeServer.class, "bungeeServers");
+
+		 */
 	}
 	
 	public void run()
@@ -78,12 +81,12 @@ public class PlayerCount implements Listener, Runnable
 		{
 			totalPlayers += server.getPlayerCount();
 		}
-		
+		/*
 		for (BungeeServer server : _secondRepository.getElements())
 		{
 			totalPlayers += server.getPlayerCount();
 		}
-		
+		*/
 		return totalPlayers;
 	}
 	

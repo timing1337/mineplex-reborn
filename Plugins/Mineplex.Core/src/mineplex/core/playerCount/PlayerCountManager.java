@@ -17,7 +17,7 @@ public class PlayerCountManager extends MiniPlugin
 {
 	private Region _region;
 	private DataRepository<BungeeServer> _repository;
-	private DataRepository<BungeeServer> _secondRepository;
+	//private DataRepository<BungeeServer> _secondRepository;
 
 	private volatile int _playerCount = 0;
 
@@ -30,6 +30,7 @@ public class PlayerCountManager extends MiniPlugin
 		_repository = new RedisDataRepository<BungeeServer>(ServerManager.getConnection(true, ServerManager.SERVER_STATUS_LABEL), ServerManager.getConnection(false, ServerManager.SERVER_STATUS_LABEL),
 				Region.ALL, BungeeServer.class, "bungeeServers");
 
+		/*
 		if (_region == Region.US)
 			_secondRepository = new RedisDataRepository<BungeeServer>(new ConnectionData("10.81.1.156", 6379, ConnectionData.ConnectionType.MASTER, "ServerStatus"), new ConnectionData("10.81.1.156", 6377, ConnectionData.ConnectionType.SLAVE, "ServerStatus"),
 					Region.ALL, BungeeServer.class, "bungeeServers");
@@ -37,6 +38,7 @@ public class PlayerCountManager extends MiniPlugin
 			_secondRepository = new RedisDataRepository<BungeeServer>(new ConnectionData("10.33.53.16", 6379, ConnectionData.ConnectionType.MASTER, "ServerStatus"), new ConnectionData("10.33.53.16", 6377, ConnectionData.ConnectionType.SLAVE, "ServerStatus"),
 					Region.ALL, BungeeServer.class, "bungeeServers");
 
+		*/
 		//updatePlayerCount();
 	}
 
@@ -48,11 +50,12 @@ public class PlayerCountManager extends MiniPlugin
 			totalPlayers += server.getPlayerCount();
 		}
 
+		/*
 		for (BungeeServer server : _secondRepository.getElements())
 		{
 			totalPlayers += server.getPlayerCount();
 		}
-
+		*/
 		_playerCount = totalPlayers;
 	}
 

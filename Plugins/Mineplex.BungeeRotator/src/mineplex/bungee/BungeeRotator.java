@@ -31,7 +31,7 @@ import mineplex.serverdata.servers.ConnectionData.ConnectionType;
 public class BungeeRotator
 {
 	private static DataRepository<BungeeServer> _repository;
-	private static DataRepository<BungeeServer> _secondRepository;
+	//private static DataRepository<BungeeServer> _secondRepository;
 	private static PlayerStatsRepository _ipRepository;
 	//private static ServerRepository _repository = null;
 
@@ -97,8 +97,8 @@ public class BungeeRotator
 		_repository = new RedisDataRepository<BungeeServer>(ServerManager.getConnection(true, ServerManager.SERVER_STATUS_LABEL), ServerManager.getConnection(false, ServerManager.SERVER_STATUS_LABEL),
 				Region.ALL, BungeeServer.class, "bungeeServers");
 		
-		_secondRepository = new RedisDataRepository<BungeeServer>(new ConnectionData("10.81.1.156", 6379, ConnectionType.MASTER, "ServerStatus"), new ConnectionData("10.81.1.156", 6377, ConnectionType.SLAVE, "ServerStatus"),
-				Region.ALL, BungeeServer.class, "bungeeServers");
+		//_secondRepository = new RedisDataRepository<BungeeServer>(new ConnectionData("10.81.1.156", 6379, ConnectionType.MASTER, "ServerStatus"), new ConnectionData("10.81.1.156", 6377, ConnectionType.SLAVE, "ServerStatus"),
+		//		Region.ALL, BungeeServer.class, "bungeeServers");
 		
 		//_ipRepository = new PlayerStatsRepository();
 		
@@ -110,7 +110,7 @@ public class BungeeRotator
 			try
 			{
 				List<BungeeServer> bungeeServers = new ArrayList<BungeeServer>(_repository.getElements());
-				bungeeServers.addAll(_secondRepository.getElements());
+				//bungeeServers.addAll(_secondRepository.getElements());
 				
 				Collections.sort(bungeeServers, bungeeSorter);
 				
@@ -240,7 +240,7 @@ public class BungeeRotator
 					}
 					
 					_repository.clean();
-					_secondRepository.clean();
+					//_secondRepository.clean();
 				}
 				
 				/*
