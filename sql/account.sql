@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Mar 01, 2024 at 09:03 AM
+-- Generation Time: Mar 02, 2024 at 06:15 AM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.0.30
 
@@ -864,7 +864,7 @@ CREATE TABLE `tasks` (
 
 CREATE TABLE `twofactor` (
   `accountId` int(11) NOT NULL,
-  `secretKey` varchar(11) NOT NULL
+  `secretKey` varchar(16) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
@@ -875,8 +875,8 @@ CREATE TABLE `twofactor` (
 
 CREATE TABLE `twofactor_history` (
   `accountId` int(11) NOT NULL,
-  `ip` int(11) NOT NULL,
-  `loginTime` datetime NOT NULL
+  `ip` text NOT NULL,
+  `loginTime` mediumtext NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------

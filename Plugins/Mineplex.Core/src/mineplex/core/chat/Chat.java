@@ -155,7 +155,7 @@ public class Chat extends MiniPlugin
 	private void setupConfigValues() {
 		try {
 			getPlugin().getConfig().addDefault("chatfilter.enable", false);
-			getPlugin().getConfig().set("chatfilter.enable", getPlugin().getConfig().getString("chatfilter.enable"));
+			getPlugin().getConfig().set("chatfilter.enable", getPlugin().getConfig().getBoolean("chatfilter.enable"));
 
 			getPlugin().getConfig().addDefault("chatfilter.filterUrl", "https://127.0.0.1/content/item/moderate");
 			getPlugin().getConfig().set("chatfilter.filterUrl", getPlugin().getConfig().getString("chatfilter.filterUrl"));

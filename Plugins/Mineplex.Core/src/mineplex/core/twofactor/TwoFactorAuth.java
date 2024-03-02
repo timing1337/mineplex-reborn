@@ -76,12 +76,26 @@ public class TwoFactorAuth extends MiniClientPlugin<TwoFactorData>
 				_repository.buildLastIpLoginProcessor((uuid, ip) -> Get(uuid).setLastLoginIp(ip))
 		);
 
+		setupConfigValues();
 		generatePermissions();
+	}
+
+	private void setupConfigValues()
+	{
+		try
+		{
+			getPlugin().getConfig().addDefault("twofactor", false);
+			getPlugin().getConfig().set("twofactor", getPlugin().getConfig().getBoolean("twofactor"));
+			getPlugin().saveConfig();
+		}
+		catch (Exception e)
+		{
+			e.printStackTrace();
+		}
 	}
 
 	private void generatePermissions()
 	{
-
 		PermissionGroup.BUILDER.setPermission(Perm.USE_2FA, true, true);
 		PermissionGroup.ADMIN.setPermission(Perm.RESET_2FA, true, true);
 	}
@@ -213,30 +227,32 @@ public class TwoFactorAuth extends MiniClientPlugin<TwoFactorData>
 	@EventHandler
 	public void onJoin(PlayerJoinEvent event)
 	{
-		/*Player player = event.getPlayer();
+		if(getPlugin().getConfig().getBoolean("twofactor")){
+			Player player = event.getPlayer();
 
-		TwoFactorData data = Get(player);
+			TwoFactorData data = Get(player);
 
-		if (data.getLastLoginIp().isPresent() && player.getAddress().getAddress().toString().substring(1).equals(data.getLastLoginIp().get()))
-		{
-			player.sendMessage(F.main("2FA", "Authenticated"));
-			return;
-		}
-
-		if (data.getSecretKey().isPresent())
-		{
-			// Hooray 2FA
-			sendTokenRequest(player);
-			authenticating.add(player.getUniqueId());
-		}
-		else
-		{
-			// 2FA not set up yet.
-			if (_clientManager.Get(player).hasPermission(Perm.USE_2FA))
+			if (data.getLastLoginIp().isPresent() && player.getAddress().getAddress().toString().substring(1).equals(data.getLastLoginIp().get()))
 			{
-				runSync(() -> setup2FA(event.getPlayer()));
+				player.sendMessage(F.main("2FA", "Authenticated"));
+				return;
 			}
-		}*/
+
+			if (data.getSecretKey().isPresent())
+			{
+				// Hooray 2FA
+				sendTokenRequest(player);
+				authenticating.add(player.getUniqueId());
+			}
+			else
+			{
+				// 2FA not set up yet.
+				if (_clientManager.Get(player).hasPermission(Perm.USE_2FA))
+				{
+					runSync(() -> setup2FA(event.getPlayer()));
+				}
+			}
+		}
 	}
 
 	@EventHandler
