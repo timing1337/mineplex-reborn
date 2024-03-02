@@ -51,13 +51,13 @@ public class StaffServer extends JavaPlugin
 		saveConfig();
 
 		//Static Modules
-		CommandCenter.Initialize(this); 
+		CommandCenter.Initialize(this);
 		CoreClientManager clientManager = new CoreClientManager(this);
 		CommandCenter.Instance.setClientManager(clientManager);
 		Recharge.Initialize(this);
-		
+
 		DonationManager donationManager = require(DonationManager.class);
-		
+
 		Punish punish = new Punish(this, clientManager);
 		new NpcManager(this, new Creature(this));
 		ServerStatusManager serverStatusManager = new ServerStatusManager(this, clientManager, new LagMeter(this, clientManager));
@@ -69,7 +69,7 @@ public class StaffServer extends JavaPlugin
 		InventoryManager inventoryManager = new InventoryManager(this, clientManager);
 		BonusRepository bonusRepository = new BonusRepository(this, null, donationManager);
 		new AchievementManager(statsManager, clientManager, donationManager, null, eloManager);
-		new MemoryFix(this);  
+		new MemoryFix(this);
 		new FileUpdater(GenericServer.HUB);
 
 		require(PacketHandler.class);
@@ -80,17 +80,18 @@ public class StaffServer extends JavaPlugin
 		SalesPackageManager salesPackageManager = new SalesPackageManager(this, clientManager, donationManager, inventoryManager, statsManager, powerPlayRepo);
 
 		new CustomerSupport(this, clientManager, donationManager, powerPlayRepo, inventoryManager, bonusRepository);
-		
+
 		//Updates
 		require(Updater.class);
-		
+
 		MinecraftServer.getServer().getPropertyManager().setProperty("debug", false);
 		SpigotConfig.debug = false;
-		
+
 		Bukkit.getWorlds().get(0).setSpawnLocation(0, 102, 0);
-		
+
+		/*
 		((CraftServer)getServer()).setWhitelist(true);
-		
+
 		((CraftServer)getServer()).getHandle().addWhitelist(new GameProfile(UUID.fromString("377bdea3-badc-448d-81c1-65db43b17ea4"), "Strutt20"));
 		((CraftServer)getServer()).getHandle().addWhitelist(new GameProfile(UUID.fromString("cf1b629c-cc55-4eb4-be9e-3ca86dfc7b9d"), "mannalou"));
 		((CraftServer)getServer()).getHandle().addWhitelist(new GameProfile(UUID.fromString("492ff708-fe76-4c5a-b9ed-a747b5fa20a0"), "cherdy"));
@@ -106,7 +107,8 @@ public class StaffServer extends JavaPlugin
 		((CraftServer)getServer()).getHandle().addOp(new GameProfile(UUID.fromString("cf1b629c-cc55-4eb4-be9e-3ca86dfc7b9d"), "mannalou"));
 		((CraftServer)getServer()).getHandle().addOp(new GameProfile(UUID.fromString("377bdea3-badc-448d-81c1-65db43b17ea4"), "Strutt20"));
 		((CraftServer)getServer()).getHandle().addOp(new GameProfile(UUID.fromString("6edf17d5-6bb2-4ed9-92e9-bed8e96fff68"), "BlueBeetleHD"));
-		
+		*/
+
 		require(ProfileCacheManager.class);
 	}
 }
