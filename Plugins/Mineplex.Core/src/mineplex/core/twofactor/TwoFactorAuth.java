@@ -75,10 +75,10 @@ public class TwoFactorAuth extends MiniClientPlugin<TwoFactorData>
 		_clientManager.addStoredProcedureLoginProcessor(
 				_repository.buildLastIpLoginProcessor((uuid, ip) -> Get(uuid).setLastLoginIp(ip))
 		);
-		
+
 		generatePermissions();
 	}
-	
+
 	private void generatePermissions()
 	{
 
@@ -213,11 +213,9 @@ public class TwoFactorAuth extends MiniClientPlugin<TwoFactorData>
 	@EventHandler
 	public void onJoin(PlayerJoinEvent event)
 	{
-		Player player = event.getPlayer();
+		/*Player player = event.getPlayer();
 
 		TwoFactorData data = Get(player);
-		player.sendMessage(F.main("2FA", "Authenticated (i lied lmao you did not authenticated)"));
-		/*
 
 		if (data.getLastLoginIp().isPresent() && player.getAddress().getAddress().toString().substring(1).equals(data.getLastLoginIp().get()))
 		{
@@ -238,8 +236,7 @@ public class TwoFactorAuth extends MiniClientPlugin<TwoFactorData>
 			{
 				runSync(() -> setup2FA(event.getPlayer()));
 			}
-		}
-		*/
+		}*/
 	}
 
 	@EventHandler
