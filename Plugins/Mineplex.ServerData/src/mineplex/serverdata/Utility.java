@@ -11,6 +11,7 @@ import mineplex.serverdata.servers.ServerManager;
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisPool;
 import redis.clients.jedis.JedisPoolConfig;
+import redis.clients.jedis.Protocol;
 
 /**
  * Utility offers various necessary utility-based methods for use in Mineplex.ServerData.
@@ -21,7 +22,7 @@ public class Utility
 {
 	private static boolean _retrievedRedisTime = false;
 	private static long _millisTimeDifference;
-	
+
 	// The Gson instance used to serialize/deserialize objects in JSON form.
 	private static Gson _gson = new Gson();
 	public static Gson getGson() { return _gson; }
@@ -51,7 +52,7 @@ public class Utility
 	public static <T> T deserialize(String serializedData, Class<T> type)
 	{
 		if (serializedData == null) return null;
-		
+
 		return _gson.fromJson(serializedData, type);
 	}
 
@@ -81,7 +82,7 @@ public class Utility
 	{
 		if (!_retrievedRedisTime)
 			setTimeDifference();
-		
+
 		return (System.currentTimeMillis() + _millisTimeDifference) / 1000;
 	}
 
@@ -102,12 +103,12 @@ public class Utility
 	 * @return a newly instantiated {@link JedisPool} connected to the provided {@link ConnectionData} repository.
 	 */
 	public static JedisPool generatePool(ConnectionData connData)
-	{	    
+	{
 	    synchronized(_poolLock)
 	    {
 		    String key = getConnKey(connData);
 		    JedisPool pool = _pools.get(key);
-		    
+
 	    	if (pool == null)
 		    {
 		        JedisPoolConfig jedisPoolConfig = new JedisPoolConfig();
@@ -118,10 +119,10 @@ public class Utility
 		        jedisPoolConfig.setMaxTotal(20);
 		        jedisPoolConfig.setBlockWhenExhausted(true);
 
-		        pool = new JedisPool(jedisPoolConfig, connData.getHost(), connData.getPort());
+		        pool = new JedisPool(jedisPoolConfig, connData.getHost(), connData.getPort(), Protocol.DEFAULT_TIMEOUT, connData.getPassword());
 		        _pools.put(key, pool);
 		    }
-	    	
+
 	    	return pool;
 	    }
 	}
