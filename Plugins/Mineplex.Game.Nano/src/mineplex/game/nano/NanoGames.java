@@ -83,9 +83,12 @@ public class NanoGames extends JavaPlugin
 	public void onEnable()
 	{
 		Bukkit.setSpawnRadius(0);
+
 		getConfig().addDefault(Constants.WEB_CONFIG_KEY, Constants.WEB_ADDRESS);
 		getConfig().set(Constants.WEB_CONFIG_KEY, getConfig().getString(Constants.WEB_CONFIG_KEY));
 		saveConfig();
+
+		Constants.WEB_ADDRESS = getConfig().getString(Constants.WEB_CONFIG_KEY);
 
 		require(ProfileCacheManager.class);
 		CommandCenter.Initialize(this);

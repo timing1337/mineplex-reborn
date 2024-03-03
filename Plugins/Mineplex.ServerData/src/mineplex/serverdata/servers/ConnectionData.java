@@ -5,27 +5,30 @@ package mineplex.serverdata.servers;
  * @author MrTwiggy
  *
  */
-public class ConnectionData 
+public class ConnectionData
 {
-	
+
 	public enum ConnectionType
 	{
 		MASTER,
 		SLAVE;
 	}
-	
+
 	private ConnectionType _type;	// The type of connection available
 	public ConnectionType getType() { return _type; }
-	
+
 	private String _name;			// The name associated with this connection
 	public String getName() { return _name; }
 
 	private String _host;			// The host URL to connect to repository
 	public String getHost() { return _host; }
-	
+
 	private int _port;				// The port to connect to repository
 	public int getPort() { return _port; }
-	
+
+	private String _password;				// The password of the repository
+	public String getPassword() { return _password; }
+
 	/**
 	 * Constructor
 	 * @param host - the host URL defining the repository
@@ -33,14 +36,15 @@ public class ConnectionData
 	 * @param type - the type of connection referenced by this ConnectionData
 	 * @param name - the name associated with ConnectionData
 	 */
-	public ConnectionData(String host, int port, ConnectionType type, String name)
+	public ConnectionData(String host, int port, String password, ConnectionType type, String name)
 	{
 		_host = host;
 		_port = port;
+		_password = password;
 		_type = type;
 		_name = name;
 	}
-	
+
 	/**
 	 * @param name
 	 * @return true, if {@code name} is null or it matches (case-insensitive) the {@code _name} associated
@@ -51,4 +55,3 @@ public class ConnectionData
 		return (name == null || name.equalsIgnoreCase(_name));
 	}
 }
-
