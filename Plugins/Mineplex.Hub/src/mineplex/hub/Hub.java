@@ -88,11 +88,8 @@ public class Hub extends JavaPlugin implements IRelation
 	public void onEnable()
 	{
 		Bukkit.setSpawnRadius(0);
-
 		getConfig().addDefault(Constants.WEB_CONFIG_KEY, Constants.WEB_ADDRESS);
 		getConfig().set(Constants.WEB_CONFIG_KEY, getConfig().getString(Constants.WEB_CONFIG_KEY));
-
-		Constants.WEB_ADDRESS = getConfig().getString(Constants.WEB_CONFIG_KEY);
 
 		//TODO: Move this to their correct modules, im too lazy and is it really necessary?
 		getConfig().addDefault("hubFeature.enableHubGames", false);

@@ -20,7 +20,7 @@ import com.mojang.util.UUIDTypeAdapter;
 
 public class Constants
 {
-	public static String WEB_ADDRESS = "http://localhost:1000/";
+	public static final String WEB_ADDRESS = "http://localhost:1000/";
 	public static final String WEB_CONFIG_KEY = "webServer";
 
 	public static Gson GSON;

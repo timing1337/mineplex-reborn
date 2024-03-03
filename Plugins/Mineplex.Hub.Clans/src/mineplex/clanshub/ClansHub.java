@@ -15,7 +15,6 @@ import mineplex.core.blockrestore.BlockRestore;
 import mineplex.core.boosters.BoosterManager;
 import mineplex.core.chat.Chat;
 import mineplex.core.command.CommandCenter;
-import mineplex.core.common.Constants;
 import mineplex.core.common.events.ServerShutdownEvent;
 import mineplex.core.creature.Creature;
 import mineplex.core.customdata.CustomDataManager;
@@ -70,15 +69,17 @@ import mineplex.minecraft.game.core.damage.DamageManager;
  */
 public class ClansHub extends JavaPlugin
 {
+	private String WEB_CONFIG = "webServer";
+
 	@Override
 	public void onEnable()
 	{
 		Bukkit.setSpawnRadius(0);
-		getConfig().addDefault(Constants.WEB_CONFIG_KEY, "http://accounts.mineplex.com/");
-		getConfig().set(Constants.WEB_CONFIG_KEY, getConfig().getString(Constants.WEB_CONFIG_KEY));
+		getConfig().addDefault(WEB_CONFIG, "http://accounts.mineplex.com/");
+		getConfig().set(WEB_CONFIG, getConfig().getString(WEB_CONFIG));
 		saveConfig();
 
-		Constants.WEB_ADDRESS = getConfig().getString(Constants.WEB_CONFIG_KEY);
+		String webServerAddress = getConfig().getString(WEB_CONFIG);
 
 		//Logger.initialize(this);
 

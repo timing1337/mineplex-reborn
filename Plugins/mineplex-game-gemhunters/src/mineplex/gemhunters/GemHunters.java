@@ -117,8 +117,6 @@ public class GemHunters extends JavaPlugin
 		getConfig().set(Constants.WEB_CONFIG_KEY, getConfig().getString(Constants.WEB_CONFIG_KEY));
 		saveConfig();
 
-		Constants.WEB_ADDRESS = getConfig().getString(Constants.WEB_CONFIG_KEY);
-
 		// Load core modules
 		CommandCenter.Initialize(this);
 

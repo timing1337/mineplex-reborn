@@ -227,7 +227,7 @@ public class TwoFactorAuth extends MiniClientPlugin<TwoFactorData>
 	@EventHandler
 	public void onJoin(PlayerJoinEvent event)
 	{
-		if(getPlugin().getConfig().getBoolean("twofactor")) {
+		if(getPlugin().getConfig().getBoolean("twofactor")){
 			Player player = event.getPlayer();
 
 			TwoFactorData data = Get(player);
