@@ -25,8 +25,8 @@
         <module>Mineplex.Database</module>
         <module>Mineplex.DDoSProtectionSwitcher</module>
         <module>Mineplex.EnjinTranslator</module>
-        <module>Mineplex.ClansQueue.Common</module>
-        <module>Mineplex.ClansQueue</module>
+		<module>Mineplex.ClansQueue.Common</module>
+		<module>Mineplex.ClansQueue</module>
         <module>Mineplex.Game.Clans</module>
         <module>Mineplex.Game.Clans.Core</module>
         <module>Mineplex.Game.Clans.Compensation</module>

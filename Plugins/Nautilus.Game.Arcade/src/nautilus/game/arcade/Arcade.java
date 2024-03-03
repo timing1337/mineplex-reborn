@@ -99,8 +99,6 @@ public class Arcade extends JavaPlugin
 		getConfig().set(Constants.WEB_CONFIG_KEY, getConfig().getString(Constants.WEB_CONFIG_KEY));
 		saveConfig();
 
-		Constants.WEB_ADDRESS = getConfig().getString(Constants.WEB_CONFIG_KEY);
-
 		//Logger.initialize(this);
 
 		//Static Modules

@@ -19,23 +19,21 @@ public class EnjinTranslator extends JavaPlugin
 		getConfig().set(Constants.WEB_CONFIG_KEY, getConfig().getString(Constants.WEB_CONFIG_KEY));
 		saveConfig();
 
-		Constants.WEB_ADDRESS = getConfig().getString(Constants.WEB_CONFIG_KEY);
-
 		//Static Modules
 		CommandCenter.Initialize(this);
-
+		
 		//Core Modules
 		CoreClientManager clientManager = new CoreClientManager(this);
 		CommandCenter.Instance.setClientManager(clientManager);
-
+		
 		DonationManager donationManager = require(DonationManager.class);
-
+		
 		//Main Modules
 		new Enjin(this, clientManager, donationManager, new InventoryManager(this, clientManager));
-
+		
 		require(Updater.class);
 	}
-
+	
 	public String GetWebServerAddress()
 	{
 
