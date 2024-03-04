@@ -2,6 +2,7 @@ package mineplex.core.disguise.disguises;
 
 import java.util.function.Predicate;
 
+import com.viaversion.viaversion.api.protocol.version.ProtocolVersion;
 import net.minecraft.server.v1_8_R3.Packet;
 import net.minecraft.server.v1_8_R3.PacketPlayOutEntityDestroy;
 
@@ -23,13 +24,10 @@ public abstract class DisguiseMutable extends DisguiseCreature
 //		if (!_spawnedIn)
 //			return;
 
-		//TODO: Multi-protocol support
-		/*
-		Predicate<Integer> pred = v -> v >= ProtocolVersion.v1_11;
+		Predicate<Integer> pred = v -> v >= ProtocolVersion.v1_11.getVersion();
 		sendToWatchers(pred, this::getDestroyPacket);
 		sendToWatchers(pred, this::getSpawnPacket);
 		sendToWatchers(pred, this::getMetadataPacket);
-		*/
 	}
 
 	private Packet getDestroyPacket()

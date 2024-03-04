@@ -1201,7 +1201,7 @@ public class UtilPlayer
 
 	public static int getProtocol(Player player)
 	{
-		return 1;
+		return ((CraftPlayer) player).getHandle().playerConnection.networkManager.getVersion();
 	}
 
 	/**

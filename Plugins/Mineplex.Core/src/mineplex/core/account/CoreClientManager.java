@@ -551,9 +551,7 @@ public class CoreClientManager extends MiniPlugin
 				{
 					client.addAdditionalGroup(group);
 				}
-			}
-			catch (SQLException e)
-			{
+			}catch(SQLException e){
 				e.printStackTrace();
 			}
 			CLIENT_LOGIN_LOCKS.remove(client.getName());

@@ -680,22 +680,6 @@ public class Halloween extends SoloGame
 						player.getLocation().getBlockX(), player.getLocation().getBlockY(),
 						player.getLocation().getBlockZ(),
 						20f, 1f);
-				/*
-				int protocol = ((CraftPlayer) player).getHandle().getProtocol();
-				if (protocol >= ProtocolVersion.v1_12)
-				{
-					packet = new PacketPlayOutCustomSoundEffect(audio.getAudioPath(),
-							player.getLocation().getX(), player.getLocation().getY(),
-							player.getLocation().getZ(), 20f, 1f);
-				} else
-				{
-					packet = new PacketPlayOutNamedSoundEffect(audio.getAudioPath(),
-							player.getLocation().getBlockX(), player.getLocation().getBlockY(),
-							player.getLocation().getBlockZ(),
-							20f, 1f);
-				}
-				*/
-
 				UtilPlayer.sendPacket(player, packet);
 			}
 		}

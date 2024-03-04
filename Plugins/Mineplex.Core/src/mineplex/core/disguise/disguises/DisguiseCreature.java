@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import com.viaversion.viaversion.api.protocol.version.ProtocolVersion;
 import net.minecraft.server.v1_8_R3.*;
 import net.minecraft.server.v1_8_R3.DataWatcher.WatchableObject;
 
@@ -78,61 +79,12 @@ public abstract class DisguiseCreature extends DisguiseInsentient
 	// ---- Metadata processing
 
 	// This WON'T be post-processed by the Spigot metadata processor
-
+    // Don't think this is neccessary...?
 	@Override
 	public Packet modifySpawnPacket(int protocol, Packet packet)
 	{
-		//TODO: Multi-protocol support
-		/*
-		if (protocol >= ProtocolVersion.v1_10_PRE)
-		{
-			PacketPlayOutSpawnEntityLiving newSpawn = (PacketPlayOutSpawnEntityLiving) getSpawnPacket();
-
-			// Allow the entity type to be changed (needed on 1.11+)
-			newSpawn.b = getTypeId(protocol >= ProtocolVersion.v1_11);
-
-			boolean hasArms = false;
-			List<WatchableObject> meta = DataWatcher.b();
-
-			if (meta != null)
-			{
-				// Run the meta through our Spigot rewriter
-				meta = MetadataRewriter.rewrite(getTypeId(false), protocol, meta).objects;
-
-				// Remove indexes >= 12 on 1.11+
-				if (protocol >= ProtocolVersion.v1_11)
-				{
-					Iterator<WatchableObject> iter = meta.iterator();
-					while (iter.hasNext())
-					{
-						WatchableObject next = iter.next();
-						if (next.getIndex().a() == 6)
-						{
-							hasArms = true;
-						} else if (next.getIndex().a() >= 12)
-						{
-							iter.remove();
-						}
-					}
-				}
-			} else
-			{
-				meta = new ArrayList<>();
-			}
-
-			if (!hasArms)
-			{
-				WatchableObject<Byte> arms = new WatchableObject<>(0, 0, null,
-						new DataIndex<>(6, DataType.BYTE), (byte) 0);
-				meta.add(arms);
-			}
-
-			newSpawn.m = meta;
-			return newSpawn;
-		}
-		*/
 		return packet;
-	}
+    }
 
 	protected int getTypeId(boolean separate)
 	{

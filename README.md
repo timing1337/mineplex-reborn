@@ -12,6 +12,7 @@ Feel free to add them back by checking git diff or even better recompile everyth
 2. [Redis](https://redis.io/docs/install/install-redis/)
 3. [MySQL](https://www.mysql.com/)
 4. API Server (You can use [fakeplex-api](https://github.com/KyleS1872/fakeplex-api) or [MineplexMonitor](https://github.com/timing1337/MineplexMonitor))
+5. [ViaVersion](https://ci.viaversion.com/job/ViaVersion/)
 
 ## Compiling
 1. Clone the repo

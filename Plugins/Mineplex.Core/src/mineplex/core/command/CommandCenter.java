@@ -11,6 +11,7 @@ import java.util.Set;
 import java.util.UUID;
 import java.util.concurrent.atomic.AtomicIntegerFieldUpdater;
 
+import com.viaversion.viaversion.api.protocol.version.ProtocolVersion;
 import net.minecraft.server.v1_8_R3.EntityPlayer;
 import net.minecraft.server.v1_8_R3.PacketPlayInTabComplete;
 import net.minecraft.server.v1_8_R3.PacketPlayOutTabComplete;
@@ -212,33 +213,17 @@ public class CommandCenter implements Listener, IPacketHandler
 		return commands;
 	}
 
-	@EventHandler
-	public void onPlayerJoin(PlayerJoinEvent event)
-	{
-		int protocol = UtilPlayer.getProtocol(event.getPlayer());
-		//TODO: Protocol Support
-		/* 
-		if (protocol >= ProtocolVersion.v1_13)
-		{
-			List<String> commands = getCommands(event.getPlayer());
-			UtilPlayer.sendPacket(event.getPlayer(), new PacketPlayOutDeclareCommands(commands));
-		}
-		*/
-	}
-
 	@Override
 	public void handle(PacketInfo packetInfo)
 	{
 		if (packetInfo.getPacket() instanceof PacketPlayInTabComplete)
 		{
 			EntityPlayer nmsPlayer = ((CraftPlayer) packetInfo.getPlayer()).getHandle();
-			//TODO: Protocol Support
-			/* 
-			if (nmsPlayer.getProtocol() >= ProtocolVersion.v1_13)
+
+			if (nmsPlayer.playerConnection.networkManager.getVersion() > ProtocolVersion.v1_13.getVersion())
 			{
 				return;
 			}
-			*/
 			
 			PacketPlayInTabComplete packet = (PacketPlayInTabComplete) packetInfo.getPacket();
 
