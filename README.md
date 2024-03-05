@@ -16,5 +16,26 @@ Feel free to add them back by checking git diff or even better recompile everyth
 
 ## Compiling
 1. Clone the repo
-2. Change ``com.mineplex`` path to your spigot jar
+2. Change spigot path to your ``libs\spigot-1.8.8-1.9-SNAPSHOT.jar`` and ``libs\bungeecord-bootstrap-1.8-SNAPSHOT.jar`` in pom.xml
+
+```
+<dependency>
+    <groupId>com.mineplex</groupId>
+    <artifactId>spigot</artifactId>
+    <version>1.8.8-1.9-SNAPSHOT</version>
+    <scope>system</scope>
+    <systemPath>path\file\libs\spigot-1.8.8-1.9-SNAPSHOT.jar</systemPath>
+</dependency>
+```
+
+```
+<dependency>
+    <groupId>net.md-5</groupId>
+    <artifactId>bungeecord-bootstrap</artifactId>
+    <version>1.8-SNAPSHOT</version>
+    <scope>system</scope>
+    <systemPath>path\file\libs\bungeecord-bootstrap-1.8-SNAPSHOT.jar</systemPath>
+</dependency>
+```
+
 3. ``mvn install``
