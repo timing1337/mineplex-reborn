@@ -3,12 +3,11 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Mar 02, 2024 at 06:15 AM
+-- Generation Time: Mar 11, 2024 at 06:46 AM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.0.30
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
-START TRANSACTION;
 SET time_zone = "+00:00";
 
 
@@ -20,6 +19,159 @@ SET time_zone = "+00:00";
 --
 -- Database: `account`
 --
+
+DELIMITER $$
+--
+-- Procedures
+--
+CREATE DEFINER=`root`@`localhost` PROCEDURE `addThank` (IN `inReceiverAccountId` INT, IN `inSenderAccountId` INT, IN `inThankAmount` INT, IN `inReason` VARCHAR(32), IN `inIgnoreCooldown` TINYINT, OUT `success` TINYINT)   BEGIN DECLARE insertSuccess TINYINT DEFAULT 0;
+
+INSERT INTO
+  accountthanktransactions (
+    receiverId,
+    senderId,
+    thankAmount,
+    reason,
+    ignoreCooldown
+  )
+VALUES
+  (
+    inReceiverAccountId,
+    inSenderAccountId,
+    inThankAmount,
+    inReason,
+    inIgnoreCooldown
+  );
+
+IF ROW_COUNT() > 0 THEN
+SET
+  insertSuccess = 1;
+
+END IF;
+
+SET
+  success = insertSuccess;
+
+END$$
+
+CREATE DEFINER=`root`@`localhost` PROCEDURE `checkAmplifierThank` (IN `inAccountId` INT, IN `inAmplifierId` INT, OUT `canThank` TINYINT)   BEGIN DECLARE countValue INT;
+
+SELECT
+  COUNT(*) INTO countValue
+FROM
+  accountamplifierthank
+WHERE
+  accountId = inAccountId
+  AND amplifierId = inAmplifierId;
+
+IF countValue > 0 THEN
+SET
+  canThank = 0;
+
+ELSE
+SET
+  canThank = 1;
+
+INSERT INTO
+  accountamplifierthank (accountId, amplifierId)
+VALUES
+  (inAccountId, inAmplifierId);
+
+END IF;
+
+END$$
+
+CREATE DEFINER=`root`@`localhost` PROCEDURE `check_clans_daily` (IN `accountId_in` INT, IN `serverId_in` INT, IN `goldChange` INT, OUT `pass` TINYINT, OUT `outTime` TIMESTAMP)   BEGIN IF goldChange >= 0 THEN
+SET
+  pass = 1;
+
+ELSE
+SET
+  pass = 0;
+
+END IF;
+
+SET
+  outTime = CURRENT_TIMESTAMP;
+
+UPDATE
+  bonus
+SET
+  clansdailytime = outTime
+WHERE
+  accountId = accountId_in;
+
+END$$
+
+CREATE DEFINER=`root`@`localhost` PROCEDURE `check_daily` (IN `accountId_in` INT, IN `coinsChange` INT, IN `gemsChange` INT, OUT `pass` TINYINT, OUT `outTime` TIMESTAMP)   BEGIN IF coinsChange >= 0 THEN
+SET
+  pass = 1;
+
+ELSE
+SET
+  pass = 0;
+
+END IF;
+
+SET
+  outTime = CURRENT_TIMESTAMP;
+
+UPDATE
+  bonus
+SET
+  dailytime = outTime
+WHERE
+  accountId = accountId_in;
+
+END$$
+
+CREATE DEFINER=`root`@`localhost` PROCEDURE `claimThank` (IN `p_receiver_id` INT, OUT `p_amount_claimed` INT, OUT `p_unique_senders` INT)   BEGIN
+START TRANSACTION;
+
+SELECT
+  SUM(thankAmount) INTO p_amount_claimed
+FROM
+  accountthanktransactions
+WHERE
+  receiverId = p_receiver_id
+  AND claimed = 0;
+UPDATE
+  accountthanktransactions
+SET
+  claimed = 1,
+  claimTime = NOW()
+WHERE
+  receiverId = p_receiver_id
+  AND claimed = 0;
+SELECT
+  COUNT(DISTINCT senderId) INTO p_unique_senders
+FROM
+  accountthanktransactions
+WHERE
+  receiverId = p_receiver_id
+  AND claimed = 0;
+
+COMMIT;
+
+END$$
+
+CREATE DEFINER=`root`@`localhost` PROCEDURE `rankBonus` (IN `accountId_in` INT, IN `coinsChange` INT, IN `gemsChange` INT, IN `mythicalChestChange` INT, IN `omegaChestChange` INT, IN `illuminatedChestChange` INT, OUT `pass` INT, OUT `outTime` DATE)   BEGIN
+SET
+  pass = TRUE;
+
+SET
+  outTime = CURDATE();
+
+UPDATE
+  bonus
+SET
+  ranktime = outTime
+WHERE
+  accountId = accountId_in;
+
+END$$
+
+DELIMITER ;
 
 -- --------------------------------------------------------
 
@@ -1337,7 +1489,6 @@ ALTER TABLE `snapshotrecipients`
 --
 ALTER TABLE `snapshots`
   ADD CONSTRAINT `snapshots_accounts_id_fk` FOREIGN KEY (`creator`) REFERENCES `accounts` (`id`);
-COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
