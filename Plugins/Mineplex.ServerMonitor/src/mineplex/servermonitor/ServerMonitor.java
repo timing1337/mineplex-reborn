@@ -4,6 +4,9 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.net.InetAddress;
+import java.net.UnknownHostException;
+import java.nio.file.Path;
 import java.text.SimpleDateFormat;
 import java.util.AbstractMap;
 import java.util.ArrayList;
@@ -22,6 +25,7 @@ import java.util.TimerTask;
 import java.util.logging.FileHandler;
 import java.util.logging.Logger;
 
+import org.apache.commons.io.FileUtils;
 import org.bukkit.craftbukkit.libs.com.google.common.base.Throwables;
 import org.fusesource.jansi.AnsiConsole;
 
@@ -53,6 +57,8 @@ public class ServerMonitor
 	private static HashSet<String> _delayedKill = new HashSet<String>();
 	private static HashSet<String> _laggyServers = new HashSet<String>();
 
+	private static HashMap<String, ProcessRunner> _serverProcesses = new HashMap<String, ProcessRunner>();
+
 	private static final SimpleDateFormat _dateFormat = new SimpleDateFormat("MM/dd/yyyy HH:mm:ss");
 	private static final Logger _logger = Logger.getLogger("ServerMonitor");
 	private static Timer _timer = new Timer();
@@ -62,20 +68,11 @@ public class ServerMonitor
 
 	private static boolean _debug = false;
 
+	private static final String SERVERS_FOLDER = "D:/MineplexServers";
+	private static final String UPDATE_FOLDER = "D:/update";
+
 	public static void main (String args[])
 	{
-		/*
-		MinecraftPingReply data = null;
-		try
-		{
-			data = new MinecraftPing().getPing(new MinecraftPingOptions().setHostname("127.0.0.1").setPort(25565));
-		}
-		catch (IOException e2)
-		{
-			e2.printStackTrace();
-		}
-		System.out.println(data.getDescription() + " " + data.getPlayers().getOnline());
-		*/
 		_region = !new File("eu.dat").exists() ? Region.US : Region.EU;
 		_debug = new File("debug.dat").exists();
 		_repository = ServerManager.getServerRepository(_region);	// Fetches and connects to server repo
@@ -470,7 +467,7 @@ public class ServerMonitor
 				if (_count == 0 || deadServers.contains(deadServer.getName()))
 				{
 					if (_count != 0)
-						copyServerLog(deadServer);
+						//copyServerLog(deadServer);
 
 					killServer(deadServer.getName(), deadServer.getPublicAddress(), deadServer.getPlayerCount(), "[KILLED] [DEAD] " + deadServer.getName() + ":" + deadServer.getPublicAddress(), true);
 
@@ -478,7 +475,7 @@ public class ServerMonitor
 				}
 				else if (!_delayedKill.contains(deadServer.getName()))
 				{
-					startTimingReport(deadServer);
+					//startTimingReport(deadServer);
 
 					_timer.schedule(new TimerTask()
 					{
@@ -488,7 +485,7 @@ public class ServerMonitor
 							_deadServers.add(deadServer.getName());
 							_delayedKill.remove(deadServer.getName());
 
-							stopTimingReport(deadServer);
+							//stopTimingReport(deadServer);
 							log("[IMPENDING DEATH] : " + deadServer.getName() + ":" + deadServer.getPublicAddress());
 						}
 					}, 20 * 1000);
@@ -652,87 +649,43 @@ public class ServerMonitor
 		if (_debug)
 			return;
 
-		String cmd = "/home/mineplex/easyRemoteKillServer.sh";
+		MinecraftServer server = null;
 
-		ProcessRunner pr = new ProcessRunner(new String[] {"/bin/sh", cmd, serverAddress, serverName});
-		pr.start(new GenericRunnable<Boolean>()
+		server = _repository.getServerStatus(serverName);
+		if (server != null)
 		{
-			@Override
-            public void run(Boolean error)
-			{
-				MinecraftServer server = null;
+			_repository.removeServerStatus(server);
+		}
 
-				if (!error)
-				{
-					server = _repository.getServerStatus(serverName);
+		//Kill the process
+		_serverProcesses.get(serverName).abort();
 
-					if (server != null)
-					{
-						_repository.removeServerStatus(server);
-					}
-				}
-
-				if (announce)
-				{
-					if (error)
-						log("[" + serverName + ":" + serverAddress + "] Kill errored.");
-					else
-						log(message + " Players: " + players);
-				}
+		try{
+			//Delete folder
+			File serverFolder = new File(SERVERS_FOLDER + "/" + serverName);
+			if(serverFolder.exists()){
+				FileUtils.deleteDirectory(serverFolder);
 			}
-		});
-
-		try
-		{
-			pr.join(50);
-		}
-		catch (InterruptedException e1)
-		{
-			e1.printStackTrace();
+		}catch (IOException exception){
+			log("ERROR DELETING SERVER FOLDER " + serverName);
 		}
 
-
-		if (!pr.isDone())
-			_processes.add(pr);
+		if (announce)
+		{
+			log(message + " Players: " + players);
+		}
 	}
 
 	private static boolean isServerOffline(DedicatedServer serverData)
 	{
-		boolean success = false;
-
 		if (_debug)
 			return false;
-
-		Process process = null;
-		String cmd = "/home/mineplex/isServerOnline.sh";
-
-		ProcessBuilder processBuilder = new ProcessBuilder(new String[] {"/bin/sh", cmd, serverData.getPublicAddress()});
-
-		try
-		{
-			process = processBuilder.start();
-			process.waitFor();
-
-            BufferedReader reader=new BufferedReader(new InputStreamReader(process.getInputStream()));
-            String line = reader.readLine();
-
-            while(line != null)
-            {
-            	success = line.equals("Success");
-
-	            line=reader.readLine();
-            }
-        }
-		catch (Exception e1)
-		{
-			e1.printStackTrace();
+		try{
+			InetAddress address = InetAddress.getByName(serverData.getPublicAddress());
+			return address.isReachable(4000);
+		}catch(Exception exception){
+			return false;
 		}
-		finally
-		{
-			process.destroy();
-		}
-
-		return !success;
 	}
 
 	private static DedicatedServer getBestDedicatedServer(Collection<DedicatedServer> dedicatedServers,	ServerGroup serverGroup)
@@ -866,10 +819,20 @@ public class ServerMonitor
 		if (_debug)
 			return;
 
-		String cmd = "/home/mineplex/easyRemoteStartServerCustom.sh";
 		final String groupPrefix = serverGroup.getPrefix();
 		final String serverName = serverSpace.getName();
 		final String serverAddress = serverSpace.getPublicAddress();
+
+		File serverFolder = new File(SERVERS_FOLDER + "/" + serverName);
+		try{
+			if(serverFolder.exists()){
+				serverFolder.delete(); //refresh the server folder
+				serverFolder.createNewFile();
+			}
+		}catch (IOException exception){
+			log("ERROR SPAWNING SERVER");
+			log(exception.getMessage());
+		}
 
 		ProcessRunner pr = new ProcessRunner(new String[] {"/bin/sh", cmd, serverAddress, serverSpace.getPrivateAddress(), (serverGroup.getPortSection() + serverNum) + "", serverGroup.getRequiredRam() + "", serverGroup.getWorldZip(), serverGroup.getPlugin(), serverGroup.getConfigPath(), serverGroup.getName(), serverGroup.getPrefix() + "-" + serverNum, serverSpace.isUsRegion() ? "true" : "false", serverGroup.getAddNoCheat() + "", serverGroup.getAddWorldEdit() + "" });
 		pr.start(new GenericRunnable<Boolean>()
