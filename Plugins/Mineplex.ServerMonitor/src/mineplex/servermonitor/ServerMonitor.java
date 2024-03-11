@@ -4,9 +4,6 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.net.InetAddress;
-import java.net.UnknownHostException;
-import java.nio.file.Path;
 import java.text.SimpleDateFormat;
 import java.util.AbstractMap;
 import java.util.ArrayList;
@@ -25,7 +22,6 @@ import java.util.TimerTask;
 import java.util.logging.FileHandler;
 import java.util.logging.Logger;
 
-import org.apache.commons.io.FileUtils;
 import org.bukkit.craftbukkit.libs.com.google.common.base.Throwables;
 import org.fusesource.jansi.AnsiConsole;
 
@@ -57,8 +53,6 @@ public class ServerMonitor
 	private static HashSet<String> _delayedKill = new HashSet<String>();
 	private static HashSet<String> _laggyServers = new HashSet<String>();
 
-	private static HashMap<String, ProcessRunner> _serverProcesses = new HashMap<String, ProcessRunner>();
-
 	private static final SimpleDateFormat _dateFormat = new SimpleDateFormat("MM/dd/yyyy HH:mm:ss");
 	private static final Logger _logger = Logger.getLogger("ServerMonitor");
 	private static Timer _timer = new Timer();
@@ -68,11 +62,20 @@ public class ServerMonitor
 
 	private static boolean _debug = false;
 
-	private static final String SERVERS_FOLDER = "D:/MineplexServers";
-	private static final String UPDATE_FOLDER = "D:/update";
-
 	public static void main (String args[])
 	{
+		/*
+		MinecraftPingReply data = null;
+		try
+		{
+			data = new MinecraftPing().getPing(new MinecraftPingOptions().setHostname("127.0.0.1").setPort(25565));
+		}
+		catch (IOException e2)
+		{
+			e2.printStackTrace();
+		}
+		System.out.println(data.getDescription() + " " + data.getPlayers().getOnline());
+		*/
 		_region = !new File("eu.dat").exists() ? Region.US : Region.EU;
 		_debug = new File("debug.dat").exists();
 		_repository = ServerManager.getServerRepository(_region);	// Fetches and connects to server repo
@@ -104,48 +107,48 @@ public class ServerMonitor
 		}
 
 		new Thread(new Runnable()
-        {
-            @Override
-            public void run()
-            {
-                try
-                {
-                    AnsiConsole.systemInstall();
-                    ConsoleReader reader = new ConsoleReader();
-                    reader.setExpandEvents(false);
+		{
+			@Override
+			public void run()
+			{
+				try
+				{
+					AnsiConsole.systemInstall();
+					ConsoleReader reader = new ConsoleReader();
+					reader.setExpandEvents(false);
 
-                    String command;
-                    while ((command = reader.readLine(">")) != null)
-                    {
-                        if (command.contains("printservers"))
-                        {
-                            String[] parts = command.split(" ");
-                            String serverGroup = "";
-                            if (parts.length > 1)
-                            {
-                                serverGroup = parts[1];
-                            }
+					String command;
+					while ((command = reader.readLine(">")) != null)
+					{
+						if (command.contains("printservers"))
+						{
+							String[] parts = command.split(" ");
+							String serverGroup = "";
+							if (parts.length > 1)
+							{
+								serverGroup = parts[1];
+							}
 
-                            printServersCommand(serverGroup);
-                        }
-                        else if (command.equals("help"))
-                        {
-                            log("Commands:");
-                            log("printservers (server-group) - prints all servers if no server group is"
-                                + "supplied, or all servers of a given group if a server group is supplied.");
-                        }
-                        else
-                        {
-                            log("No command " + command + " found.");
-                        }
-                    }
-                }
-                catch (Exception e)
-                {
-                    log(Throwables.getStackTraceAsString(e));
-                }
-            }
-        }).start();
+							printServersCommand(serverGroup);
+						}
+						else if (command.equals("help"))
+						{
+							log("Commands:");
+							log("printservers (server-group) - prints all servers if no server group is"
+									+ "supplied, or all servers of a given group if a server group is supplied.");
+						}
+						else
+						{
+							log("No command " + command + " found.");
+						}
+					}
+				}
+				catch (Exception e)
+				{
+					log(Throwables.getStackTraceAsString(e));
+				}
+			}
+		}).start();
 
 		HashMap<String, Entry<String, Long>> serverTracker = new HashMap<String, Entry<String, Long>>();
 
@@ -467,7 +470,7 @@ public class ServerMonitor
 				if (_count == 0 || deadServers.contains(deadServer.getName()))
 				{
 					if (_count != 0)
-						//copyServerLog(deadServer);
+						copyServerLog(deadServer);
 
 					killServer(deadServer.getName(), deadServer.getPublicAddress(), deadServer.getPlayerCount(), "[KILLED] [DEAD] " + deadServer.getName() + ":" + deadServer.getPublicAddress(), true);
 
@@ -475,17 +478,17 @@ public class ServerMonitor
 				}
 				else if (!_delayedKill.contains(deadServer.getName()))
 				{
-					//startTimingReport(deadServer);
+					startTimingReport(deadServer);
 
 					_timer.schedule(new TimerTask()
 					{
 						@Override
-                        public void run()
+						public void run()
 						{
 							_deadServers.add(deadServer.getName());
 							_delayedKill.remove(deadServer.getName());
 
-							//stopTimingReport(deadServer);
+							stopTimingReport(deadServer);
 							log("[IMPENDING DEATH] : " + deadServer.getName() + ":" + deadServer.getPublicAddress());
 						}
 					}, 20 * 1000);
@@ -599,7 +602,7 @@ public class ServerMonitor
 			List<MinecraftServer> emptyServers = new ArrayList<MinecraftServer>(serverGroup.getEmptyServers());
 			MinecraftServer emptyServer = emptyServers.get(serversToKill - 1);
 			killServer(emptyServer, "[KILLED] [EXCESS] " + emptyServer.getName() + ":" + emptyServer.getPublicAddress());
-		    serversToKill--;
+			serversToKill--;
 		}
 
 		while (serversToAdd > 0)
@@ -628,7 +631,7 @@ public class ServerMonitor
 				serverTracker.put(serverGroup.getPrefix() + "-" + serverNum, new AbstractMap.SimpleEntry<String, Long>(bestServer.getPublicAddress(), System.currentTimeMillis()));
 			}
 
-		    serversToAdd--;
+			serversToAdd--;
 		}
 
 		List<MinecraftServer> servers = new ArrayList<MinecraftServer>();
@@ -649,43 +652,87 @@ public class ServerMonitor
 		if (_debug)
 			return;
 
-		MinecraftServer server = null;
+		String cmd = "/home/mineplex/easyRemoteKillServer.sh";
 
-		server = _repository.getServerStatus(serverName);
-		if (server != null)
+		ProcessRunner pr = new ProcessRunner(new String[] {"/bin/sh", cmd, serverAddress, serverName});
+		pr.start(new GenericRunnable<Boolean>()
 		{
-			_repository.removeServerStatus(server);
-		}
+			@Override
+			public void run(Boolean error)
+			{
+				MinecraftServer server = null;
 
-		//Kill the process
-		_serverProcesses.get(serverName).abort();
+				if (!error)
+				{
+					server = _repository.getServerStatus(serverName);
 
-		try{
-			//Delete folder
-			File serverFolder = new File(SERVERS_FOLDER + "/" + serverName);
-			if(serverFolder.exists()){
-				FileUtils.deleteDirectory(serverFolder);
+					if (server != null)
+					{
+						_repository.removeServerStatus(server);
+					}
+				}
+
+				if (announce)
+				{
+					if (error)
+						log("[" + serverName + ":" + serverAddress + "] Kill errored.");
+					else
+						log(message + " Players: " + players);
+				}
 			}
-		}catch (IOException exception){
-			log("ERROR DELETING SERVER FOLDER " + serverName);
+		});
+
+		try
+		{
+			pr.join(50);
+		}
+		catch (InterruptedException e1)
+		{
+			e1.printStackTrace();
 		}
 
-		if (announce)
-		{
-			log(message + " Players: " + players);
-		}
+
+		if (!pr.isDone())
+			_processes.add(pr);
 	}
 
 	private static boolean isServerOffline(DedicatedServer serverData)
 	{
+		boolean success = false;
+
 		if (_debug)
 			return false;
-		try{
-			InetAddress address = InetAddress.getByName(serverData.getPublicAddress());
-			return address.isReachable(4000);
-		}catch(Exception exception){
-			return false;
+
+		Process process = null;
+		String cmd = "/home/mineplex/isServerOnline.sh";
+
+		ProcessBuilder processBuilder = new ProcessBuilder(new String[] {"/bin/sh", cmd, serverData.getPublicAddress()});
+
+		try
+		{
+			process = processBuilder.start();
+			process.waitFor();
+
+			BufferedReader reader=new BufferedReader(new InputStreamReader(process.getInputStream()));
+			String line = reader.readLine();
+
+			while(line != null)
+			{
+				success = line.equals("Success");
+
+				line=reader.readLine();
+			}
 		}
+		catch (Exception e1)
+		{
+			e1.printStackTrace();
+		}
+		finally
+		{
+			process.destroy();
+		}
+
+		return !success;
 	}
 
 	private static DedicatedServer getBestDedicatedServer(Collection<DedicatedServer> dedicatedServers,	ServerGroup serverGroup)
@@ -723,7 +770,7 @@ public class ServerMonitor
 		pr.start(new GenericRunnable<Boolean>()
 		{
 			@Override
-            public void run(Boolean error)
+			public void run(Boolean error)
 			{
 				if (error)
 					log("[TIMING START] Errored " + server.getName() + "(" + server.getPublicAddress() + ")");
@@ -757,7 +804,7 @@ public class ServerMonitor
 		pr.start(new GenericRunnable<Boolean>()
 		{
 			@Override
-            public void run(Boolean error)
+			public void run(Boolean error)
 			{
 				if (error)
 					log("[TIMING PASTE] Errored " + server.getName() + "(" + server.getPublicAddress() + ")");
@@ -791,7 +838,7 @@ public class ServerMonitor
 		pr.start(new GenericRunnable<Boolean>()
 		{
 			@Override
-            public void run(Boolean error)
+			public void run(Boolean error)
 			{
 				if (error)
 					log("[COPY LOG] Errored " + server.getName() + "(" + server.getPublicAddress() + ")");
@@ -819,26 +866,16 @@ public class ServerMonitor
 		if (_debug)
 			return;
 
+		String cmd = "/home/mineplex/easyRemoteStartServerCustom.sh";
 		final String groupPrefix = serverGroup.getPrefix();
 		final String serverName = serverSpace.getName();
 		final String serverAddress = serverSpace.getPublicAddress();
-
-		File serverFolder = new File(SERVERS_FOLDER + "/" + serverName);
-		try{
-			if(serverFolder.exists()){
-				serverFolder.delete(); //refresh the server folder
-				serverFolder.createNewFile();
-			}
-		}catch (IOException exception){
-			log("ERROR SPAWNING SERVER");
-			log(exception.getMessage());
-		}
 
 		ProcessRunner pr = new ProcessRunner(new String[] {"/bin/sh", cmd, serverAddress, serverSpace.getPrivateAddress(), (serverGroup.getPortSection() + serverNum) + "", serverGroup.getRequiredRam() + "", serverGroup.getWorldZip(), serverGroup.getPlugin(), serverGroup.getConfigPath(), serverGroup.getName(), serverGroup.getPrefix() + "-" + serverNum, serverSpace.isUsRegion() ? "true" : "false", serverGroup.getAddNoCheat() + "", serverGroup.getAddWorldEdit() + "" });
 		pr.start(new GenericRunnable<Boolean>()
 		{
 			@Override
-            public void run(Boolean error)
+			public void run(Boolean error)
 			{
 				if (error)
 					log("[" + serverName + ":" + serverAddress + " Free Resources; CPU " + serverSpace.getAvailableCpu() + " RAM " + serverSpace.getAvailableRam() + "MB] Errored " + serverName + "(" + groupPrefix+ "-" + serverNum + (free ? "-FREE" : "") + ")");
@@ -863,37 +900,37 @@ public class ServerMonitor
 			_processes.add(pr);
 	}
 
-    private static void printServersCommand(String serverGroup)
-    {
-        // grab servers
-        Collection<MinecraftServer> servers = _repository.getServerStatuses();
+	private static void printServersCommand(String serverGroup)
+	{
+		// grab servers
+		Collection<MinecraftServer> servers = _repository.getServerStatuses();
 
-        // remove entries not within the target server group, if one is supplied
-        if (!serverGroup.isEmpty())
-        {
-            servers.removeIf(s -> !s.getGroup().equalsIgnoreCase(serverGroup));
-        }
+		// remove entries not within the target server group, if one is supplied
+		if (!serverGroup.isEmpty())
+		{
+			servers.removeIf(s -> !s.getGroup().equalsIgnoreCase(serverGroup));
+		}
 
-        List<MinecraftServer> serverList = new ArrayList<>(servers);
-        Collections.sort(serverList,
-                (a, b) -> Integer.compare(b.getPlayerCount(), a.getPlayerCount()));
+		List<MinecraftServer> serverList = new ArrayList<>(servers);
+		Collections.sort(serverList,
+				(a, b) -> Integer.compare(b.getPlayerCount(), a.getPlayerCount()));
 
-        serverList.forEach(server ->
-        {
-            Optional<DedicatedServer> opt = getDediStatusFromAddress(server.getPublicAddress());
-            String dediName = opt.map(dedi -> dedi.getName()).orElse("???");
+		serverList.forEach(server ->
+		{
+			Optional<DedicatedServer> opt = getDediStatusFromAddress(server.getPublicAddress());
+			String dediName = opt.map(dedi -> dedi.getName()).orElse("???");
 
-            String fmt = "%s: %s (%s players online), open slots: %s, free ram: %sMB";
-            log(String.format(fmt, server.getName(), dediName, server.getPlayerCount(),
-                    server.getMaxPlayerCount() - server.getPlayerCount(), server.getRam()));
-        });
-    }
+			String fmt = "%s: %s (%s players online), open slots: %s, free ram: %sMB";
+			log(String.format(fmt, server.getName(), dediName, server.getPlayerCount(),
+					server.getMaxPlayerCount() - server.getPlayerCount(), server.getRam()));
+		});
+	}
 
-    private static Optional<DedicatedServer> getDediStatusFromAddress(String address)
-    {
-        return _dedicatedServers.stream().filter(dedi -> dedi.getPrivateAddress().equals(address))
-                                .findFirst();
-    }
+	private static Optional<DedicatedServer> getDediStatusFromAddress(String address)
+	{
+		return _dedicatedServers.stream().filter(dedi -> dedi.getPrivateAddress().equals(address))
+				.findFirst();
+	}
 
 	private static boolean ignoreServer(String serverGroupName)
 	{
