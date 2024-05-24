@@ -87,7 +87,7 @@ public class ParkourManager extends MiniPlugin
 			snakes.add(new Snake(head, path));
 		}
 
-		if(getPlugin().getConfig().getBoolean("enableParkour")){
+		if(getPlugin().getConfig().getBoolean("hubFeature.enableParkour")){
 			_parkours.add(new ParkourData(this, "HayYou", new String[]
 					{
 							"Jump fast and jump quick, just don't",
