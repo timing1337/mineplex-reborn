@@ -52,7 +52,7 @@ public class HubPlugin extends MiniPlugin
 		_npcManager = require(NewNPCManager.class);
 
 		setupWorld();
-		if(getPlugin().getConfig().getBoolean("enableHubGames")) addHubGames();
+		if(getPlugin().getConfig().getBoolean("hubFeature.enableHubGames")) addHubGames();
 	}
 
 	protected void setupWorld()
